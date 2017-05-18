@@ -1,5 +1,5 @@
 {
-  "name": "typeBox",
+  "name": "typebox",
   "description": "Launcher",
   "version": "0.36.84",
   "license": "MIT",
@@ -24,15 +24,15 @@
     "make": "electron-forge make",
     "_packagew64": "electron-packager . --asar=true --platform=win32 --arch=x64 --prune=true --out=out --electron-version=1.6.7",
     "_packagew64NoAsar": "electron-packager . --platform=win32 --arch=x64 --prune=true --out=out --electron-version=1.6.7",
-    "_buildWin": "electron-installer-windows --src out/typeBox-win32-x64/ --dest dist/installers/"
+    "_buildWin": "electron-installer-windows --src out/typebox-win32-x64/ --dest dist/installers/"
   },
   "author": {
     "name": "karacas",
     "email": "alejandroe@gmail.com"
   },
   "build": {
-    "productName": "typeBox",
-    "appId": "com.karacas.typeBox",
+    "productName": "typebox",
+    "appId": "com.karacas.typebox",
     "directories": {
       "output": "_out/installers"
     }
@@ -106,8 +106,8 @@
   },
   "electronBuilder__": {
     "build": {
-      "productName": "typeBox",
-      "appId": "typeBox.karacas",
+      "productName": "typebox",
+      "appId": "typebox.karacas",
       "asar": true,
       "win": {
         "target": "nsis"
@@ -138,8 +138,8 @@
         ]
       },
       "electronWinstallerConfig__": {
-        "name": "typeBox",
-        "loadingGif": "src/assets/typeBox.gif",
+        "name": "typebox",
+        "loadingGif": "src/assets/typebox.gif",
         "iconUrl": "**********************",
         "setupIcon": "src/assets/icons/win.ico",
         "setupExe": "setup.exe",
@@ -178,7 +178,7 @@
       "electronInstallerRedhat": {},
       "github_repository": {
         "owner": "karacas",
-        "name": "typeBox"
+        "name": "typebox"
       }
     }
   }
