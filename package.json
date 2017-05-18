@@ -1,0 +1,185 @@
+{
+  "name": "typeBox",
+  "description": "Launcher",
+  "version": "0.36.84",
+  "license": "MIT",
+  "keywords": [
+    "desktop",
+    "electron",
+    "app"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karacas/typebox"
+  },
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "node ./node_modules/mocha/bin/mocha ./_test/ --timeout 20000",
+    "reinstall": "yarn run clean && yarn install",
+    "ncu": "node ./node_modules/npm-check-updates/bin/ncu",
+    "clean": "node ./node_modules/rimraf/bin.js ./out && node ./node_modules/rimraf/bin.js ./node_modules",
+    "prettier": "node node_modules/prettier/bin/prettier.js --single-quote --print-width 160 --tab-width 4 --write ./app/**/*.{jsx,js}",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "_packagew64": "electron-packager . --asar=true --platform=win32 --arch=x64 --prune=true --out=out --electron-version=1.6.7",
+    "_packagew64NoAsar": "electron-packager . --platform=win32 --arch=x64 --prune=true --out=out --electron-version=1.6.7",
+    "_buildWin": "electron-installer-windows --src out/typeBox-win32-x64/ --dest dist/installers/"
+  },
+  "author": {
+    "name": "karacas",
+    "email": "alejandroe@gmail.com"
+  },
+  "build": {
+    "productName": "typeBox",
+    "appId": "com.karacas.typeBox",
+    "directories": {
+      "output": "_out/installers"
+    }
+  },
+  "dependencies": {
+    "all": "^0.0.0",
+    "app2png": "^1.0.0",
+    "babel-core": "^6.24.1",
+    "babel-plugin-inferno": "^3.2.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-register": "^6.24.1",
+    "cheerio": "^0.22.0",
+    "deep-diff": "^0.3.8",
+    "electron-compile": "^6.4.1",
+    "electron-is-accelerator": "^0.1.2",
+    "electron-is-dev": "^0.1.2",
+    "electron-log": "^2.2.6",
+    "electron-shortcut-normalizer": "^1.0.0",
+    "file-extension": "^3.1.2",
+    "fs-extra": "^3.0.1",
+    "fs-plus": "^3.0.0",
+    "get-package-readme": "^1.2.0",
+    "get-repository-url": "^0.1.1",
+    "globby": "^6.1.0",
+    "hash-sum": "^1.0.2",
+    "immutable": "^4.0.0-rc.2",
+    "inferno": "^3.1.2",
+    "inferno-component": "^3.1.2",
+    "inferno-create-class": "^3.1.2",
+    "inferno-create-element": "^3.1.2",
+    "is-url": "^1.2.2",
+    "isexe": "^2.0.0",
+    "json5": "^0.5.1",
+    "lodash": "^4.17.4",
+    "marked": "^0.3.6",
+    "mathjs": "^3.13.1",
+    "mkpath": "^1.0.0",
+    "moment": "^2.18.1",
+    "mousetrap": "^1.6.1",
+    "msgpack-lite": "^0.1.26",
+    "node-fetch": "^1.6.3",
+    "node-notifier": "^5.1.2",
+    "node-watch": "^0.5.4",
+    "npm-check-updates": "^2.11.1",
+    "npmi": "^2.0.1",
+    "opn": "^5.0.0",
+    "path-exists": "^3.0.0",
+    "q": "^1.5.0",
+    "redux": "^3.6.0",
+    "redux-observers": "^2.0.1",
+    "rimraf": "^2.6.1",
+    "robotjs": "^0.4.7",
+    "sanitize-html": "^1.14.1",
+    "string_score": "^0.1.22",
+    "syntax-error": "^1.3.0",
+    "walk": "^2.3.9",
+    "yargs": "^8.0.1"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.24.1",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "electron-prebuilt-compile": "1.6.8",
+    "mocha": "^3.4.1",
+    "npm-check-updates": "^2.11.1",
+    "prettier": "^1.3.1",
+    "spectron": "^3.7.1"
+  },
+  "electronBuilder__": {
+    "build": {
+      "productName": "typeBox",
+      "appId": "typeBox.karacas",
+      "asar": true,
+      "win": {
+        "target": "nsis"
+      },
+      "nsis": {
+        "oneClick": false,
+        "allowElevation": false
+      }
+    },
+    "directories": {
+      "output": "/_out",
+      "app": "/app",
+      "buildResources": "/buildResources"
+    }
+  },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronWinstallerConfig__": {
+        "name": "typeBox",
+        "loadingGif": "src/assets/typeBox.gif",
+        "iconUrl": "**********************",
+        "setupIcon": "src/assets/icons/win.ico",
+        "setupExe": "setup.exe",
+        "remoteReleases": "https://*************************/update/win32/0.1.1",
+        "remoteToken": "**********************"
+      },
+      "electronPackagerConfig": {
+        "asar": true,
+        "prune": true,
+        "ignore___": [
+          "/^out($|/)",
+          "/_utils",
+          "/_gulp",
+          "/_data",
+          "/_data/caches",
+          "/_dev",
+          "/_sublime",
+          "/test",
+          "\\.exe",
+          "\\.md",
+          "\\.bat",
+          "\\.lock",
+          "/\\.git($|/)",
+          "/\\.gitignore"
+        ],
+        "ignore": [
+          "/_sublime",
+          "/_gulp",
+          "/_utils",
+          "/_data",
+          "/_dev",
+          "/_test"
+        ]
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "karacas",
+        "name": "typeBox"
+      }
+    }
+  }
+}

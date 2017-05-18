@@ -1,0 +1,894 @@
+body {
+/*Colors*/
+  --scale: 1;
+  --backColor: #263238;
+  --backDarkColor: #263238;
+  --backLightColor: #33434b;
+  --accentColor: #88d8d0;
+  --textLowColor: #c0cbcc;
+  --textHighColor: #fff;
+  --hrTagColor: #3b4c54;
+  --iframeBlendMode: initial;
+/*Sizes*/
+  --padding: calc(18px * var(--scale));
+  --searchBoxHeight: calc(82px * var(--scale));
+  --itemHeight: calc(54px * var(--scale));
+  --statusBarHeight: calc(28px * var(--scale));
+/**/
+  --iconSize: calc(32px);
+  --iconSizeSmall: calc(24px);
+  --propRulesView: 45%;
+/*Opacity*/
+  --lowOpacity: 0.3;
+  --medOpacity: 0.5;
+  --hiOpacity: 0.65;
+/*Times*/
+  --animSpeedFactor: 1;
+  --timeSpin: 0.25s;
+/*Font*/
+  --mainFont: "Roboto-Light", "SF Pro Display", sans-serif;
+  --mainFontWeight: 300;
+  --mainSearchFontSize: calc(28px * var(--scale));
+  --ruleNameFontSize: calc(15px * var(--scale));
+  --smallFontSize: calc(11px * var(--scale));
+/**/
+  --minWidth: 600px;
+}
+body.atom {
+  --backColor: #282c34;
+  --backDarkColor: #282c34;
+  --backLightColor: #2f333d;
+  --accentColor: #568af2;
+  --textLowColor: #98a0af;
+  --textHighColor: #fff;
+  --hrTagColor: #2f333d;
+}
+body.cream {
+  --backColor: #fafafa;
+  --backDarkColor: #fafafa;
+  --backLightColor: #f1efee;
+  --accentColor: #5dac7b;
+  --textLowColor: #363636;
+  --textHighColor: #1f1f1f;
+  --hrTagColor: #e2e2e2;
+  --lowOpacity: 0.5;
+  --medOpacity: 0.75;
+  --hiOpacity: 0.9;
+  --iframeBlendMode: multiply;
+}
+body.big {
+  --scale: 1.15 !important;
+  --padding: 20px;
+  --searchBoxHeight: 94px;
+  --itemHeight: 62px;
+  --statusBarHeight: 32px;
+}
+body.small {
+  --scale: 0.85 !important;
+  --padding: 15px;
+  --searchBoxHeight: 70px;
+  --itemHeight: 46px;
+  --statusBarHeight: 24px;
+}
+@font-face {
+  font-family: "Roboto-Light";
+  src: url("../fonts/Roboto-Light.woff2") format("woff2");
+  font-weight: var(--mainFontWeight);
+  font-style: normal;
+}
+html {
+  overflow: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+html,
+html body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mainFont);
+  font-weight: var(--mainFontWeight);
+}
+#content {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+#inner-content {
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+}
+html,
+body,
+#content,
+#inner-content {
+  min-width: var(--minWidth);
+  overflow-x: hidden;
+}
+.dragWindow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  text-align: right;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  cursor: pointer;
+  z-index: 5;
+}
+#boxContentWrapper {
+  min-height: 100vh;
+}
+.animate-spin {
+  animation: spin var(--timeSpin) infinite linear;
+  display: inline-block;
+}
+.animate-disappear {
+  animation: disappear 1s linear;
+}
+.no-animate-disappear {
+  -webkit-opacity: 1;
+}
+.canDisapppear:not(.no-animate-disappear),
+.scrollTrackEl:not(.no-animate-disappear),
+.canDisapppear.animate-disappear,
+.scrollTrackEl.animate-disappear {
+  -webkit-opacity: 0;
+}
+.main_ico,
+.ruleIconContext {
+  vertical-align: top;
+  text-align: center;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  width: calc(var(--iconSize) * 1.8);
+  margin-left: calc(var(--iconSize) * -0.4);
+  margin-right: calc(var(--iconSize) * 0.1);
+  font-size: var(--iconSize);
+}
+.main_ico:before,
+.ruleIconContext:before {
+  line-height: var(--itemHeight) !important;
+  font-size: var(--iconSize);
+}
+.main_ico.small_ico,
+.ruleIconContext.small_ico {
+  font-size: var(--iconSizeSmall);
+}
+.main_ico.small_ico:before,
+.ruleIconContext.small_ico:before {
+  font-size: var(--iconSizeSmall);
+}
+.main_ico wrappIcon {
+  display: block;
+  transform: translateY(calc((var(--itemHeight) - var(--iconSize)) * 0.5));
+}
+.main_ico wrappIcon svg {
+  height: var(--iconSize);
+  width: auto;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
+}
+.main_ico wrappIcon img {
+  height: var(--iconSize);
+}
+.main_ico.small_ico wrappIcon {
+  transform: translateY(calc((var(--itemHeight) - var(--iconSizeSmall)) * 0.5));
+}
+.main_ico.small_ico wrappIcon svg {
+  height: var(--iconSizeSmall);
+}
+.main_ico.small_ico wrappIcon img {
+  height: var(--iconSizeSmall);
+}
+.main_ico.animate-spin-ico wrappIcon svg,
+.main_ico.animate-spin-ico wrappIcon img {
+  animation: spin var(--timeSpin) infinite linear;
+}
+.main_ico.noShadow:before {
+  text-shadow: none !important;
+}
+.main_ico.noShadow wrappIcon svg {
+  filter: none !important;
+}
+.main_ico.noShadow wrappIcon img {
+  filter: none !important;
+}
+.ruleContext .main_ico,
+.pathIndicator .main_ico {
+  line-height: 1;
+}
+.ruleContext .main_ico:before,
+.pathIndicator .main_ico:before {
+  line-height: var(--searchBoxHeight) !important;
+}
+.ruleContext .main_ico wrappIcon,
+.pathIndicator .main_ico wrappIcon {
+  transform: translateY(calc((var(--searchBoxHeight) - var(--iconSize)) * 0.5));
+}
+.ruleContext .main_ico.small_ico wrappIcon,
+.pathIndicator .main_ico.small_ico wrappIcon {
+  transform: translateY(calc((var(--searchBoxHeight) - var(--iconSizeSmall)) * 0.5));
+}
+.ruleIconContext {
+  width: calc(var(--iconSizeSmall) * 1);
+  float: right;
+  margin-right: calc(var(--iconSizeSmall) * -0.25);
+  margin-left: calc(var(--iconSizeSmall) * 0.4);
+}
+.ruleIconContext.smallContext {
+  width: calc(var(--iconSizeSmall) * 1 * 0.75);
+  margin-left: calc(var(--iconSizeSmall) * 0.4 * 0.75);
+  height: var(--itemHeight);
+  line-height: var(--itemHeight);
+}
+.ruleIconContext.smallContext i {
+  zoom: 0.75;
+}
+#boxContentWrapper {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+#mainSearchWrapper {
+  width: auto;
+  padding: 0 var(--padding);
+  height: var(--searchBoxHeight);
+  position: relative;
+}
+#mainSearchWrapper .pathIndicator .pathName {
+  font-family: var(--mainFont);
+  font-size: var(--smallFontSize);
+}
+#mainSearch {
+  outline: none;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 86%;
+  overflow: hidden;
+  line-height: 2;
+  font-size: var(--mainSearchFontSize);
+  font-family: var(--mainFont);
+  letter-spacing: 0.1px;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  font-weight: var(--mainFontWeight);
+}
+.mainSearchIcon {
+  position: absolute;
+  right: var(--padding);
+  top: 50%;
+  transform: translate(0, -50%);
+  font-size: var(--iconSizeSmall);
+}
+.ruleList {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+}
+.ruleListCelda,
+.ruleContext,
+.pathIndicator {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  margin: 0;
+  width: auto;
+  height: var(--itemHeight);
+  min-height: var(--itemHeight);
+  padding: 0 var(--padding);
+}
+.ruleListCelda span.ruleNameAndDesc,
+.ruleContext span.ruleNameAndDesc,
+.pathIndicator span.ruleNameAndDesc {
+  width: calc(100% - 120px);
+  display: inline-block;
+  overflow: hidden;
+  margin: 0;
+  line-height: var(--itemHeight);
+  height: var(--itemHeight);
+}
+.ruleListCelda span.ruleName,
+.ruleContext span.ruleName,
+.pathIndicator span.ruleName {
+  display: block;
+  letter-spacing: 0px;
+  margin: 0;
+  font-size: var(--ruleNameFontSize);
+  height: calc(var(--itemHeight) * 0.7);
+  line-height: calc(var(--itemHeight) * 0.9);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ruleListCelda span.ruleDescription,
+.ruleContext span.ruleDescription,
+.pathIndicator span.ruleDescription {
+  width: calc(100% - 100px);
+  letter-spacing: 0px;
+  display: block;
+  margin: 0;
+  font-size: var(--smallFontSize);
+  text-rendering: optimizeLegibility;
+  height: calc(var(--itemHeight) * 0.3);
+  line-height: calc(var(--itemHeight) * 0.15);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ruleListCelda .ruleInfo,
+.ruleContext .ruleInfo,
+.pathIndicator .ruleInfo {
+  position: absolute;
+  top: 0;
+  width: auto;
+  display: none;
+  right: calc(var(--padding) + var(--iconSize) * 1.85);
+  font-size: var(--smallFontSize);
+  line-height: var(--itemHeight);
+}
+.ruleListCelda .ruleInfo.show,
+.ruleContext .ruleInfo.show,
+.pathIndicator .ruleInfo.show {
+  display: block;
+}
+.ruleListCelda.noDesc span.ruleDescription,
+.ruleContext.noDesc span.ruleDescription,
+.pathIndicator.noDesc span.ruleDescription {
+  display: none;
+}
+.ruleListCelda.noDesc span.ruleName,
+.ruleContext.noDesc span.ruleName,
+.pathIndicator.noDesc span.ruleName {
+  font-size: var(--ruleNameFontSize);
+  height: calc(var(--itemHeight) * 1);
+  line-height: calc(var(--itemHeight) * 1);
+  white-space: nowrap;
+}
+.ruleContext,
+.pathIndicator {
+  padding-right: 0;
+  padding-left: 0;
+}
+.contextTitle,
+.pathIndicator .pathName {
+  line-height: var(--searchBoxHeight);
+  font-size: calc(var(--ruleNameFontSize) * 1.5);
+  max-width: 85vh;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pathIndicator .pathName {
+  position: absolute;
+  top: -6px;
+  margin-left: 1px;
+  line-height: calc(var(--searchBoxHeight) * 0.75);
+  font-size: calc(var(--ruleNameFontSize) * 1.5);
+  width: auto;
+  text-transform: lowercase;
+}
+.ruleListCelda.celd_loading {
+  pointer-events: none !important;
+  text-align: center;
+}
+.ruleListCelda.celd_loading .ruleInfo {
+  display: none;
+}
+.ruleListCelda.celd_loading span.ruleName {
+  text-align: center;
+  text-transform: uppercase;
+}
+.ruleListCelda {
+  background-color: transparent;
+}
+.ruleListCelda.highLight,
+.ruleListCelda.highLight .ruleInfo {
+  transition: all 0 cubic-bezier(0.19, 1, 0.22, 1);
+}
+#status-bar {
+  display: block;
+  height: var(--statusBarHeight);
+  padding: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  font-size: var(--smallFontSize);
+  text-rendering: optimizeLegibility;
+  line-height: var(--statusBarHeight);
+  line-height: calc(var(--statusBarHeight));
+  width: 100%;
+}
+#status-bar > span {
+  display: block;
+  padding-left: var(--padding);
+  padding-right: var(--padding);
+}
+#status-bar .infoDer {
+  float: right;
+  line-height: calc(var(--statusBarHeight));
+}
+.mousetrapCapture {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  -webkit-opacity: 0;
+}
+.scrollTrackEl {
+  position: absolute;
+  width: 2px;
+  height: 36px;
+  top: 0;
+  right: 0;
+  margin: 4px;
+  border-radius: 0;
+  transition: all calc(0.15s) cubic-bezier(0.19, 1, 0.22, 1);
+}
+.animsEnabled .ruleListCelda,
+.animsEnabled .ruleListCelda .ruleInfo {
+  transition: all calc(0.3s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+}
+.animsEnabled .ruleListCelda.toDeletedCss {
+  margin-top: calc(var(--itemHeight) * -1);
+  transition: all calc(0.3s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+}
+.animsEnabled .scrollTrackEl {
+  transition: all calc(0.3s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+}
+html,
+body {
+  background: transparent;
+}
+#content {
+  background: var(--backColor);
+}
+#mainSearch {
+  color: var(--textLowColor);
+}
+.contextTitle {
+  color: var(--textHighColor);
+}
+.pathIndicator .pathName {
+  color: var(--textLowColor);
+  -webkit-opacity: var(--hiOpacity);
+}
+#mainSearchWrapper,
+#status-bar {
+  background-color: var(--backDarkColor);
+}
+.ruleListCelda .ruleInfo {
+  color: var(--textHighColor);
+  -webkit-opacity: 0.2;
+}
+.ruleListCelda .ruleIconContext {
+  color: var(--textLowColor);
+  -webkit-opacity: var(--medOpacity);
+}
+.ruleListCelda .ruleIconContext:hover {
+  -webkit-opacity: 1;
+}
+span.ruleName,
+.mainSearchIcon {
+  color: var(--textLowColor);
+}
+.ruleListCelda span.ruleDescription {
+  color: var(--textLowColor);
+  -webkit-opacity: var(--lowOpacity);
+}
+.colorDefault {
+  color: var(--accentColor);
+}
+.colorDefault svg path {
+  fill: var(--accentColor);
+}
+.ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight {
+  background-color: var(--backLightColor);
+}
+.ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight .ruleName {
+  color: var(--textHighColor);
+}
+.ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight .ruleDescription {
+  -webkit-opacity: var(--hiOpacity);
+}
+.ruleList.mouseActivated_NO .ruleListCelda:hover {
+  background-color: var(--backLightColor);
+}
+.ruleViewer {
+  color: var(--textLowColor);
+}
+.ruleViewer p {
+  color: var(--textLowColor);
+}
+.ruleViewer h1,
+.ruleViewer h2,
+.ruleViewer h3,
+.ruleViewer h4,
+.ruleViewer h5 {
+  color: var(--textLowColor);
+}
+.ruleViewer h1,
+.ruleViewer h2,
+.ruleViewer h3,
+.ruleViewer h4 {
+  border-bottom: 1px solid var(--hrTagColor);
+}
+.ruleViewer h1,
+.ruleViewer h2,
+.ruleViewer h3,
+.ruleViewer h4,
+.ruleViewer h1 a,
+.ruleViewer h2 a,
+.ruleViewer h3 a,
+.ruleViewer h4 a,
+.ruleViewer h1 p,
+.ruleViewer h2 p,
+.ruleViewer h3 p,
+.ruleViewer h4 p {
+  color: var(--accentColor);
+}
+.ruleViewer table,
+.ruleViewer td,
+.ruleViewer th {
+  color: var(--textLowColor);
+}
+.ruleViewer a {
+  color: var(--textHighColor);
+}
+.ruleViewer a:visited {
+  color: var(--accentColor);
+}
+.ruleViewer ul,
+.ruleViewer ol {
+  color: var(--textLowColor);
+}
+.ruleViewer pre {
+  background-color: var(--backLightColor);
+}
+.ruleViewer code,
+.ruleViewer code[class] {
+  background-color: var(--backLightColor);
+}
+.ruleViewer blockquote {
+  border-left: 2px var(--accentColor) solid;
+}
+.ruleViewer hr {
+  border-top-color: var(--hrTagColor);
+}
+.ruleViewer iframe,
+.ruleViewer webview {
+  background-color: #fff;
+}
+.ruleViewer .ruleViewerWrapp {
+  color: var(--textHighColor);
+}
+.ruleViewer .ruleViewerWrapp::-webkit-scrollbar,
+.ruleViewer iframe::-webkit-scrollbar,
+.ruleViewer webview::-webkit-scrollbar {
+  background-color: transparent;
+}
+.ruleViewer .ruleViewerWrapp::-webkit-scrollbar-thumb,
+.ruleViewer iframe::-webkit-scrollbar-thumb,
+.ruleViewer webview::-webkit-scrollbar-thumb {
+  border-right: solid 2px var(--accentColor);
+  background: transparent;
+}
+.ruleViewer Loading:after {
+  background-color: var(--accentColor);
+}
+.ruleViewer buttonsviewer a {
+  background-color: var(--accentColor);
+}
+.ruleViewer buttonsviewer a:before {
+  color: var(--backColor);
+}
+#status-bar {
+  color: var(--textLowColor);
+  background: var(--backColor) !important;
+  z-index: 10;
+}
+.scrollTrackEl {
+  background-color: var(--accentColor);
+}
+.boxContentWrapperList .listadoRules {
+  background-color: var(--backColor);
+}
+.boxContentWrapperList {
+  position: relative;
+}
+.boxContentWrapperList .listadoRules {
+  position: relative;
+  width: 100%;
+  display: block;
+  z-index: 4;
+  transition: all calc(0.25s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+}
+.boxContentWrapperList .ruleViewer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  overflow-x: hidden;
+  display: block;
+  z-index: 1;
+  transition: all calc(0.25s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+/*KTODO: Disable via JS Settings*/
+  mix-blend-mode: var(--iframeBlendMode);
+}
+.boxContentWrapperList.withViewer .listadoRules {
+  width: var(--propRulesView);
+  transition-delay: 0.32s;
+}
+.boxContentWrapperList.withViewer .ruleViewer {
+  width: calc(100% - var(--propRulesView));
+}
+.ruleViewer {
+  height: 100%;
+  overflow-y: hidden;
+}
+.ruleViewer h1,
+.ruleViewer h2,
+.ruleViewer h3,
+.ruleViewer h4,
+.ruleViewer h5 {
+  font-weight: var(--mainFontWeight);
+}
+.ruleViewer table,
+.ruleViewer td,
+.ruleViewer th {
+  border: none;
+}
+.ruleViewer table {
+  zoom: 0.85;
+}
+.ruleViewer a {
+  cursor: pointer;
+}
+.ruleViewer i {
+  font-style: normal;
+}
+.ruleViewer ul,
+.ruleViewer ol {
+  padding: 0;
+  padding-left: 15px;
+}
+.ruleViewer hr {
+  height: 0px;
+  overflow: hidden;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  border-top-width: 1px;
+  border-top-style: solid;
+  margin-top: 2em;
+  margin-bottom: 2em;
+/**/
+}
+.ruleViewer iframe,
+.ruleViewer webview {
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 4px;
+}
+.ruleViewer iframe.withTrans,
+.ruleViewer webview.withTrans {
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.ruleViewer .ruleViewerWrapp {
+  font-size: 14px;
+  line-height: 1.4;
+  width: calc(100% - (var(--padding) * 2));
+  height: calc(100% - (var(--padding) * 0.5));
+  padding: 0 var(--padding);
+  padding-right: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.ruleViewer .ruleViewerWrapp::-webkit-scrollbar,
+.ruleViewer iframe::-webkit-scrollbar,
+.ruleViewer webview::-webkit-scrollbar {
+  width: 10px;
+}
+.ruleViewer .ruleViewerWrapp::-webkit-scrollbar-thumb,
+.ruleViewer iframe::-webkit-scrollbar-thumb,
+.ruleViewer webview::-webkit-scrollbar-thumb {
+  height: 36px !important;
+}
+.ruleViewer Loading {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ruleViewer Loading:after {
+  content: " ";
+  position: absolute;
+  top: calc(50% - var(--iconSize) / 2);
+  left: calc(50% - var(--iconSize) / 2);
+  width: var(--iconSize);
+  height: var(--iconSize);
+  animation: spin var(--timeSpin) infinite linear;
+  -webkit-mask-position: 50% 50%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><path fill='#fff' d='M25.3 6.5C15 6.5 6.6 14.8 6.6 25h4c0-8 6.6-14.5 14.7-14.5v-4z'/></svg>");
+}
+.ruleViewer buttonsviewer {
+  position: absolute;
+  bottom: calc(var(--padding) * 1);
+  right: calc(var(--padding) * 1.4);
+}
+.ruleViewer buttonsviewer a {
+  cursor: pointer;
+  display: inline-block;
+  width: var(--iconSize);
+  height: var(--iconSize);
+  border-radius: 100%;
+  font-size: 0;
+}
+.ruleViewer buttonsviewer a:hover {
+  -webkit-opacity: 0.9;
+}
+.ruleViewer buttonsviewer a:before {
+  font-size: calc(var(--iconSizeSmall) * 0.8);
+  display: block;
+  width: var(--iconSize);
+  height: var(--iconSize);
+  text-align: center;
+  line-height: calc(var(--iconSize) * 1);
+}
+.ruleViewer .frameInLoad iframe,
+.ruleViewer .frameInLoad webview,
+.ruleViewer .frameInLoad buttonsViewer {
+  -webkit-opacity: 0;
+}
+.ruleViewer .frameInLoad Loading {
+  position: absolute;
+  top: calc(var(--padding) * -0.25);
+  left: 0;
+}
+.ruleViewer .frameLoaded Loading {
+  display: none;
+}
+.ruleViewer .frameLoaded iframe,
+.ruleViewer .frameLoaded webview {
+  -webkit-opacity: 1;
+}
+.markdownView,
+.markdownView td {
+  font-size: 14px;
+}
+.markdownView {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.markdownView,
+.markdownView * {
+  line-height: 1.6;
+}
+.markdownView tt,
+.markdownView code,
+.markdownView pre {
+  font-family: 'Roboto Mono', Consolas, Monaco, monospace;
+}
+.markdownView h1 {
+  font-size: 2.2em;
+  padding-bottom: 0.3em;
+  line-height: 1.25;
+}
+.markdownView h1:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.markdownView h2 {
+  font-size: 1.7em;
+  padding-bottom: 0.3em;
+  line-height: 1.25;
+}
+.markdownView h3,
+.markdownView h4 {
+  font-size: 1.4em;
+  line-height: 1.25;
+}
+.markdownView h5,
+.markdownView h6 {
+  font-size: 1.2em;
+  line-height: 1.25;
+}
+.markdownView pre,
+.markdownView img {
+  max-width: 100%;
+}
+.markdownView pre {
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.markdownView pre code {
+  display: block;
+  padding: 0.5em;
+}
+.markdownView code {
+  font-size: 90%;
+  border: none;
+}
+.markdownView code[class] {
+  border: none;
+}
+.markdownView blockquote {
+  margin: 0;
+  padding-left: 1em;
+}
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+@-moz-keyframes disappear {
+  0%, 75% {
+    -webkit-opacity: 1;
+  }
+  100% {
+    -webkit-opacity: 0;
+  }
+}
+@-webkit-keyframes disappear {
+  0%, 75% {
+    -webkit-opacity: 1;
+  }
+  100% {
+    -webkit-opacity: 0;
+  }
+}
+@-o-keyframes disappear {
+  0%, 75% {
+    -webkit-opacity: 1;
+  }
+  100% {
+    -webkit-opacity: 0;
+  }
+}
+@keyframes disappear {
+  0%, 75% {
+    -webkit-opacity: 1;
+  }
+  100% {
+    -webkit-opacity: 0;
+  }
+}
