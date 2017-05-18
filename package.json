@@ -1,7 +1,7 @@
 {
   "name": "typebox",
   "description": "Launcher",
-  "version": "0.36.88",
+  "version": "0.36.90",
   "license": "MIT",
   "keywords": [
     "desktop",
@@ -14,11 +14,12 @@
   },
   "main": "app/main.js",
   "scripts": {
+    "preinstall": "yarn global electron-forge",
     "start": "electron-forge start",
     "test": "node ./node_modules/mocha/bin/mocha ./_test/ --timeout 20000",
-    "reinstall": "yarn run clean && yarn install",
+    "reinstall": "yarn run clean_dep && yarn install",
     "ncu": "node ./node_modules/npm-check-updates/bin/ncu",
-    "clean": "node ./node_modules/rimraf/bin.js ./out && node ./node_modules/rimraf/bin.js ./node_modules",
+    "clean_dep": "node ./node_modules/rimraf/bin.js ./out && node ./node_modules/rimraf/bin.js ./node_modules",
     "prettier": "node node_modules/prettier/bin/prettier.js --single-quote --print-width 160 --tab-width 4 --write ./app/**/*.{jsx,js}",
     "package": "electron-forge package",
     "make": "electron-forge make",
