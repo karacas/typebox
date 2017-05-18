@@ -14,7 +14,7 @@
   },
   "main": "app/main.js",
   "scripts": {
-    "preinstall": "yarn global electron-forge",
+    "preinstall": "yarn global add electron-forge",
     "start": "electron-forge start",
     "test": "node ./node_modules/mocha/bin/mocha ./_test/ --timeout 20000",
     "reinstall": "yarn run clean_dep && yarn install",
