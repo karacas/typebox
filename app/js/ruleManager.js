@@ -13,6 +13,7 @@ const makeRuleIdHash = require('../js/rule.js').makeRuleIdHash;
 const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const makeRulePath = require('../js/path.js');
+const sharedData = require('../js/sharedData.js');
 
 let rules = Immutable.OrderedMap();
 let cache_paths = Immutable.OrderedMap();
@@ -21,48 +22,6 @@ let virtaulrules = Immutable.OrderedMap();
 let lastRulesCache = Immutable.OrderedMap();
 let lastRulesQuery = null;
 let logTimes = Config.get('here_are_dragons.verboseTimes');
-
-if (true) {
-    (function() {
-        function _1(word) {
-            if (this === word) return 1;
-            if (word === '') return 0;
-            let runningScore = 0, charScore, finalScore, strLength = this.length, wordLength = word.length, idxOf, startAt = 0, i;
-
-            for (i = 0; i < wordLength; i++) {
-                idxOf = this.indexOf(word[i], startAt);
-                if (-1 === idxOf) return 0;
-
-                if (startAt === idxOf) {
-                    charScore = 0.7;
-                } else {
-                    charScore = 0.1;
-
-                    if (this[idxOf - 1] === ' ') {
-                        charScore += 0.8;
-                    }
-                }
-
-                if (this[idxOf] === word[i]) {
-                    charScore += 0.1;
-                }
-
-                runningScore += charScore;
-                startAt = idxOf + 1;
-            }
-
-            finalScore = 0.5 * (runningScore / strLength + runningScore / wordLength);
-
-            if (word[0] === this[0] && finalScore < 0.85) {
-                finalScore += 0.15;
-            }
-
-            return finalScore;
-        }
-
-        String.prototype.score = _1;
-    })();
-}
 
 function resetCaches() {
     cache_paths = Immutable.OrderedMap();

@@ -63,7 +63,7 @@ class ReactContent extends Component {
             <div id="content" className={classes}>
                 <div className="dragWindow" />
                 <div id="inner-content">
-                    <FuzzyList store={this.props.store} storeDispatch={this.props.storeDispatch} version={version} />
+                    <FilterList store={this.props.store} storeDispatch={this.props.storeDispatch} version={version} />
                 </div>
             </div>
         );
@@ -71,7 +71,7 @@ class ReactContent extends Component {
 }
 
 //SEARCH + LIST + ETC
-var FuzzyList = InfCreateClass({
+var FilterList = InfCreateClass({
     componentDidMount: function() {
         let debounceTime = Config.get('here_are_dragons.debounceTime_actionsKeys');
 
@@ -336,7 +336,7 @@ var MainSearch = InfCreateClass({
 
         if (this.props && this.props.text && this.props.text.length) {
             this.searchField.value = this.props.text;
-            this.searchField.focus();
+            this.reFocus();
         } else {
             //Get first list
             store.dispatch(ListViewStore.updateFilterlist());
@@ -357,20 +357,16 @@ var MainSearch = InfCreateClass({
             }
         });
 
+        //ON SHOW
+        window_and_systray.windowEvent.on('SHOW', this.reFocus);
+
         //On sore [text] change
         ListViewStore.storeEvents.on('CHANGE_SEARCH_TEXT', txt => {
             if (this.searchField && txt !== this.searchField.value) {
                 this.searchField.value = txt;
-                this.searchField.focus();
+                this.reFocus();
             }
         });
-
-        this.interval = setInterval(() => {
-            if (this.searchField) {
-                //window.focus();
-                //this.searchField.focus();
-            }
-        }, Config.get('here_are_dragons.intervalSetFocusInRoot'));
     },
     componentWillUnmount: function() {
         clearInterval(this.interval);
@@ -379,16 +375,18 @@ var MainSearch = InfCreateClass({
     onChange: function(event) {
         this.debounceChange();
     },
-    onblur: function(e) {
-        //Always focus
+    reFocus: function() {
+        window.focus();
         if (this.searchField) {
             this.searchField.focus();
         }
     },
+    onblur: function(e) {
+        //Always focus
+        this.reFocus();
+    },
     render: function() {
-        if (this.searchField) {
-            this.searchField.focus();
-        }
+        this.reFocus();
         let path = this.props.path;
         return (
             <span>
@@ -635,11 +633,16 @@ var ListCelds = InfCreateClass({
 
             let deltaObj = Math.round(this.statusBarHeight + this.mainSearchWrapperHeight);
             let $validHeight = this.getValidWinSize(this.newHeight + deltaObj);
+            let $maxValidHeight = this.getValidWinSize(this.state.size_items_visible * Math.round(this.ruleHeight) + deltaObj);
 
             if ($validHeight) {
                 //KTODO: PASAR A VAR el style
                 this.ruleListado.style.height = $validHeight.height - deltaObj + 'px';
                 window_and_systray.setWindowSize(null, $validHeight.height);
+            }
+
+            if ($maxValidHeight) {
+                window_and_systray.setMaxSize($maxValidHeight.height);
             }
         }
 
@@ -648,18 +651,18 @@ var ListCelds = InfCreateClass({
 
         //KTODO: Change 4 Class
         if (size <= this.state.size_items_visible) {
-            this.scroller.style.display = 'none';
+            this.scroller.className = this.scroller.className.replace('hidden', '') + ' hidden';
             return;
         }
 
-        this.scroller.style.display = 'block';
+        this.scroller.className = this.scroller.className.replace('hidden', '');
         this.relScroll = this.state.actual / (size - 1);
 
         if (!this.scrollerOffsetHeight) {
             this.scrollerOffsetHeight = this.scroller.offsetHeight;
         }
 
-        if (this.scrollerOffsetHeight && this.newHeight && this.statusBarHeight) {
+        if (this.newHeight && this.statusBarHeight) {
             this.scrollHeight = Math.round(this.newHeight - 4 * 2 - this.scrollerOffsetHeight);
         }
 
@@ -667,12 +670,13 @@ var ListCelds = InfCreateClass({
             this.debounceTime_searchKeys = Config.get('here_are_dragons.debounceTime_searchKeys') || 16;
         }
 
-        if (this.scrollHeight && this.relScroll != this.relScrollLast) {
-            //KTODO: PASAR A VAR  el style top
-            let top = this.scrollHeight * this.relScroll || 0;
-            this.scroller.style.top = Math.round(top) + 'px';
+        if (this.scrollHeight) {
+            let top = Math.round(this.scrollHeight * this.relScroll || 0);
+            if (top !== this.topLast) {
+                this.scroller.style.top = top + 'px';
+                this.topLast = top;
+            }
             this.scroller.className = this.scroller.className.replace('no-animate-disappear', '').replace('animate-disappear', '') + ' no-animate-disappear';
-            this.relScrollLast = this.relScroll;
             setTimeout(() => {
                 this.scroller.className = this.scroller.className.replace('no-animate-disappear', '').replace('animate-disappear', '') + ' animate-disappear';
             }, this.debounceTime_searchKeys);
@@ -843,6 +847,12 @@ var getRule = (item, clickContext, clickToggleFav) => {
         iconFav = 'mdi-star';
     }
 
+    let infoClassName = 'ruleInfo';
+
+    if (Config.get('here_are_dragons.printRulePoints') || Config.get('here_are_dragons.debug.printRulePoints')) {
+        infoClassName += ' show';
+    }
+
     return (
         <span>
             {!item.component &&
@@ -855,7 +865,7 @@ var getRule = (item, clickContext, clickToggleFav) => {
                     </span>
 
                     {item._score_p !== null &&
-                        <span className="ruleInfo show">
+                        <span className={infoClassName}>
                             <span className="points">{item._points_p}</span>
                             /
                             <span className="pointsK">{item._points_current_key_p}</span>

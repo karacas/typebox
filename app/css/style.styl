@@ -1,10 +1,11 @@
 body {
 	/*Colors*/
 	--scale: 1
-	--backColor: #263238; //back
-	--backDarkColor: #263238; //back2
-	--backLightColor: #33434b; //bar color
-	--accentColor: #88d8d0; // HighLight /celeste
+	--backColor: #293039; //back
+	--backDarkColor: #293039; //back2
+	--backLightColor: #2d3742; //bar color
+	--accentColor: #4ec0a3; // HighLight /celeste
+	--cursorColor: #c0cbcc; // HighLight /celeste
 	--textLowColor: #c0cbcc; //name color
 	--textHighColor: #ffffff; //name color selected
 	--hrTagColor: #3b4c54; // hr separador
@@ -32,7 +33,7 @@ body {
 	--ruleNameFontSize: calc(15px * var(--scale));
 	--smallFontSize: calc(11px * var(--scale));
 	/**/
-	--minWidth: 600px
+	--minWidth: 400px
 }
 
 //________________________
@@ -45,6 +46,7 @@ body.atom {
 	--accentColor: #568af2;
 	--textLowColor: #98a0af;
 	--textHighColor: #fff;
+	--cursorColor: #fff;
 	--hrTagColor: #2f333d;
 }
 
@@ -55,6 +57,7 @@ body.cream {
 	--accentColor: #5dac7b;
 	--textLowColor: #363636;
 	--textHighColor: #1f1f1f;
+	--cursorColor: #1f1f1f;
 	--hrTagColor: #e2e2e2;
 	--lowOpacity: 0.5;
 	--medOpacity: 0.75;
@@ -141,6 +144,10 @@ html, body, #content, #inner-content {
 
 #boxContentWrapper{
 	min-height 100vh
+}
+
+.hidden{
+	display none !important
 }
 
 //________________________
@@ -371,13 +378,9 @@ html, body, #content, #inner-content {
 		position absolute
 		top 0
 		width auto
-		display none
 		right: calc(var(--padding) + var(--iconSize) * 1.85);
 		font-size: var(--smallFontSize);
 		line-height: var(--itemHeight);
-	}
-	.ruleInfo.show{
-		display block
 	}
 	&.noDesc{
 		span.ruleDescription{
@@ -512,7 +515,7 @@ html, body{
 }
 //SEARCH
 #mainSearch {
-	color: var(--textLowColor);
+	color: var(--cursorColor);
 }
 .contextTitle{
 	color: var(--textHighColor);
@@ -527,8 +530,11 @@ html, body{
 
 //RULES
 .ruleListCelda .ruleInfo{
-	color var(--textHighColor)
-	-webkit-opacity 0.2
+	color var(--backColor)
+}
+.ruleListCelda .ruleInfo.show{
+	color var(--textLowColor)
+	opacity 0.5
 }
 .ruleListCelda .ruleIconContext{
 	color var(--textLowColor)

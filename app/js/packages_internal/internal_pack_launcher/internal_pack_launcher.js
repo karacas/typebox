@@ -218,8 +218,8 @@ module.exports = {
         this.app.on('changeQuery', txt => {
             if (!txt.match(/\!$/)) return;
             if (txt === 'rc!' || txt === 'refreshCatalog!') {
-                getLauncherRules(this, true, true);
                 this.app.setQuery('');
+                getLauncherRules(this, true, true);
             }
         });
 

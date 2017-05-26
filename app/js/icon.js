@@ -1,5 +1,7 @@
 'use strict';
 
+const Config = require('../js/config.js');
+
 var defaultIcon = {
     type: 'iconFont',
     iconClass: 'feather-align-left small_ico',
@@ -7,7 +9,13 @@ var defaultIcon = {
     iconData: null
 };
 
+var icons = Config.get('icons');
+
 module.exports.get = icon => {
+    if (!icons) {
+        return {};
+    }
+
     if (icon && icon.type === 'noIcon') {
         return icon;
     }

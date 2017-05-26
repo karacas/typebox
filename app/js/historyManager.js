@@ -7,9 +7,10 @@ const removeDiacritics = require('lodash').deburr;
 const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
+const getTime = sharedData.realClock.getTime;
 
-var historyItems = Immutable.Map();
-var historyItemsKeys = Immutable.Map();
+var historyItems = Immutable.OrderedMap();
+var historyItemsKeys = Immutable.OrderedMap();
 var historyNeedSave = false;
 
 function push(ruleHistory) {
@@ -20,7 +21,7 @@ function push(ruleHistory) {
 
     var keys = removeDiacritics(ruleHistory.keys.toLowerCase());
     var id = ruleHistory.rule.id;
-    var date = Moment(new Date()).unix();
+    var date = getTime();
 
     var maxCant = Config.get('here_are_dragons.maxKeysInHistory');
     if (keys.length > maxCant) {
@@ -42,12 +43,13 @@ function push(ruleHistory) {
     var checkItem = historyItems.get(id);
     if (checkItem) {
         checkItem._points++;
+        checkItem.date = date;
     } else {
         //Map of items
         historyItems = historyItems.set(id, historyItem);
     }
 
-    //[HYSTORY by Keys]
+    //[HYSTORY by Keys
     if (keys.length) {
         var keysArr = historyItemsKeys.get(keys);
         var checkItemK = null;
@@ -60,6 +62,7 @@ function push(ruleHistory) {
 
         if (checkItemK && _.isArray(checkItemK) && checkItemK[0] && checkItemK[0]._points_current_key) {
             checkItemK[0]._points_current_key++;
+            checkItemK[0].date = date;
         } else {
             var arrayKeys = [];
             var arrayKeysTmp = historyItemsKeys.get(keys);
@@ -71,6 +74,13 @@ function push(ruleHistory) {
         }
     }
 
+    //PURGE
+    try {
+        depure();
+    } catch (e) {
+        Logger.warn('[History] depure error', e);
+    }
+
     //MAke Big History
     if (false) {
         Array.from(new Array(1000), (x, i) => i).map(i => {
@@ -80,6 +90,31 @@ function push(ruleHistory) {
     }
 
     historyNeedSave = true;
+}
+
+function depure() {
+    let historyItems_max = Math.round(Config.get('here_are_dragons.maxItemsInHistory') || 320);
+
+    if (historyItems.size > historyItems_max * 1.25) {
+        Logger.info('[History] depure', 'historyItems.size', historyItems.size);
+
+        //FILTER historyItems
+        historyItems = historyItems.sortBy(r => -r.date).slice(0, Math.abs(historyItems_max * 1.1));
+        historyItems = historyItems.sortBy(r => -r.date).sortBy(r => -r._points).slice(0, historyItems_max);
+
+        //FILTER historyItemsKeys
+        let historyItemsKeysNew = Immutable.OrderedMap();
+        historyItemsKeys.map((keys, id) => {
+            let nKeys = keys.filter(key => {
+                return Boolean(historyItems.get(key.id));
+            });
+            if (nKeys.length) {
+                historyItemsKeysNew = historyItemsKeysNew.set(id, nKeys);
+            }
+        });
+        historyItemsKeys = historyItemsKeysNew;
+        historyNeedSave = true;
+    }
 }
 
 function saveHistory() {
@@ -125,8 +160,8 @@ function loadHistory() {
     }
 
     if (load) {
-        historyItems = Immutable.Map(historyItemsTmp);
-        historyItemsKeys = Immutable.Map(historyItemsKeysTmp);
+        historyItems = Immutable.OrderedMap(historyItemsTmp);
+        historyItemsKeys = Immutable.OrderedMap(historyItemsKeysTmp);
 
         if (!true) {
             /*dev*/ //PRINT HISTORY

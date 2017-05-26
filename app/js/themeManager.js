@@ -84,7 +84,9 @@ function handleThemes() {
 
     if (window) {
         let backColor = window.getComputedStyle(document.querySelector('body')).getPropertyValue('--backColor');
-        if (backColor) document.querySelector('html').style.setProperty('background', backColor);
+        setTimeout(() => {
+            if (backColor) document.querySelector('html').style.setProperty('background', backColor);
+        }, 1);
     }
 
     themeEvents.emit('CHANGE_THEME');
@@ -162,6 +164,7 @@ function reloadThemes() {
 function removeLoader() {
     //TURN OFF LOADER
     setTimeout(() => {
+        document.querySelector('html').style.setProperty('background', 'transparent');
         body.className = body.className.replace('bodyloader', '');
     }, Config.get('here_are_dragons.delayToRemoveLoader') || 0);
 }
@@ -252,7 +255,7 @@ function setSubTheme2Settings(subThemeName) {
     }
 }
 
-//fs-font-source-sans-pro
+//tb-font-source-sans-pro
 function setFont2Settings(fontName) {
     let paramObj = {
         font: String(fontName)

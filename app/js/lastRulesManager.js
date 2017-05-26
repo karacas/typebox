@@ -6,6 +6,7 @@ const Immutable = require('immutable');
 const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
+const getTime = sharedData.realClock.getTime;
 
 var lastItems = Immutable.OrderedMap();
 var lastNeedSave = false;
@@ -41,9 +42,9 @@ function push(rulelast) {
         rulelast.last_permit = false;
         rulelast.params.original_last_id = rulelast.id;
         rulelast.params.original_last_path = rulelast.path;
-        rulelast.params.lastDate = -Moment(new Date()).unix();
+        rulelast.params.lastDate = getTime();
 
-        lastItems = lastItems.set(id, rulelast).sortBy(r => r.params.lastDate).slice(0, Config.get('here_are_dragons.maxLastRules'));
+        lastItems = lastItems.set(id, rulelast).sortBy(r => -r.params.lastDate).slice(0, Config.get('here_are_dragons.maxLastRules'));
         lastNeedSave = true;
     }
 }
@@ -52,7 +53,7 @@ function remove(rulelast) {
     var id = _.result(rulelast, 'params.original_last_id') || rulelast.id;
     if (id && lastItems.get(id)) {
         rulelast.last_permit = false;
-        lastItems = lastItems.delete(id).sortBy(r => r.params.lastDate).slice(0, Config.get('here_are_dragons.maxLastRules'));
+        lastItems = lastItems.delete(id);
         lastNeedSave = true;
     }
 }
@@ -95,7 +96,7 @@ function loadlast() {
     }
 
     if (load) {
-        lastItems = Immutable.OrderedMap(lastItemsTmp).sortBy(r => r.params.lastDate).slice(0, Config.get('here_are_dragons.maxLastRules'));
+        lastItems = Immutable.OrderedMap(lastItemsTmp);
         Logger.info('[Lasts] lastItems length: ', lastItems.size);
     }
 }

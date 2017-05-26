@@ -30,8 +30,8 @@ function createViewerWebView() {
                 useragent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko',
                 useragent: 'Mozilla/5.0 (Android 4.4; Mobile; rv:41.0) Gecko/41.0 Firefox/41.0',
                 partition: 'viewer',
-                audimute: true,
-                zoom: 0.9
+                audiomute: true,
+                zoom: 1
             };
             this.fetchHtml = _.debounce(rule => {
                 if (rule.id !== this.props.rule.id) return;
@@ -63,6 +63,10 @@ function createViewerWebView() {
             this.fetchHtml(_.clone(nextProps.rule));
         },
         componentWillUnmount: function() {
+            if (this.webview) {
+                this.webview.stop();
+                this.webview.closeDevTools();
+            }
             this.webview = false;
             this.iFrameView = false;
         },
@@ -88,7 +92,7 @@ function createViewerWebView() {
                     );
 
                     //KTODO: Que se pueda setear directo como opcion del plugin
-                    this.webview.setAudioMuted(Boolean(this.options.audimute));
+                    this.webview.setAudioMuted(Boolean(this.options.audiomute));
                     this.webview.setZoomFactor(Number(this.options.zoom));
 
                     setTimeout(() => {

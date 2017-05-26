@@ -30,7 +30,7 @@ module.exports = {
             if (!pathItem) return;
 
             this.app.setPath({
-                path: 'fs-path' + pathItem,
+                path: 'typebox-path' + pathItem,
                 icon: iconArchive,
                 name: pathItem.replace(/\\/g, '/')
             });
@@ -40,7 +40,7 @@ module.exports = {
         this.returnPaths = currentPath => {
             if (!this.driveManager) return;
 
-            let pathRoute = 'fs-path' + currentPath;
+            let pathRoute = 'typebox-path' + currentPath;
 
             this.app.putLoader(pathRoute);
 
@@ -85,8 +85,8 @@ module.exports = {
         };
 
         this.app.on('changePath', path => {
-            if (_.startsWith(path, 'fs-path')) {
-                var path = path.replace('fs-path', '');
+            if (_.startsWith(path, 'typebox-path')) {
+                var path = path.replace('typebox-path', '');
                 this.returnPaths(path);
             }
         });
@@ -95,7 +95,7 @@ module.exports = {
         this.app.on('changeQuery', txt => {
             if (this.app.getPath().path === '/' && txt === '/') {
                 this.app.setPath({
-                    path: 'fs-path' + '/',
+                    path: 'typebox-path' + '/',
                     icon: iconArchive,
                     name: ' '
                 });

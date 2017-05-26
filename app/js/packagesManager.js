@@ -175,7 +175,7 @@ function registerPlugin(name, url, validate = false) {
     if (validate) {
         try {
             packagejson = require(url + '/package.json');
-            var engine = _.result(packagejson, 'engines.fs');
+            var engine = _.result(packagejson, 'engines.typebox');
         } catch (error) {
             onCatchErrorPackage(name, 'no valid package.json, need a engine.key', error);
             return;

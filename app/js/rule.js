@@ -8,6 +8,7 @@ const sub = require('hash-sum');
 
 var copyKey = null;
 var enterKey = null;
+var icons = Config.get('icons');
 
 function getStringDescription() {
     //Define enter key
@@ -141,8 +142,9 @@ module.exports.getNewRule = params => {
 
     rule.id = makeHash((params._id || rule.title) + rule.type[0] + rule.path);
 
-    //KTODO: ver de poner en config que no haya iconos ID21-04-17_02-07-43
-    rule.icon = icon.get(params.icon);
+    if (icons) {
+        rule.icon = icon.get(params.icon);
+    }
 
     return rule;
 };

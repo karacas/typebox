@@ -23,6 +23,7 @@ const globby = require('globby');
 const app2png = require('app2png');
 
 let cacheFilesImmitable = Immutable.OrderedMap();
+var icons = Config.get('icons');
 
 function getFileInfo(pathname) {
     return new Promise((resolve, reject) => {
@@ -34,7 +35,7 @@ function getFileInfo(pathname) {
             let cacheFile = cacheFilesImmitable.get(pathname);
             if (cacheFile && cacheFile.params.originalData && cacheFile.icon && cacheFile.icon.iconData) {
                 let dataTmp = cacheFile.params.originalData;
-                dataTmp.iconUrl = cacheFile.icon.iconData;
+                if (icons) dataTmp.iconUrl = cacheFile.icon.iconData;
                 resolve(dataTmp);
                 return;
             }
@@ -119,6 +120,11 @@ function auxGetMacApptoDataUrl(file) {
 }
 
 function auxGetFileIcon(file, resolve) {
+    if (!icons) {
+        resolve();
+        return;
+    }
+
     //KTODO: LAS EXTENCIONES CONOCIADAS USAR UN FONTICON
 
     //MAC APP ICON

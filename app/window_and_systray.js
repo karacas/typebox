@@ -9,6 +9,7 @@ const Tray = electron.Tray;
 const __dirnameRoot = app.getAppPath();
 const EventEmitter = require('events');
 const idleTime = require('./idletime.js');
+const realClock = require('./real_clock.js');
 const data_io = require('./data_io.js');
 
 var initiated = false;
@@ -17,6 +18,7 @@ var mainWindow = null;
 var trayIcon = null;
 var win_user_X = -1;
 var win_user_Y = -1;
+var win_max_size = -1;
 var firstPos = false;
 var windowEvent = new EventEmitter();
 var lastShortcut = null;
@@ -25,10 +27,10 @@ var oldWin = null;
 var shouldQuit;
 
 const size_threshold = 4;
-const delay2show = 1200;
+var delay2show = 1200;
 
 function init() {
-    if (initiated) {
+    if (initiated || !app) {
         return;
     }
 
@@ -38,13 +40,20 @@ function init() {
     }
 
     settings = global.sharedObj.settings_manager.getSettings();
+    delay2show = settings.here_are_dragons.delay2show;
 
     setShares();
+    realClock.init(_.result(settings, 'here_are_dragons.realClockOptions'), _.result(settings, 'here_are_dragons.realClockEnabled'));
     registerSystray();
     registerWindow();
     singleInstance();
 
     app.on('before-quit', beforequit);
+
+    if (app.dock) {
+        app.dock.hide();
+    }
+
     initiated = true;
 
     //ON CHANGE SETTINGS
@@ -73,6 +82,10 @@ function init() {
             toast = false;
         }
 
+        if (path === 'icons') {
+            refreshListWindow();
+        }
+
         if (path.includes('here_are_dragons.') && refreshIn_here_are_dragons) {
             refreshListWindow();
         }
@@ -91,18 +104,25 @@ function setShares() {
     $global.app_window_and_systray.unpopWin = unpopWin;
     $global.app_window_and_systray.popWin = popWin;
     $global.app_window_and_systray.setWindowSize = setWindowSize;
+    $global.app_window_and_systray.setMaxSize = setMaxSize;
     $global.app_window_and_systray.openDevTools = openDevTools;
     $global.app_window_and_systray.refreshListWindow = refreshListWindow;
     $global.app_window_and_systray.quit = forceQuit;
     $global.app_window_and_systray.centerWin = centerWin;
-    idleTime.init(windowEvent);
     $global.idleTime = idleTime;
+    $global.realClock = realClock;
+    idleTime.init(windowEvent);
+
     //KTODO: No es mejor que los files tomen los settings de acá?
     $global.settings = settings;
     $global.app_window_and_systray.windowEvent = windowEvent;
 }
 
 function registerWindow() {
+    if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
+        // settings.here_are_dragons.electron_windows_list_options.show = true
+    }
+
     mainWindow = new BrowserWindow(settings.here_are_dragons.electron_windows_list_options);
     mainWindow.loadURL('file://' + __dirname + '/list_view.html');
 
@@ -111,9 +131,13 @@ function registerWindow() {
         mainWindow.setMenuBarVisibility(false);
         mainWindow.setAutoHideMenuBar(true);
     }
+
     if (settings.dev && settings.here_are_dragons.chromiumConsole) {
-        mainWindow.webContents.openDevTools();
+        openDevTools();
+    } else {
+        settings.here_are_dragons.delay2show = 100;
     }
+
     if (settings.verbose) {
         console.log('Win list created');
     }
@@ -130,7 +154,7 @@ function openDevTools() {
     if (!mainWindow) {
         return;
     }
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools(_.result(settings, 'here_are_dragons.chromiumConsoleOptions'));
 }
 
 function refreshListWindow() {
@@ -142,39 +166,46 @@ function refreshListWindow() {
 
     oldWin = mainWindow;
 
-    win_user_X = -1;
-    win_user_Y = -1;
-    firstPos = false;
-
-    settings = global.sharedObj.settings_manager.getSettings();
-
-    //KTODO: percent width
-    mainWindow = new BrowserWindow(settings.here_are_dragons.electron_windows_list_options);
-    windowEvent = new EventEmitter();
-    idleTime.init(windowEvent);
-
-    setShares();
-    handleWindow();
-
-    mainWindow.webContents.loadURL('file://' + __dirname + '/list_view.html');
-
-    if (settings.dev && settings.here_are_dragons.chromiumConsole) {
-        openDevTools();
-    }
-
-    setTimeout(registerMainShortcut);
-    setTimeout(centerWin);
-
-    if (oldWin) {
-        oldWin.closeDevTools();
-        oldWin.close();
-    }
+    mainWindow.closeDevTools();
+    unpopWin();
 
     setTimeout(() => {
+        win_user_X = -1;
+        win_user_Y = -1;
+        firstPos = false;
+
+        settings = global.sharedObj.settings_manager.getSettings();
+
         if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-            popWin();
+            // settings.here_are_dragons.electron_windows_list_options.show = true
         }
-    }, delay2show);
+
+        //KTODO: percent width
+        mainWindow = new BrowserWindow(settings.here_are_dragons.electron_windows_list_options);
+        windowEvent = new EventEmitter();
+        idleTime.init(windowEvent);
+
+        setShares();
+        handleWindow();
+
+        mainWindow.webContents.loadURL('file://' + __dirname + '/list_view.html');
+
+        if (settings.dev && settings.here_are_dragons.chromiumConsole) {
+            openDevTools();
+        }
+
+        setTimeout(registerMainShortcut);
+
+        if (oldWin && oldWin.close) {
+            oldWin.close();
+        }
+
+        setTimeout(() => {
+            if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
+                popWin();
+            }
+        }, delay2show + 10);
+    }, 10);
 }
 
 function registerMainShortcut() {
@@ -227,7 +258,17 @@ function registerSystray() {
         return;
     }
 
-    trayIcon = new Tray(__dirname + '/gfx/systray.png');
+    let trayIconFile = '/assets/icons/systray.png';
+
+    if (process.platform === 'darwin') {
+        trayIconFile = '/assets/icons/systray_pleno_18_white.png';
+    }
+
+    if (process.platform === 'linux' || process.platform === 'freebsd' || process.platform === 'sunos') {
+        trayIconFile = '/assets/icons/systray_pleno_16_black.png';
+    }
+
+    trayIcon = new Tray(__dirname + trayIconFile);
 
     var contextMenu = Menu.buildFromTemplate([
         {
@@ -258,7 +299,7 @@ function registerSystray() {
         }
     ]);
 
-    trayIcon.setToolTip('fuzzy Snipetts');
+    trayIcon.setToolTip('Typebox');
     trayIcon.setContextMenu(contextMenu);
     trayIcon.on('click', togleWin);
 
@@ -271,15 +312,30 @@ function popWin(upKeys) {
     if (!mainWindow) {
         return;
     }
+
+    let isvisible = true;
+
     if (!mainWindow.isVisible()) {
+        isvisible = false;
+        if (app && app.show) {
+            app.show();
+        }
         mainWindow.show();
-        if (mainWindow.isMinimized()) {
+    }
+
+    if (mainWindow.isMinimized()) {
+        isvisible = false;
+        if (mainWindow.restore) {
             mainWindow.restore();
         }
-        windowEvent.emit('SHOW');
     }
+
     if (!mainWindow.isFocused()) {
+        isvisible = false;
         mainWindow.focus();
+    }
+
+    if (!isvisible) {
         windowEvent.emit('SHOW');
     }
 }
@@ -290,18 +346,31 @@ function unpopWin() {
         return;
     }
 
+    let isvisible = false;
+
     if (mainWindow.isFocused()) {
+        isvisible = true;
         mainWindow.blur();
     }
 
     if (mainWindow.isVisible()) {
+        isvisible = true;
+        if (app && app.hide) {
+            app.hide();
+        }
         mainWindow.hide();
+    }
+
+    if (isvisible) {
         windowEvent.emit('HIDE');
     }
 }
 
 function togleWin() {
-    if (mainWindow.isVisible()) {
+    if (!mainWindow) {
+        return;
+    }
+    if (mainWindow.isVisible() && mainWindow.isFocused()) {
         unpopWin();
     } else {
         popWin();
@@ -309,24 +378,47 @@ function togleWin() {
 }
 
 function centerWin(force = false) {
+    if (!mainWindow) {
+        return;
+    }
+
     if (win_user_X !== -1 && win_user_Y !== -1 && !force) {
         mainWindow.setPosition(Math.round(win_user_X), Math.round(win_user_Y));
         return;
     }
+
     mainWindow.center();
 
     setTimeout(() => {
         let setY = mainWindow.getPosition()[1];
+
+        let deltaHeight = Math.round((win_max_size - Math.round(mainWindow.getSize()[1])) * 0.5);
+        if (deltaHeight < size_threshold) deltaHeight = 0;
+        setY -= deltaHeight;
+
         if (!settings.here_are_dragons.startOpen) {
             setY += settings.here_are_dragons.initOffsetY;
         }
+
         if (setY < settings.here_are_dragons.minY) {
             setY = settings.here_are_dragons.minY;
         }
-        mainWindow.setPosition(Math.round(mainWindow.getPosition()[0]), Math.round(setY));
+
+        if (Math.abs(setY - mainWindow.getPosition()[1]) > size_threshold) {
+            mainWindow.setPosition(Math.round(mainWindow.getPosition()[0]), Math.round(setY));
+        }
     }, 1);
 
     firstPos = true;
+}
+
+function setMaxSize(height) {
+    if (!mainWindow) {
+        return;
+    }
+    if (height && height > 0) {
+        win_max_size = height;
+    }
 }
 
 function userMove() {
@@ -348,7 +440,10 @@ function userMove() {
 
 function getValidSizes(w, h) {
     if (!mainWindow || !electron.screen) {
-        return { w, h };
+        return {
+            w,
+            h
+        };
     }
     try {
         let maxW = electron.screen.getPrimaryDisplay().workAreaSize.width;
@@ -366,14 +461,21 @@ function getValidSizes(w, h) {
         if (newW < minW) newW = minW;
         if (newH < minH) newH = minH;
 
-        return { w: newW, h: newH };
+        return {
+            w: newW,
+            h: newH
+        };
     } catch (e) {
-        return { w, h };
+        return {
+            w,
+            h
+        };
     }
 }
 
 var handleResize_lastW = 0;
 var handleResize_lastH = 0;
+
 function handleResize(e) {
     if (!mainWindow) return null;
     try {
@@ -396,7 +498,9 @@ function handleResize(e) {
 
         let widthInFile = Math.round(Number(_.result(settings, 'width')));
         if (Math.abs(newW - widthInFile) > size_threshold) {
-            data_io.dataManager.setAndSaveSettings('userSettings', { width: newW });
+            data_io.dataManager.setAndSaveSettings('userSettings', {
+                width: newW
+            });
         }
 
         setWindowSize(newW, newH);

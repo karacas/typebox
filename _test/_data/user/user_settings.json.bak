@@ -1,0 +1,36 @@
+{
+    "testUserVar": true,
+    "notifications": false,
+    "ignoreThesePackages": [
+        "fs_paths",
+        "fs-icons"
+    ],
+    "ignoreTheseRules": [
+        "krcRules",
+        "krcTestIcons.json"
+    ],
+    "packages": [],
+    "here_are_dragons": {
+        "startOpen": false,
+        "delay2show": 0,
+        "chromiumConsole": false,
+        "deletePackages": false,
+        "installPackages": false,
+        "idleTime": 1000,
+        "logger": {
+            "verboseForceFile": true,
+            "maxSize": 1048576
+        },
+        "internal_packages": [
+            "internal_pack_internal",
+            "internal_pack_last_rules",
+            "internal_pack_favorites",
+            "internal_pack_calc"
+        ],
+        "paths": {
+            "historypath": "_test/_data/history/",
+            "favpath": "_test/_data/favorites/",
+            "logpath": "_test/_data/log/"
+        }
+    }
+}

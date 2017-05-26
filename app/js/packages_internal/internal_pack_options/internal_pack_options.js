@@ -13,7 +13,7 @@ const themeManager = require('../../themeManager.js');
 
 var getRules = level => [
     {
-        title: 'Options',
+        title: 'typebox Options',
         initSort: 15,
         type: ['null'],
         icon: {
@@ -31,7 +31,7 @@ var getRules = level => [
         }
     },
     {
-        title: 'Edit Settings',
+        title: 'Edit typebox Settings',
         path: level,
         type: ['internal', 'null'],
         icon: {
@@ -43,7 +43,7 @@ var getRules = level => [
         }
     },
     {
-        title: 'Open log',
+        title: 'Open typebox log',
         path: level,
         type: ['internal', 'null'],
         icon: {
@@ -55,7 +55,7 @@ var getRules = level => [
         }
     },
     {
-        title: 'Package Manager',
+        title: 'typebox Package Manager',
         path: level,
         icon: {
             type: 'iconFont',
@@ -68,7 +68,7 @@ var getRules = level => [
         }
     },
     {
-        title: 'Quit FussySniperts',
+        title: 'Quit typebox',
         path: level,
         initSort: -10,
         type: ['internal', 'null'],

@@ -5,7 +5,7 @@ const appName = app.getName();
 const path = require('path');
 const os = require('os');
 const ostype = process.platform;
-const appnamedir = 'fuzzysnipetts';
+const appnamedir = 'typebox';
 
 var __dirNameRoot = String(path.normalize(app.getAppPath()));
 
@@ -18,6 +18,7 @@ if (__dirNameRoot.includes('node_modules')) {
 }
 
 //PROD PATHS
+//kTODO: app.getPath('userData')
 if (!Boolean(require('electron-is-dev'))) {
     if (ostype === 'linux' || ostype === 'freebsd' || ostype === 'sunos') {
         __dirNameRoot = path.resolve(app.getPath('home'), '.config/' + appnamedir);
@@ -56,6 +57,7 @@ var settings = {
         cssOverWrite: ''
     },
     font: 'Roboto-Light',
+    icons: true,
     here_are_dragons: {
         bindKeys: [
             { keys: ['esc'], action: 'ESCAPE' },
@@ -78,21 +80,23 @@ var settings = {
         notificationsErrors: true,
         setKeyboardDelay: 15,
         setDefaultDelay: 5,
-        initOffsetY: -180,
+        initOffsetY: -100,
         delayBeforeQuit: 1000,
-        minY: 140,
+        delay2show: 1200,
+        minY: 100,
         chromiumConsole: true,
+        chromiumConsoleOptions: { mode: 'detach' },
         systray: true,
         startOpen: true,
         initEmpty: false,
         deleteSearchOnFire: true,
         unpopAfterCopy: true,
-        printRulePoints: true,
+        printRulePoints: false,
         gotoRootOnShow: false,
         gotoRootOnExec: true,
         debounceTime_actionsKeys: 24,
         debounceTime_searchKeys: 80,
-        debounceTime_viewer: 320,
+        debounceTime_viewer: 420,
         throttleTime_moveList: 0,
         debounceTime_resize_win: 240,
         loadPackages: true,
@@ -102,12 +106,12 @@ var settings = {
         reloadOnPackagesSteeingChange: true,
         historyBackups: true,
         maxKeysInHistory: 10,
-        intervalSetFocusInRoot: 3000,
+        maxItemsInHistory: 320,
         favBackups: true,
         lastBackups: true,
         launcherCacheBackups: false,
-        maxFavsRules: 250,
-        maxLastRules: 250,
+        maxFavsRules: 320,
+        maxLastRules: 320,
         checkPackagesSyntax: true,
         delayToRemoveLoader: 560,
         setAndSaveSettings_enabled: true,
@@ -130,6 +134,7 @@ var settings = {
         debug: {
             testPackage: 'internal_pack_test',
             no_executeAction: false,
+            printRulePoints: true,
             makeDummyRules: 0,
             noUnpopWin: false
         },
@@ -167,6 +172,14 @@ var settings = {
             changeSettings: 'Refresh settings 1'
         },
         search_box_main_window: { hideOnBlur: true },
+        realClockEnabled: false,
+        realClockOptions: {
+            host: 'pool.ntp.org',
+            host: 'time.google.com',
+            port: 123,
+            resolveReference: true,
+            timeout: 10000
+        },
         electron_windows_list_options: {
             height: 140,
             frame: false,
@@ -177,7 +190,7 @@ var settings = {
             fullscreenable: false,
             skipTaskbar: true,
             resizable: true,
-            backgroundColor: '#000',
+            backgroundColor: '#293039',
             show: false,
             minWidth: 580,
             minHeight: 90

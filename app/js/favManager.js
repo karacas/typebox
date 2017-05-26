@@ -7,6 +7,7 @@ const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const createRule = require('../js/rule.js').getNewRule;
 const sharedData = require('../js/sharedData.js');
+const getTime = sharedData.realClock.getTime;
 
 var favItems = Immutable.OrderedMap();
 var favNeedSave = false;
@@ -41,9 +42,9 @@ function push(rulefav) {
         rulefav.favorite = true;
         rulefav.params.original_fav_id = id;
         rulefav.params.original_fav_path = rulefav.path;
-        rulefav.params.lastDate = -Moment(new Date()).unix();
+        rulefav.params.lastDate = getTime();
 
-        favItems = favItems.set(id, rulefav).sortBy(r => r.params.lastDate).slice(0, Config.get('here_are_dragons.maxFavsRules'));
+        favItems = favItems.set(id, rulefav).sortBy(r => -r.params.lastDate).slice(0, Config.get('here_are_dragons.maxFavsRules'));
         favNeedSave = true;
     }
 }
@@ -103,7 +104,7 @@ function loadfav() {
     }
 
     if (load) {
-        favItems = Immutable.OrderedMap(favItemsTmp).sortBy(r => r.params.lastDate).slice(0, Config.get('here_are_dragons.maxFavsRules'));
+        favItems = Immutable.OrderedMap(favItemsTmp);
         Logger.info('[Favs] favItems length: ', favItems.size);
     }
 }

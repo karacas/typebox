@@ -9,7 +9,7 @@ function toaster(obj) {
             obj = { message: obj, sound: false };
         }
 
-        obj.title = obj.title || 'Fuzzy';
+        obj.title = obj.title || 'Typebox';
 
         console.log('[TOASTER]', obj.message);
 

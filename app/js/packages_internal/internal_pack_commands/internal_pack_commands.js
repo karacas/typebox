@@ -12,6 +12,7 @@ const window_and_systray = sharedData.app_window_and_systray;
 /*
  * setUserSettings :{"theme":{"subTheme": "atom"}} !
  * setUserSettings :{"theme":{"subTheme": "cream"}} !
+ * setUserSettings :{"icons":false} !
  * setSubTheme:cream !
  * setSubTheme:atom !
  * addPackage: dummyPackage-2 !
@@ -28,31 +29,36 @@ module.exports = {
                 this.app.quit();
             }
             if (txt === 'c!' || txt === 'console!') {
+                this.app.setQuery('');
                 this.app.openDevTools();
             }
             if (txt === 'log!') {
                 let ConfigFile = Config.get('here_are_dragons.paths.logpath') + Config.get('here_are_dragons.paths.logfile');
+                this.app.setQuery('');
                 this.app.getDriveManager().openFile(ConfigFile);
             }
             if (txt === 'r!' || txt === 'refresh!') {
                 this.app.reloadApp();
             }
             if (txt === 'o!' || txt === 'options!') {
+                this.app.setQuery('');
                 this.app.setPath('internal_pack_options');
             }
             if (txt === 'dc!' || txt === 'deleteCache!') {
+                this.app.setQuery('');
                 this.app.getDriveManager().deleteCaches();
             }
             if (txt === 'duc!' || txt === 'deleteUserData!') {
+                this.app.setQuery('');
                 this.app.getDriveManager().deleteUserData();
             }
             if (txt === 'rt!' || txt === 'reloadTehmes!') {
-                themeManager.reloadThemes();
                 this.app.setQuery('');
+                themeManager.reloadThemes();
             }
             if (txt === 'center!') {
-                window_and_systray.centerWin(true);
                 this.app.setQuery('');
+                window_and_systray.centerWin(true);
             }
             if (txt === 'dm!' || txt === 'devmode!') {
                 this.app.devModeOn();
@@ -98,11 +104,13 @@ module.exports = {
 
             //PACKAGE: addPackage
             if (obj.command === 'addPackage' || obj.command === 'ap') {
+                this.app.setQuery('');
                 packagesManager.addPackage(String(obj.args));
             }
 
             //REMOVE PACKAGE: removePackage
             if (obj.command === 'removePackage' || obj.command === 'rp') {
+                this.app.setQuery('');
                 packagesManager.removePackage(String(obj.args));
             }
 
@@ -123,6 +131,7 @@ module.exports = {
             //TEST: test
             if (obj.command === 'test') {
                 Logger.info('Test', obj.args);
+                this.app.setQuery('');
             }
         });
     }

@@ -5,7 +5,6 @@ const app = electron.app;
 const __dirnameRoot = app.getAppPath();
 const data_io = require('./data_io.js');
 const window_and_systray = require('./window_and_systray.js');
-const idleTime = require('./idletime.js');
 const Menu = electron.Menu;
 const Tray = electron.Tray;
 const argv = require('yargs').argv;
@@ -14,11 +13,15 @@ const Moment = require('moment');
 var initiated = false;
 
 function init() {
-    if (initiated) {
+    if (initiated || !app) {
         return;
     }
 
     try {
+        if (app.dock) {
+            app.dock.hide();
+        }
+
         data_io.init(argv);
 
         console.log('argv:', argv);
@@ -30,7 +33,7 @@ function init() {
         window_and_systray.init();
         initiated = true;
     } catch (e) {
-        console.error('Data_io error', e);
+        console.error('Init error', e);
     }
 
     console.log('\r\n________________________________________\r\n');

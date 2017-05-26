@@ -1,10 +1,11 @@
 body {
 /*Colors*/
   --scale: 1;
-  --backColor: #263238;
-  --backDarkColor: #263238;
-  --backLightColor: #33434b;
-  --accentColor: #88d8d0;
+  --backColor: #293039;
+  --backDarkColor: #293039;
+  --backLightColor: #2d3742;
+  --accentColor: #4ec0a3;
+  --cursorColor: #c0cbcc;
   --textLowColor: #c0cbcc;
   --textHighColor: #fff;
   --hrTagColor: #3b4c54;
@@ -32,7 +33,7 @@ body {
   --ruleNameFontSize: calc(15px * var(--scale));
   --smallFontSize: calc(11px * var(--scale));
 /**/
-  --minWidth: 600px;
+  --minWidth: 400px;
 }
 body.atom {
   --backColor: #282c34;
@@ -41,6 +42,7 @@ body.atom {
   --accentColor: #568af2;
   --textLowColor: #98a0af;
   --textHighColor: #fff;
+  --cursorColor: #fff;
   --hrTagColor: #2f333d;
 }
 body.cream {
@@ -50,6 +52,7 @@ body.cream {
   --accentColor: #5dac7b;
   --textLowColor: #363636;
   --textHighColor: #1f1f1f;
+  --cursorColor: #1f1f1f;
   --hrTagColor: #e2e2e2;
   --lowOpacity: 0.5;
   --medOpacity: 0.75;
@@ -121,6 +124,9 @@ body,
 }
 #boxContentWrapper {
   min-height: 100vh;
+}
+.hidden {
+  display: none !important;
 }
 .animate-spin {
   animation: spin var(--timeSpin) infinite linear;
@@ -328,15 +334,9 @@ body,
   position: absolute;
   top: 0;
   width: auto;
-  display: none;
   right: calc(var(--padding) + var(--iconSize) * 1.85);
   font-size: var(--smallFontSize);
   line-height: var(--itemHeight);
-}
-.ruleListCelda .ruleInfo.show,
-.ruleContext .ruleInfo.show,
-.pathIndicator .ruleInfo.show {
-  display: block;
 }
 .ruleListCelda.noDesc span.ruleDescription,
 .ruleContext.noDesc span.ruleDescription,
@@ -451,7 +451,7 @@ body {
   background: var(--backColor);
 }
 #mainSearch {
-  color: var(--textLowColor);
+  color: var(--cursorColor);
 }
 .contextTitle {
   color: var(--textHighColor);
@@ -465,8 +465,11 @@ body {
   background-color: var(--backDarkColor);
 }
 .ruleListCelda .ruleInfo {
-  color: var(--textHighColor);
-  -webkit-opacity: 0.2;
+  color: var(--backColor);
+}
+.ruleListCelda .ruleInfo.show {
+  color: var(--textLowColor);
+  opacity: 0.5;
 }
 .ruleListCelda .ruleIconContext {
   color: var(--textLowColor);
