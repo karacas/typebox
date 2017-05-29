@@ -30,7 +30,7 @@ module.exports = {
             let packlast = [];
             lasts.forEach(last => {
                 last.persistFuzzy = false;
-                last.path = 'LAST_RULES_PATH';
+                last.path = lastRulesManager.getPath().path;
                 last.addInHistory = false;
                 packlast.push(last);
             });
@@ -38,13 +38,13 @@ module.exports = {
         };
 
         this.app.on('changePath', path => {
-            if (path === 'LAST_RULES_PATH') {
+            if (path === lastRulesManager.getPath().path) {
                 this.pushRules();
             }
         });
 
         this.app.on('avoidCache', path => {
-            if (this.app.getPath().path === 'LAST_RULES_PATH') {
+            if (this.app.getPath().path === lastRulesManager.getPath().path) {
                 this.pushRules();
             }
         });
@@ -56,7 +56,7 @@ module.exports = {
                 type: 'object',
                 id: 'package_internal_remove_last',
                 enabled: obj => {
-                    if (obj.path !== 'LAST_RULES_PATH') return false;
+                    if (obj.path !== lastRulesManager.getPath().path) return false;
                     return true;
                 },
                 exectFunc: obj => {

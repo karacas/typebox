@@ -1,7 +1,7 @@
 {
   "name": "typebox",
   "description": "Launcher",
-  "version": "0.39.10",
+  "version": "0.39.62",
   "license": "MIT",
   "keywords": [
     "desktop",
@@ -21,7 +21,9 @@
     "reinstall": "yarn run clean_dep && yarn install",
     "ncu": "node ./node_modules/npm-check-updates/bin/ncu",
     "clean_dep": "node ./node_modules/rimraf/bin.js ./out && node ./node_modules/rimraf/bin.js ./node_modules",
-    "prettier": "node node_modules/prettier/bin/prettier.js --single-quote --print-width 160 --tab-width 4 --write ./app/**/*.{jsx,js}",
+    "prettierApp": "node node_modules/prettier/bin/prettier.js --single-quote --print-width 160 --tab-width 4 --write ./app/**/*.{jsx,js}",
+    "prettierPacks": "node node_modules/prettier/bin/prettier.js --single-quote --print-width 160 --tab-width 4 --write ./_data/packages_dev/*/*.{jsx,js}",
+    "prettier": "npm run prettierApp && npm run prettierPacks",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "_packagew64": "electron-packager . --asar=true --platform=win32 --arch=x64 --prune=true --out=out --electron-version=1.6.7",
@@ -46,7 +48,7 @@
     "babel-plugin-inferno": "^3.2.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-register": "^6.24.1",
-    "cheerio": "^0.22.0",
+    "cheerio": "^1.0.0-rc.1",
     "deep-diff": "^0.3.8",
     "electron-compile": "^6.4.1",
     "electron-is-accelerator": "^0.1.2",
@@ -70,7 +72,7 @@
     "json5": "^0.5.1",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
-    "mathjs": "^3.13.1",
+    "mathjs": "^3.13.3",
     "mkpath": "^1.0.0",
     "moment": "^2.18.1",
     "mousetrap": "^1.6.1",
@@ -99,7 +101,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.5.1",
     "babel-preset-react": "^6.24.1",
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "chai-as-promised": "^6.0.0",
     "electron-prebuilt-compile": "1.6.11",
     "mocha": "^3.4.2",
@@ -141,40 +143,19 @@
           "rpm"
         ]
       },
-      "electronWinstallerConfig__": {
-        "name": "typebox",
-        "loadingGif": "src/assets/typebox.gif",
-        "iconUrl": "**********************",
-        "setupIcon": "/app/assets/icons/color_128.ico",
-        "setupExe": "setup.exe",
-        "remoteReleases": "https://*************************/update/win32/0.1.1",
-        "remoteToken": "**********************"
+      "___electronWinstallerConfig": {
+        "loadingGif": "src/assets/typebox.gif"
       },
       "electronWinstallerConfig": {
         "name": "typebox",
-        "setupIcon": "app/assets/icons/color_128.ico",
-        "setupExe": "setup.exe"
+        "setupIcon": "app/assets/icons/color_256.ico",
+        "description": "Launcher",
+        "setupExe": "typebox_installer.exe"
       },
       "electronPackagerConfig": {
         "icon": "app/assets/icons/color_256.ico",
         "asar": true,
         "prune": true,
-        "ignore___": [
-          "/^out($|/)",
-          "/_utils",
-          "/_gulp",
-          "/_data",
-          "/_data/caches",
-          "/_dev",
-          "/_sublime",
-          "/test",
-          "\\.exe",
-          "\\.md",
-          "\\.bat",
-          "\\.lock",
-          "/\\.git($|/)",
-          "/\\.gitignore"
-        ],
         "ignore": [
           "/_sublime",
           "/_gulp",

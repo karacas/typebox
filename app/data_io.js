@@ -53,6 +53,7 @@ function init($argv) {
     loadHistory();
     loadfav();
     loadlast();
+    loadHiddenRules();
     configLogger();
     setShares();
     watchSettings();
@@ -363,6 +364,20 @@ function loadLauncherCache() {
 }
 
 //_________________________________________
+//HIDDEN RULES
+//_________________________________________
+function saveHiddenRules(data) {
+    var fileName = getSettings().here_are_dragons.paths.hidden_path + getSettings().here_are_dragons.paths.hiddenRulesfile;
+    dataLoaded.hiddenRules = data;
+    return saveGenericJson(data, fileName);
+}
+
+function loadHiddenRules() {
+    var fileName = getSettings().here_are_dragons.paths.hidden_path + getSettings().here_are_dragons.paths.hiddenRulesfile;
+    dataLoaded.hiddenRules = loadGenericJson(fileName);
+}
+
+//_________________________________________
 //GenericJson
 //_________________________________________
 function saveGenericJson(data, fileName) {
@@ -548,10 +563,10 @@ module.exports.dataManager = {
     dataLoaded: dataLoaded,
     savelast: savelast,
     savefav: savefav,
+    saveHiddenRules: saveHiddenRules,
     getFile: loadFileSync,
     setFile: saveFileSync,
     saveLauncherCache: saveLauncherCache,
-    loadLauncherCache: loadLauncherCache,
     saveGenericJson: saveGenericJson,
     loadGenericJson: loadGenericJson,
     setAndSaveSettings: setAndSaveSettings,

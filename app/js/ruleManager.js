@@ -5,6 +5,7 @@ const removeDiacritics = require('lodash').deburr;
 const moment = require('moment');
 const Immutable = require('immutable');
 const HistoryManager = require('../js/historyManager.js');
+const hiddenRulesManager = require('../js/hiddenRulesManager.js');
 const favManagerIfFav = require('../js/favManager.js').ifFav;
 const PackagesManager = require('../js/packagesManager.js');
 const ListViewStore = require('../js/listViewStore.js');
@@ -93,9 +94,21 @@ function getFilterRules($keys = '', $optPath) {
         });
     }
 
+    //[WIP] Hiiden
+    if (filteredRules.size) {
+        hiddenRulesManager.gethiddenItems().map(r => {
+            let idHidden = _.result(r, 'params.original_hidden_id');
+            if (idHidden) {
+                filteredRules = filteredRules.delete(r.id);
+            }
+        });
+    }
+
     //FUZZY
     let tmpResultFuzzy;
-    if (haveKeys && (keys.length > 1 || !firstKeyCheck)) {
+    //KTODO: Revisar bien esto
+    // if (haveKeys && (keys.length > 1 || !firstKeyCheck)) {
+    if (haveKeys && (keys.length > 0 || !firstKeyCheck)) {
         filteredRules = filteredRules.filter(r => {
             tmpResultFuzzy = r.searchField.score(keys);
             if (r.persistFuzzy && tmpResultFuzzy === 0) {

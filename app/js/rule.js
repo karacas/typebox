@@ -10,7 +10,7 @@ var copyKey = null;
 var enterKey = null;
 var icons = Config.get('icons');
 
-function getStringDescription() {
+function getStringDescription(rule) {
     //Define enter key
     if (!enterKey) {
         enterKey = Config.get('here_are_dragons.bindKeys').find(o => {
@@ -19,6 +19,7 @@ function getStringDescription() {
         enterKey = _.result(enterKey, 'keys[0]') || 'Enter11';
         enterKey = enterKey.toUpperCase();
     }
+
     //Define copy key
     if (!copyKey) {
         copyKey = Config.get('here_are_dragons.bindKeys').find(o => {
@@ -27,6 +28,7 @@ function getStringDescription() {
         copyKey = _.result(copyKey, 'keys[0]') || 'ctrl + c';
         copyKey = copyKey.toUpperCase();
     }
+
     return 'Press ' + enterKey + ' to expand text / ' + copyKey + ' to clipboard';
 }
 
@@ -105,12 +107,17 @@ module.exports.getNewRule = params => {
     //FAV & LAST
     rule.fav_permit = true;
     rule.last_permit = true;
+    rule.hidden_permit = true;
+
     if (params.fav_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.favorite = false;
         rule.fav_permit = false;
     }
     if (params.last_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.last_permit = false;
+    }
+    if (params.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading || rule.favorite) {
+        rule.hidden_permit = false;
     }
 
     rule.params = params.params || {};

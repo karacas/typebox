@@ -40,6 +40,7 @@ function push(rulefav) {
 
         rulefav = _.clone(rulefav);
         rulefav.favorite = true;
+        rulefav.hidden_permit = false;
         rulefav.params.original_fav_id = id;
         rulefav.params.original_fav_path = rulefav.path;
         rulefav.params.lastDate = getTime();
@@ -50,20 +51,25 @@ function push(rulefav) {
 }
 
 function toggle(rulefav) {
-    var id = rulefav.id;
+    let id = rulefav.id;
 
-    if (_.result(rulefav, 'params.original_fav_id')) {
-        id = rulefav.params.original_fav_id;
-    }
-
-    if (id && !favItems.get(id)) {
-        if (rulefav.path !== 'FAVS_PATH') {
-            push(rulefav);
-        }
-    } else {
+    if (id && favItems.get(id)) {
         favItems = favItems.delete(id);
         favNeedSave = true;
+        return;
     }
+
+    id = _.result(rulefav, 'params.original_fav_id');
+    if (id && favItems.get(id)) {
+        favItems = favItems.delete(id);
+        favNeedSave = true;
+        return;
+    }
+
+    if (rulefav.fav_permit === false) return;
+
+    push(rulefav);
+    favNeedSave = true;
 }
 
 function savefav() {

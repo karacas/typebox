@@ -31,7 +31,7 @@ module.exports = {
             favs.forEach(fav => {
                 fav.favorite = true;
                 fav.persistFuzzy = false;
-                fav.path = 'FAVS_PATH';
+                fav.path = favManager.getPath().path;
                 fav.addInHistory = false;
                 packFav.push(fav);
             });
@@ -39,13 +39,13 @@ module.exports = {
         };
 
         this.app.on('changePath', path => {
-            if (path === 'FAVS_PATH') {
+            if (path === favManager.getPath().path) {
                 this.pushRules();
             }
         });
 
         this.app.on('avoidCache', path => {
-            if (this.app.getPath().path === 'FAVS_PATH') {
+            if (this.app.getPath().path === favManager.getPath().path) {
                 this.pushRules();
             }
         });
@@ -62,9 +62,13 @@ module.exports = {
                 enabled: obj => {
                     if (obj.fav_permit === false) return false;
                     if (obj.favorite === true) return false;
+                    if (obj.path === favManager.getPath().path) return false;
                     return true;
                 },
                 exectFunc: obj => {
+                    if (obj.fav_permit === false) return;
+                    if (obj.favorite === true) return;
+                    if (obj.path === favManager.getPath().path) return;
                     this.app.toggle(obj.rule);
                 }
             },
@@ -73,12 +77,12 @@ module.exports = {
                 type: 'object',
                 id: 'package_internal_remove_fav',
                 icon: {
-                    iconClass: 'mdi-star small_ico'
+                    iconClass: 'mdi-star-off small_ico'
                 },
                 enabled: obj => {
-                    if (obj.fav_permit === false) return false;
-                    if (obj.favorite === !true) return false;
-                    return true;
+                    if (obj.path === favManager.getPath().path) return true;
+                    if (obj.favorite === true) return true;
+                    return false;
                 },
                 exectFunc: obj => {
                     this.app.toggle(obj.rule);

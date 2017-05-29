@@ -567,19 +567,24 @@ function singleInstance() {
 }
 
 function closeWindowAndSystray() {
-    if (mainWindow && mainWindow.close) {
-        try {
-            mainWindow.close();
-        } catch (e) {}
-    }
     if (trayIcon && trayIcon.destroy) {
         try {
             trayIcon.destroy();
         } catch (e) {}
     }
+    if (mainWindow && mainWindow.close) {
+        try {
+            mainWindow.close();
+        } catch (e) {}
+    }
 }
 
 function forceQuit() {
+    if (trayIcon && trayIcon.destroy) {
+        try {
+            trayIcon.destroy();
+        } catch (e) {}
+    }
     if (app && app.quit) {
         try {
             app.quit();

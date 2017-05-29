@@ -48,6 +48,9 @@ function getNewDate() {
 module.exports.init = init;
 module.exports.getTime = getTime;
 module.exports.getNewDate = getNewDate;
+module.exports.getTimeOffset = () => {
+    return Number(offset);
+};
 module.exports.haveOffset = () => {
     return Boolean(haveOffset);
 };

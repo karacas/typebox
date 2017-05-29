@@ -40,6 +40,7 @@ function push(rulelast) {
         rulelast.component = null;
         rulelast.fav_permit = false;
         rulelast.last_permit = false;
+        rulelast.hidden_permit = false;
         rulelast.params.original_last_id = rulelast.id;
         rulelast.params.original_last_path = rulelast.path;
         rulelast.params.lastDate = getTime();
@@ -50,11 +51,20 @@ function push(rulelast) {
 }
 
 function remove(rulelast) {
-    var id = _.result(rulelast, 'params.original_last_id') || rulelast.id;
+    let id = _.result(rulelast, 'params.original_last_id');
     if (id && lastItems.get(id)) {
         rulelast.last_permit = false;
         lastItems = lastItems.delete(id);
         lastNeedSave = true;
+        return;
+    }
+
+    id = rulelast.id;
+    if (id && lastItems.get(id)) {
+        rulelast.last_permit = false;
+        lastItems = lastItems.delete(id);
+        lastNeedSave = true;
+        return;
     }
 }
 

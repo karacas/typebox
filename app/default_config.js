@@ -112,6 +112,7 @@ var settings = {
         launcherCacheBackups: false,
         maxFavsRules: 320,
         maxLastRules: 320,
+        maxHiddenRules: 320,
         checkPackagesSyntax: true,
         delayToRemoveLoader: 560,
         setAndSaveSettings_enabled: true,
@@ -123,6 +124,7 @@ var settings = {
             'internal_pack_package_manager',
             'internal_pack_favorites',
             'internal_pack_last_rules',
+            'internal_pack_hidden_rules',
             'internal_pack_paths',
             'internal_pack_calc',
             'internal_pack_launcher'
@@ -158,10 +160,12 @@ var settings = {
             favpath: __dirNameData + 'favorites/',
             lastpath: __dirNameData + 'lastrules/',
             logpath: __dirNameData + 'log/',
+            hidden_path: __dirNameData + 'hidden/',
             //
             user_packagesSettingsName: '_user_settings.json',
             userSettingsFile: 'user_settings.json',
             //
+            hiddenRulesfile: 'hidden_rules.json',
             logfile: 'log%TERMNAME%.log',
             historyfile: 'history%TERMNAME%',
             favfile: 'favorites%TERMNAME%',
@@ -172,7 +176,7 @@ var settings = {
             changeSettings: 'Refresh settings 1'
         },
         search_box_main_window: { hideOnBlur: true },
-        realClockEnabled: false,
+        realClockEnabled: true,
         realClockOptions: {
             host: 'pool.ntp.org',
             host: 'time.google.com',
@@ -210,6 +214,7 @@ if (true && (terminalName === 'prystore2' || terminalName === 'der2')) {
             extensions: ['js', 'jsx', 'json', 'html', 'htm', 'php', 'css', 'styl', 'log', 'txt', 'config']
         }
     ];
+    settings.here_are_dragons.realClockEnabled = true;
 }
 
 module.exports.settings = settings;

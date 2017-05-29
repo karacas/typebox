@@ -133,6 +133,9 @@ module.exports = (name, pack, url) => {
         getRobotJs: () => {
             return robot;
         },
+        getRealClock: () => {
+            return sharedData.realClock;
+        },
         getlastItemsPath: lastRulesManager.getlastItemsPath
     };
 
