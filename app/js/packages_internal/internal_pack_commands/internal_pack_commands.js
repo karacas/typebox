@@ -5,6 +5,8 @@ const sharedData = require('../../sharedData.js');
 const Config = require('../../config.js');
 const Logger = require('../../logger.js');
 const packagesManager = require('../../packagesManager.js');
+const hiddenRulesManager = require('../../hiddenRulesManager.js');
+const favManager = require('../../favManager.js');
 const themeManager = require('../../themeManager.js');
 const JSON5 = require('json5');
 const window_and_systray = sharedData.app_window_and_systray;
@@ -28,7 +30,7 @@ module.exports = {
             if (txt === 'q!' || txt === 'quit!') {
                 this.app.quit();
             }
-            if (txt === 'c!' || txt === 'console!') {
+            if (txt === 'con!' || txt === 'console!') {
                 this.app.setQuery('');
                 this.app.openDevTools();
             }
@@ -48,7 +50,7 @@ module.exports = {
                 this.app.setQuery('');
                 this.app.getDriveManager().deleteCaches();
             }
-            if (txt === 'duc!' || txt === 'deleteUserData!') {
+            if (txt === 'dud!' || txt === 'deleteUserData!') {
                 this.app.setQuery('');
                 this.app.getDriveManager().deleteUserData();
             }
@@ -56,9 +58,29 @@ module.exports = {
                 this.app.setQuery('');
                 themeManager.reloadThemes();
             }
+            if (txt === 'f!' || txt === 'favs!') {
+                this.app.setQuery('');
+                this.app.setPath(favManager.getPath());
+            }
+            if (txt === 'sp!' || txt === 'searchPackages!') {
+                this.app.setQuery('');
+                this.app.setPath('npm-package-plugin');
+            }
+            if (txt === 'pm!' || txt === 'packageManager!') {
+                this.app.setQuery('');
+                this.app.setPath('package_options_menu');
+            }
+            if (txt === 'h!' || txt === 'hiddenItems!') {
+                this.app.setQuery('');
+                this.app.setPath(hiddenRulesManager.getPath());
+            }
             if (txt === 'center!') {
                 this.app.setQuery('');
                 window_and_systray.centerWin(true);
+            }
+            if (txt === 'us!' || txt === 'userSettings!') {
+                let ConfigFile = Config.get('here_are_dragons.paths.user') + Config.get('here_are_dragons.paths.userSettingsFile');
+                this.app.getDriveManager().openFile(ConfigFile);
             }
             if (txt === 'dm!' || txt === 'devmode!') {
                 this.app.devModeOn();

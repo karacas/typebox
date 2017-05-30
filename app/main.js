@@ -1,5 +1,6 @@
 'use strict';
 
+const setupEvents = require('./setupEvents.js');
 const electron = require('electron');
 const app = electron.app;
 const __dirnameRoot = app.getAppPath();
@@ -13,6 +14,11 @@ const Moment = require('moment');
 var initiated = false;
 
 function init() {
+    if (setupEvents.handleSquirrelEvent()) {
+        // squirrel event handled and app will exit in 1000ms, so don't do anything else
+        return;
+    }
+
     if (initiated || !app) {
         return;
     }

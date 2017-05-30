@@ -11,6 +11,7 @@ const EventEmitter = require('events');
 const idleTime = require('./idletime.js');
 const realClock = require('./real_clock.js');
 const data_io = require('./data_io.js');
+const isElevated = require('is-elevated');
 
 var initiated = false;
 var settings = null;
@@ -28,6 +29,7 @@ var shouldQuit;
 
 const size_threshold = 4;
 var delay2show = 1200;
+var elevated = null;
 
 function init() {
     if (initiated || !app) {
@@ -55,6 +57,10 @@ function init() {
     }
 
     initiated = true;
+
+    isElevated().then(ele => {
+        elevated = ele;
+    });
 
     //ON CHANGE SETTINGS
     global.sharedObj.settings_manager.getChangeSettingsEvent().on('change', (path, dif) => {
@@ -109,6 +115,9 @@ function setShares() {
     $global.app_window_and_systray.refreshListWindow = refreshListWindow;
     $global.app_window_and_systray.quit = forceQuit;
     $global.app_window_and_systray.centerWin = centerWin;
+    $global.app_window_and_systray.isElevated = () => {
+        return elevated;
+    };
     $global.idleTime = idleTime;
     $global.realClock = realClock;
     idleTime.init(windowEvent);
@@ -145,7 +154,7 @@ function registerWindow() {
 
     setTimeout(() => {
         if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-            popWin();
+            popWin(true);
         }
     }, delay2show);
 }
@@ -202,7 +211,7 @@ function refreshListWindow() {
 
         setTimeout(() => {
             if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-                popWin();
+                popWin(popWin);
             }
         }, delay2show + 10);
     }, 10);
@@ -222,7 +231,9 @@ function registerMainShortcut() {
         globalShortcut.unregister(currentShortcut);
     }
     if (!globalShortcut.isRegistered(currentShortcut)) {
-        globalShortcut.register(currentShortcut, popWin);
+        globalShortcut.register(currentShortcut, () => {
+            popWin(true);
+        });
     }
 }
 
@@ -260,6 +271,10 @@ function registerSystray() {
 
     let trayIconFile = '/assets/icons/systray.png';
 
+    if (settings.dev) {
+        trayIconFile = '/assets/icons/systray_dev.png';
+    }
+
     if (process.platform === 'darwin') {
         trayIconFile = '/assets/icons/systray_pleno_18_white.png';
     }
@@ -273,20 +288,16 @@ function registerSystray() {
     var contextMenu = Menu.buildFromTemplate([
         {
             label: 'Open [' + settings.mainShortcut + ']',
-            click: popWin
+            click: () => {
+                popWin(true);
+            }
         },
         {
             type: 'separator'
         },
         {
             label: 'About',
-            click: function() {}
-        },
-        {
-            label: 'Refresh Rules',
-            click: function() {
-                refreshListWindow();
-            }
+            click: () => {}
         },
         {
             type: 'separator'
@@ -301,15 +312,15 @@ function registerSystray() {
 
     trayIcon.setToolTip('Typebox');
     trayIcon.setContextMenu(contextMenu);
-    trayIcon.on('click', togleWin);
+    trayIcon.on('click', togleWinDebounce);
 
     if (settings.verbose) {
         console.log('Systray created');
     }
 }
 
-function popWin(upKeys) {
-    if (!mainWindow) {
+function popWin(force = false) {
+    if (!mainWindow || !app) {
         return;
     }
 
@@ -317,21 +328,24 @@ function popWin(upKeys) {
 
     if (!mainWindow.isVisible()) {
         isvisible = false;
-        if (app && app.show) {
-            app.show();
-        }
+        if (app && app.show) app.show();
         mainWindow.show();
     }
 
     if (mainWindow.isMinimized()) {
         isvisible = false;
-        if (mainWindow.restore) {
-            mainWindow.restore();
-        }
+        if (mainWindow.restore) mainWindow.restore();
     }
 
     if (!mainWindow.isFocused()) {
         isvisible = false;
+        mainWindow.focus();
+    }
+
+    if (force) {
+        if (app && app.show) app.show();
+        if (mainWindow.restore) mainWindow.restore();
+        mainWindow.show();
         mainWindow.focus();
     }
 
@@ -340,7 +354,7 @@ function popWin(upKeys) {
     }
 }
 
-function unpopWin() {
+function unpopWin(force = false) {
     //KTODO: Si sale con esc que no haga focus en la app anterior
     if (!mainWindow || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
         return;
@@ -355,16 +369,22 @@ function unpopWin() {
 
     if (mainWindow.isVisible()) {
         isvisible = true;
-        if (app && app.hide) {
-            app.hide();
-        }
+        if (app && app.hide) app.hide();
         mainWindow.hide();
+    }
+
+    if (force) {
+        mainWindow.blur();
+        mainWindow.hide();
+        if (app && app.hide) app.hide();
     }
 
     if (isvisible) {
         windowEvent.emit('HIDE');
     }
 }
+
+let togleWinDebounce = _.debounce(togleWin, 320);
 
 function togleWin() {
     if (!mainWindow) {

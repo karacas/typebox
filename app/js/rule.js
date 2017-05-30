@@ -32,47 +32,47 @@ function getStringDescription(rule) {
     return 'Press ' + enterKey + ' to expand text / ' + copyKey + ' to clipboard';
 }
 
-module.exports.getNewRule = params => {
+module.exports.getNewRule = ruleObj => {
     let rule = {};
 
     rule.isLoading = false;
     rule._internalAct = false;
     rule._noSelect = false;
 
-    if (params && params.isLoading) {
-        params.title = 'loading';
-        params.icon = icon.getLoader();
-        params.addInHistory = false;
-        params.persistFuzzy = true;
+    if (ruleObj && ruleObj.isLoading) {
+        ruleObj.title = 'loading';
+        ruleObj.icon = icon.getLoader();
+        ruleObj.addInHistory = false;
+        ruleObj.persistFuzzy = true;
         rule.isLoading = true;
         rule._internalAct = true;
         rule._noSelect = true;
     }
 
-    if (!params || !params.title || !params.title.length) {
-        Logger.warn('RULE: No title:', params);
+    if (!ruleObj || !ruleObj.title || !ruleObj.title.length) {
+        Logger.warn('RULE: No title:', ruleObj);
         return null;
     }
 
-    rule.title = params.title;
+    rule.title = ruleObj.title;
 
     rule.addInHistory = true;
-    if (params.addInHistory === false) {
+    if (ruleObj.addInHistory === false) {
         rule.addInHistory = false;
     }
 
-    rule.description = params.description;
+    rule.description = ruleObj.description;
 
     //Type
-    if (params.type) {
-        if (_.isArray(params.type)) {
-            rule.type = params.type;
+    if (ruleObj.type) {
+        if (_.isArray(ruleObj.type)) {
+            rule.type = ruleObj.type;
         }
-        if (_.isString(params.type) && params.type !== 'object') {
-            rule.type = [params.type];
+        if (_.isString(ruleObj.type) && ruleObj.type !== 'object') {
+            rule.type = [ruleObj.type];
         }
     } else {
-        if (!_.has(params, 'params.changePath') && !rule._internalAct) {
+        if (!_.has(ruleObj, 'ruleObj.changePath') && !rule._internalAct) {
             rule.type = ['string'];
             rule.description = rule.description || getStringDescription(rule);
         } else {
@@ -84,7 +84,7 @@ module.exports.getNewRule = params => {
         rule.type.push('object');
     }
 
-    if (params._noSelect === true) {
+    if (ruleObj._noSelect === true) {
         rule._noSelect = true;
     }
 
@@ -92,46 +92,46 @@ module.exports.getNewRule = params => {
         rule.type = ['null'];
     }
 
-    rule.initSort = params.initSort || 0;
+    rule.initSort = ruleObj.initSort || 0;
 
-    rule.order = params.order || params.title;
+    rule.order = ruleObj.order || ruleObj.title;
 
-    rule.generateStaticRule = params.generateStaticRule || null;
+    rule.generateStaticRule = ruleObj.generateStaticRule || null;
 
-    rule.component = params.component || null;
+    rule.component = ruleObj.component || null;
 
-    rule.path = String(params.path || '/');
+    rule.path = String(ruleObj.path || '/');
 
-    rule.favorite = Boolean(params.favorite);
+    rule.favorite = Boolean(ruleObj.favorite);
 
     //FAV & LAST
     rule.fav_permit = true;
     rule.last_permit = true;
     rule.hidden_permit = true;
 
-    if (params.fav_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
+    if (ruleObj.fav_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.favorite = false;
         rule.fav_permit = false;
     }
-    if (params.last_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
+    if (ruleObj.last_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.last_permit = false;
     }
-    if (params.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading || rule.favorite) {
+    if (ruleObj.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading || rule.favorite) {
         rule.hidden_permit = false;
     }
 
-    rule.params = params.params || {};
+    rule.params = ruleObj.params || {};
 
-    rule.isVirtual = Boolean(params.isVirtual);
+    rule.isVirtual = Boolean(ruleObj.isVirtual);
 
-    rule.searchField = params.searchField || rule.title;
+    rule.searchField = ruleObj.searchField || rule.title;
 
     rule.searchField = removeDiacritics(rule.searchField.toLowerCase());
 
-    rule.persistFuzzy = params.persistFuzzy || false;
+    rule.persistFuzzy = ruleObj.persistFuzzy || false;
 
     rule.viewer = true;
-    if (params.viewer === false) {
+    if (ruleObj.viewer === false) {
         rule.viewer = false;
     }
 
@@ -147,10 +147,10 @@ module.exports.getNewRule = params => {
 
     rule._distance_keys_cache = -1;
 
-    rule.id = makeHash((params._id || rule.title) + rule.type[0] + rule.path);
+    rule.id = makeHash((ruleObj._id || rule.title) + rule.type[0] + rule.path);
 
     if (icons) {
-        rule.icon = icon.get(params.icon);
+        rule.icon = icon.get(ruleObj.icon);
     }
 
     return rule;

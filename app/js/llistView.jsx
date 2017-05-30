@@ -915,6 +915,7 @@ var getRuleSelected = item => {
             {getIcon(item.icon)}
             <span class="ruleNameAndDesc">
                 <span class="contextTitle">{item.title}</span>
+                <span className="ruleDescription">{item.description}</span>
             </span>
         </span>
     );
@@ -928,6 +929,12 @@ var getStatusBar = params => {
     if (params.dev) {
         dev = 'D';
     }
+
+    let elevatedString = '';
+    if (window_and_systray.isElevated()) {
+        elevatedString = '^';
+    }
+
     return (
         <div id="status-bar">
             <span>
@@ -937,7 +944,7 @@ var getStatusBar = params => {
                 </span>
                 {' \xA0-\xA0 '}
                 <span id="totalTime">{'time: ' + params.data.statusBar_totalTime + 'ms.'}</span>
-                <span className="infoDer">ver: {params.version} . {dev} </span>
+                <span className="infoDer">{elevatedString}ver: {params.version} . {dev} </span>
             </span>
         </div>
     );

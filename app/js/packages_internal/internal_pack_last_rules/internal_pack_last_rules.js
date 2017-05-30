@@ -11,6 +11,7 @@ module.exports = {
             {
                 title: 'Hystory',
                 type: ['Hystory', 'null'],
+                description: '[ shortcut: alt+down ]',
                 icon: lastRulesManager.getIcon(),
                 fav_permit: false,
                 initSort: 10,
@@ -55,6 +56,9 @@ module.exports = {
                 title: 'Remove from Hystory',
                 type: 'object',
                 id: 'package_internal_remove_last',
+                icon: {
+                    iconClass: 'mdi-restart small_ico'
+                },
                 enabled: obj => {
                     if (obj.path !== lastRulesManager.getPath().path) return false;
                     return true;

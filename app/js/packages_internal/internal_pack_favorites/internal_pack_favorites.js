@@ -11,6 +11,7 @@ module.exports = {
             {
                 title: 'Favorites',
                 type: ['Favorites', 'null'],
+                description: '[ command: f! / shortcut: ctrl+shift+f ]',
                 icon: favManager.getIcon(),
                 fav_permit: false,
                 initSort: 5,
@@ -55,6 +56,7 @@ module.exports = {
             {
                 title: 'Add to Favorites',
                 type: 'object',
+                description: '[ shortCut: ctrl+f ]',
                 id: 'package_internal_add_fav',
                 icon: {
                     iconClass: 'mdi-star small_ico'
@@ -75,6 +77,7 @@ module.exports = {
             {
                 title: 'Remove from Favorites',
                 type: 'object',
+                description: '[ shortCut: ctrl+f ]',
                 id: 'package_internal_remove_fav',
                 icon: {
                     iconClass: 'mdi-star-off small_ico'

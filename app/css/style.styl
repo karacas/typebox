@@ -6,7 +6,7 @@ body {
 	--backLightColor: #2d3742; //bar color
 	--accentColor: #4ec0a3; // HighLight /celeste
 	--cursorColor: #c0cbcc; // HighLight /celeste
-	--textLowColor: #c0cbcc; //name color
+	--textLowColor: #ccd8d9; //name color
 	--textHighColor: #ffffff; //name color selected
 	--hrTagColor: #3b4c54; // hr separador
 	--iframeBlendMode: initial
@@ -20,9 +20,9 @@ body {
 	--iconSizeSmall: calc(24px);
 	--propRulesView: 45%;
 	/*Opacity*/
-	--lowOpacity: 0.30;
+	--lowOpacity: 0.25;
 	--medOpacity: 0.5;
-	--hiOpacity: 0.65;
+	--hiOpacity: 0.75;
 	/*Times*/
 	--animSpeedFactor: 1;
 	--timeSpin: 0.25s;
@@ -301,6 +301,7 @@ html, body, #content, #inner-content {
 	.pathName{
 		font-family: var(--mainFont)
 		font-size: var(--smallFontSize)
+		letter-spacing: 0.25px;
 	}
 }
 #mainSearch{
@@ -364,7 +365,7 @@ html, body, #content, #inner-content {
 	}
 	span.ruleDescription{
 		width calc(100% - 100px)
-		letter-spacing: 0px;
+		letter-spacing: 0.25px;
 		display block
 		margin 0
 		font-size: var(--smallFontSize);
@@ -379,6 +380,7 @@ html, body, #content, #inner-content {
 		top 0
 		width auto
 		right: calc(var(--padding) + var(--iconSize) * 1.85);
+		letter-spacing: 0.25px;
 		font-size: var(--smallFontSize);
 		line-height: var(--itemHeight);
 	}
@@ -448,9 +450,9 @@ html, body, #content, #inner-content {
 	left 0
 	bottom 0
 	z-index 10
+	letter-spacing: 0.25px;
 	font-size: var(--smallFontSize);
 	text-rendering: optimizeLegibility;
-	line-height: var(--statusBarHeight)
 	line-height: calc(var(--statusBarHeight));
 	width 100%
 	> span{

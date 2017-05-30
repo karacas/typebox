@@ -304,6 +304,7 @@ function registerExecutors(executor, name) {
         var $executor = {};
         $executor.title = executor.title;
         $executor.type = executor.type;
+        $executor.description = executor.description;
         $executor.exectFunc = executor.exectFunc;
         $executor.enabled = executor.enabled;
         $executor.namePlugin = name;

@@ -24,7 +24,9 @@ var path = {
     icon: icon
 };
 
-function push(rulefav) {
+function push(rulefavObj) {
+    let rulefav = _.cloneDeep(rulefavObj);
+
     if (rulefav.generateStaticRule) rulefav = createRule(rulefav.generateStaticRule(rulefav));
 
     var id = rulefav.id;
@@ -38,7 +40,6 @@ function push(rulefav) {
             favItems = favItems.delete(id);
         }
 
-        rulefav = _.clone(rulefav);
         rulefav.favorite = true;
         rulefav.hidden_permit = false;
         rulefav.params.original_fav_id = id;
@@ -51,25 +52,26 @@ function push(rulefav) {
 }
 
 function toggle(rulefav) {
-    let id = rulefav.id;
+    let deleted = false;
 
+    let id = rulefav.id;
     if (id && favItems.get(id)) {
         favItems = favItems.delete(id);
+        deleted = true;
         favNeedSave = true;
-        return;
     }
 
     id = _.result(rulefav, 'params.original_fav_id');
-    if (id && favItems.get(id)) {
+    if (id && favItems.get(id) && !deleted) {
         favItems = favItems.delete(id);
+        deleted = true;
         favNeedSave = true;
-        return;
     }
 
-    if (rulefav.fav_permit === false) return;
-
-    push(rulefav);
-    favNeedSave = true;
+    if (rulefav.fav_permit === true && !deleted) {
+        push(rulefav);
+        favNeedSave = true;
+    }
 }
 
 function savefav() {

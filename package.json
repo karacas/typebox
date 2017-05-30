@@ -1,11 +1,14 @@
 {
   "name": "typebox",
-  "description": "Launcher",
-  "version": "0.39.62",
+  "description": "Universal & Open Source keystroke launcher",
+  "version": "0.40.98",
   "license": "MIT",
   "keywords": [
     "desktop",
     "electron",
+    "launcher",
+    "keystroke",
+    "productivity",
     "app"
   ],
   "repository": {
@@ -41,6 +44,76 @@
       "output": "_out/installers"
     }
   },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip",
+          "dmg"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "__electronWinstallerConfig": {
+        "iconUrl": "app/assets/icons/color_256.ico",
+        "loadingGif": "./assets/img/install-splash-anim.gif"
+      },
+      "electronWinstallerConfig": {
+        "title": "typebox",
+        "name": "typebox",
+        "description": "typebox launcher",
+        "setupIcon": "app/assets/icons/color_256.ico",
+        "setupExe": "typebox_setup.exe"
+      },
+      "__electronPackagerConfig": {
+        "packageManager": "yarn",
+        "electronVersion": "1.7.2"
+      },
+      "electronPackagerConfig": {
+        "icon": "app/assets/icons/color_256",
+        "asar": true,
+        "prune": true,
+        "overwrite": true,
+        "name": "typebox",
+        "protocol": "typebox://",
+        "appCopyright": "typebox",
+        "win32metadata": {
+          "ProductName": "typebox",
+          "InternalName": "typebox",
+          "FileDescription": "typebox launcher",
+          "CompanyName": "typebox",
+          "OriginalFilename": "typebox.exe"
+        },
+        "ignore": [
+          "/_sublime",
+          "/_gulp",
+          "/_utils",
+          "/_data",
+          "/_dev",
+          "/_test"
+        ]
+      },
+      "electronInstallerDMG": {
+        "icon": "app/assets/icons/color_256.icns"
+      },
+      "electronInstallerDebian": {
+        "icon": "app/assets/icons/color_256.png",
+        "categories": [
+          "productivity"
+        ],
+        "homepage": "https://github.com/karacas/typebox"
+      },
+      "github_repository": {
+        "owner": "karacas",
+        "name": "typebox"
+      }
+    }
+  },
   "dependencies": {
     "all": "^0.0.0",
     "app2png": "^1.0.0",
@@ -67,6 +140,7 @@
     "inferno-component": "^3.3.1",
     "inferno-create-class": "^3.3.1",
     "inferno-create-element": "^3.3.1",
+    "is-elevated": "^2.0.1",
     "is-url": "^1.2.2",
     "isexe": "^2.0.0",
     "json5": "^0.5.1",
@@ -108,69 +182,5 @@
     "npm-check-updates": "^2.11.2",
     "prettier": "^1.3.1",
     "spectron": "^3.7.1"
-  },
-  "electronBuilder__": {
-    "build": {
-      "productName": "typebox",
-      "appId": "typebox.karacas",
-      "asar": true,
-      "win": {
-        "target": "nsis"
-      },
-      "nsis": {
-        "oneClick": false,
-        "allowElevation": false
-      }
-    },
-    "directories": {
-      "output": "/_out",
-      "app": "/app",
-      "buildResources": "/buildResources"
-    }
-  },
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip",
-          "dmg"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "___electronWinstallerConfig": {
-        "loadingGif": "src/assets/typebox.gif"
-      },
-      "electronWinstallerConfig": {
-        "name": "typebox",
-        "setupIcon": "app/assets/icons/color_256.ico",
-        "description": "Launcher",
-        "setupExe": "typebox_installer.exe"
-      },
-      "electronPackagerConfig": {
-        "icon": "app/assets/icons/color_256.ico",
-        "asar": true,
-        "prune": true,
-        "ignore": [
-          "/_sublime",
-          "/_gulp",
-          "/_utils",
-          "/_data",
-          "/_dev",
-          "/_test"
-        ]
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "karacas",
-        "name": "typebox"
-      }
-    }
   }
 }

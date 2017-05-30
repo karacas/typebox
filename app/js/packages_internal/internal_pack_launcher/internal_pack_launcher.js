@@ -193,6 +193,7 @@ module.exports = {
             {
                 title: 'Refresh Launcher Catalog',
                 path: 'internal_pack_aux_dev',
+                description: '[ command: rc! ]',
                 type: ['internal_launcher', 'null'],
                 icon: {
                     iconClass: 'mdi-chevron-right text'
@@ -204,6 +205,7 @@ module.exports = {
             {
                 title: 'Refresh Launcher Catalog',
                 path: 'internal_pack_options',
+                description: '[ command: rc! ]',
                 type: ['internal_launcher', 'null'],
                 icon: {
                     iconClass: 'mdi-cached text'

@@ -280,6 +280,8 @@ function changeSettings() {
     }
 }
 
+let changeSettingsDebounce = _.debounce(changeSettings, 1000);
+
 function watchSettings() {
     var dir = settings.here_are_dragons.paths.user;
     var userSettings = settings.here_are_dragons.paths.userSettingsFile;
@@ -290,7 +292,8 @@ function watchSettings() {
         var dirWatch = path.normalize(path.join(dir + userSettings));
         watch(dirWatch, { recursive: true }, function(evt, name) {
             console.log('%s changed!!!! [4]', name);
-            changeSettings();
+            // changeSettings();
+            changeSettingsDebounce();
         });
     } else {
         console.warn('Cant watch user settings');

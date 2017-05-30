@@ -16,6 +16,7 @@ module.exports = {
                     iconClass: 'mdi-eye-outline-off text'
                 },
                 fav_permit: false,
+                description: '[ command: h! ]',
                 path: 'internal_pack_options',
                 initSort: 10,
                 params: {

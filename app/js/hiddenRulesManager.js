@@ -24,8 +24,10 @@ var path = {
     icon: icon
 };
 
-function push(hiddenItem) {
-    var id = hiddenItem.id;
+function push($hiddenItem) {
+    let hiddenItem = _.cloneDeep($hiddenItem);
+
+    let id = hiddenItem.id;
 
     if (!_.includes(hiddenItem.type, 'object')) {
         return;
@@ -40,7 +42,6 @@ function push(hiddenItem) {
             hiddenItems = hiddenItems.delete(id);
         }
 
-        hiddenItem = _.clone(hiddenItem);
         hiddenItem.component = null;
         hiddenItem.fav_permit = false;
         hiddenItem.last_permit = false;
@@ -58,14 +59,12 @@ function remove(hiddenItem) {
     if (id && hiddenItems.get(id)) {
         hiddenItems = hiddenItems.delete(id);
         hiddenNeedSave = true;
-        return;
     }
 
     id = hiddenItem.id;
     if (id && hiddenItems.get(id)) {
         hiddenItems = hiddenItems.delete(id);
         hiddenNeedSave = true;
-        return;
     }
 }
 
@@ -103,7 +102,7 @@ function loadHiddenRules() {
         var hiddenItemsTmp = sharedData.dataManager.dataLoaded.hiddenRules.hiddenItems;
     } else {
         var load = false;
-        Logger.warn('[HiddenRules] load error: no hidden');
+        Logger.warn('[HiddenRules] load: no hidden file');
     }
 
     if (load) {

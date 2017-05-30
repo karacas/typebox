@@ -6,7 +6,7 @@ body {
   --backLightColor: #2d3742;
   --accentColor: #4ec0a3;
   --cursorColor: #c0cbcc;
-  --textLowColor: #c0cbcc;
+  --textLowColor: #ccd8d9;
   --textHighColor: #fff;
   --hrTagColor: #3b4c54;
   --iframeBlendMode: initial;
@@ -20,9 +20,9 @@ body {
   --iconSizeSmall: calc(24px);
   --propRulesView: 45%;
 /*Opacity*/
-  --lowOpacity: 0.3;
+  --lowOpacity: 0.25;
   --medOpacity: 0.5;
-  --hiOpacity: 0.65;
+  --hiOpacity: 0.75;
 /*Times*/
   --animSpeedFactor: 1;
   --timeSpin: 0.25s;
@@ -249,6 +249,7 @@ body,
 #mainSearchWrapper .pathIndicator .pathName {
   font-family: var(--mainFont);
   font-size: var(--smallFontSize);
+  letter-spacing: 0.25px;
 }
 #mainSearch {
   outline: none;
@@ -318,7 +319,7 @@ body,
 .ruleContext span.ruleDescription,
 .pathIndicator span.ruleDescription {
   width: calc(100% - 100px);
-  letter-spacing: 0px;
+  letter-spacing: 0.25px;
   display: block;
   margin: 0;
   font-size: var(--smallFontSize);
@@ -335,6 +336,7 @@ body,
   top: 0;
   width: auto;
   right: calc(var(--padding) + var(--iconSize) * 1.85);
+  letter-spacing: 0.25px;
   font-size: var(--smallFontSize);
   line-height: var(--itemHeight);
 }
@@ -400,9 +402,9 @@ body,
   left: 0;
   bottom: 0;
   z-index: 10;
+  letter-spacing: 0.25px;
   font-size: var(--smallFontSize);
   text-rendering: optimizeLegibility;
-  line-height: var(--statusBarHeight);
   line-height: calc(var(--statusBarHeight));
   width: 100%;
 }

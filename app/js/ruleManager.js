@@ -94,7 +94,7 @@ function getFilterRules($keys = '', $optPath) {
         });
     }
 
-    //[WIP] Hiiden
+    //Filter Hidden rules
     if (filteredRules.size) {
         hiddenRulesManager.gethiddenItems().map(r => {
             let idHidden = _.result(r, 'params.original_hidden_id');

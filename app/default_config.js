@@ -75,6 +75,7 @@ var settings = {
         os: null,
         idleTime: 30000,
         idleTimeHeavy: 900000,
+        dateFormat: 'DD-MM-YY, hh:mm',
         disableKeysOnSearchBox: ['up', 'down', 'pageup', 'pagedown', 'home', 'end'],
         verboseTimes: true,
         notificationsErrors: true,

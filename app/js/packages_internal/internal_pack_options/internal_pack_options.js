@@ -24,6 +24,7 @@ var getRules = level => [
             type: 'iconFont',
             iconClass: 'feather-toggle palette-Amber-A200 text'
         },
+        description: '[ command: o! ]',
         params: {
             changePath: {
                 path: level
@@ -33,6 +34,7 @@ var getRules = level => [
     {
         title: 'Edit typebox Settings',
         path: level,
+        description: '[ command:  us! ]',
         type: ['internal', 'null'],
         icon: {
             type: 'iconFont',
@@ -46,6 +48,7 @@ var getRules = level => [
         title: 'Open typebox log',
         path: level,
         type: ['internal', 'null'],
+        description: '[ command: log! ]',
         icon: {
             type: 'iconFont',
             iconClass: 'mdi-clock-alert'
@@ -57,6 +60,7 @@ var getRules = level => [
     {
         title: 'typebox Package Manager',
         path: level,
+        description: '[ command: pm! ]',
         icon: {
             type: 'iconFont',
             iconClass: 'mdi-package'
@@ -72,6 +76,7 @@ var getRules = level => [
         path: level,
         initSort: -10,
         type: ['internal', 'null'],
+        description: '[ command: quit! / q! ]',
         icon: {
             type: 'iconFont',
             iconClass: 'feather-power'

@@ -37,6 +37,7 @@ module.exports = {
                         {
                             title: txt + ' = ' + exp,
                             addInHistory: false,
+                            hidden_permit: false,
                             persistFuzzy: true,
                             path: this.name,
                             icon: calcIcon,

@@ -21,10 +21,12 @@
             "verboseForceFile": true,
             "maxSize": 1048576
         },
+        "realClockEnabled": false,
         "internal_packages": [
             "internal_pack_internal",
             "internal_pack_last_rules",
             "internal_pack_favorites",
+            "internal_pack_hidden_rules",
             "internal_pack_calc"
         ],
         "paths": {

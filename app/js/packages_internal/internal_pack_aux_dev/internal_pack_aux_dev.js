@@ -7,6 +7,7 @@ const Config = require('../../config.js');
 const Logger = require('../../logger.js');
 const packagesManager = require('../../packagesManager.js');
 const themeManager = require('../../themeManager.js');
+const rimraf = require('rimraf');
 
 var getRules = level => [
     {
@@ -151,6 +152,17 @@ var getRules = level => [
         params: {
             action: 'delete_user_data'
         }
+    },
+    {
+        title: 'Reset last/fav/hist/hidden',
+        path: level,
+        type: ['internal', 'null'],
+        icon: {
+            iconClass: 'mdi-chevron-right text'
+        },
+        params: {
+            action: 'delete_rules_flasg_data'
+        }
     }
 ];
 
@@ -210,6 +222,15 @@ module.exports = {
                     }
                     if (action === 'delete_user_data') {
                         this.app.getDriveManager().deleteUserData();
+                    }
+                    if (action === 'delete_rules_flasg_data') {
+                        sharedData.dataManager.saveHiddenRules({});
+                        sharedData.dataManager.saveHistory({});
+                        sharedData.dataManager.savefav({});
+                        sharedData.dataManager.savelast({});
+                        setTimeout(() => {
+                            this.app.reloadApp();
+                        }, 0);
                     }
                     if (action === 'oepn_data_path') {
                         this.app.getDriveManager().openFile(Config.get('here_are_dragons.paths.rootDataStored'));

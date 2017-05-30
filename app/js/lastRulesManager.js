@@ -3,6 +3,7 @@ const _ = require('lodash');
 const Moment = require('moment');
 const auxjs = require('../auxfs.js');
 const Immutable = require('immutable');
+const hiddenRulesManager = require('../js/hiddenRulesManager.js');
 const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
@@ -23,8 +24,10 @@ var path = {
     icon: icon
 };
 
-function push(rulelast) {
-    var id = rulelast.id;
+function push(rulefavObj) {
+    let rulelast = _.cloneDeep(rulefavObj);
+
+    let id = rulelast.id;
 
     if (!_.includes(rulelast.type, 'object')) {
         return;
@@ -35,11 +38,11 @@ function push(rulelast) {
             lastItems = lastItems.delete(id);
         }
 
-        rulelast = _.clone(rulelast);
         rulelast.favorite = false;
         rulelast.component = null;
         rulelast.fav_permit = false;
         rulelast.last_permit = false;
+        rulelast.description = '(' + Moment(getTime()).format(Config.get('here_are_dragons.dateFormat')) + ') ' + (rulelast.description || '');
         rulelast.hidden_permit = false;
         rulelast.params.original_last_id = rulelast.id;
         rulelast.params.original_last_path = rulelast.path;
@@ -56,7 +59,6 @@ function remove(rulelast) {
         rulelast.last_permit = false;
         lastItems = lastItems.delete(id);
         lastNeedSave = true;
-        return;
     }
 
     id = rulelast.id;
@@ -64,7 +66,6 @@ function remove(rulelast) {
         rulelast.last_permit = false;
         lastItems = lastItems.delete(id);
         lastNeedSave = true;
-        return;
     }
 }
 
@@ -102,11 +103,11 @@ function loadlast() {
         var lastItemsTmp = sharedData.dataManager.dataLoaded.last.lastItems;
     } else {
         var load = false;
-        Logger.warn('[Lasts] load last error: no last');
+        Logger.warn('[Lasts] load last: no last file');
     }
 
     if (load) {
-        lastItems = Immutable.OrderedMap(lastItemsTmp);
+        lastItems = Immutable.OrderedMap(lastItemsTmp).sortBy(r => -r.params.lastDate);
         Logger.info('[Lasts] lastItems length: ', lastItems.size);
     }
 }
@@ -120,10 +121,35 @@ module.exports.push = push;
 module.exports.remove = remove;
 module.exports.loadlast = loadlast;
 module.exports.getlastItems = () => {
-    return lastItems.toArray();
+    let result = lastItems;
+
+    //FILTER HIDDEN
+    if (result.size) {
+        hiddenRulesManager.gethiddenItems().map(r => {
+            let idHidden = _.result(r, 'params.original_hidden_id');
+            if (idHidden) {
+                result = result.delete(r.id);
+            }
+        });
+    }
+
+    //FITER PATH-DRIVE
+    result.map(r => {
+        if (
+            (r.params && r.params.original_last_path && r.params.original_last_path.includes('typebox-path')) ||
+            (r.params && r.params.original_fav_path && r.params.original_fav_path.includes('typebox-path'))
+        ) {
+            result = result.delete(r.id);
+        }
+    });
+
+    return result.sortBy(r => -r.params.lastDate).toArray();
+};
+module.exports.getAllLastItems = () => {
+    return lastItems.sortBy(r => -r.params.lastDate).toArray();
 };
 module.exports.getlastItemsPath = path => {
-    return lastItems.filter(v => v.params.original_last_path === path).toArray();
+    return lastItems.filter(v => v.params.original_last_path === path).sortBy(r => -r.params.lastDate).toArray();
 };
 module.exports.getIcon = () => {
     return icon;

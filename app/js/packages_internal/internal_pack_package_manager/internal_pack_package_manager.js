@@ -25,6 +25,7 @@ module.exports = {
                 title: 'Search Packages',
                 type: ['npm-package-plugin-root'],
                 path: 'package_options_menu',
+                description: '[ command: sp! ]',
                 icon: {
                     type: 'iconFont',
                     iconClass: 'mdi-package text'
