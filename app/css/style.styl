@@ -108,6 +108,7 @@ html {
 		padding: 0;
 		font-family var(--mainFont)
 		font-weight: var(--mainFontWeight);
+		zoom 1 !important
 	}
 }
 
@@ -138,7 +139,6 @@ html, body, #content, #inner-content {
 	text-align right
 	-webkit-user-select: none;
 	-webkit-app-region: drag;
-	cursor pointer
 	z-index 5
 }
 
@@ -296,6 +296,7 @@ html, body, #content, #inner-content {
 	padding 0 var(--padding)
 	height var(--searchBoxHeight)
 	position relative
+	overflow hidden
 }
 #mainSearchWrapper .pathIndicator{
 	.pathName{
@@ -304,7 +305,7 @@ html, body, #content, #inner-content {
 		letter-spacing: 0.25px;
 	}
 }
-#mainSearch{
+#mainSearch, #mainSearchCopy, #searchResult, #searchResultWrapp{
 	outline: none;
 	background none
 	border none
@@ -321,6 +322,28 @@ html, body, #content, #inner-content {
 	transform: translate(0, -50%);
 	font-weight: var(--mainFontWeight);
 }
+#searchResultWrapp{
+	top 50%
+}
+#mainSearchCopy{
+	opacity 0
+}
+#mainSearchCopy, #searchResult{
+	line-height var(--searchBoxHeight)
+	transform: translate(0, 0);
+	top initial
+	left initial
+	position relative
+	display inline-block
+	letter-spacing: 0.10px;
+	width auto
+	pointer-events none
+	user-select none
+}
+#searchResult{
+	margin-left 5px
+}
+
 .mainSearchIcon {
 	position absolute
 	right var(--padding)
@@ -336,8 +359,10 @@ html, body, #content, #inner-content {
 	overflow-y: hidden;
 }
 
-.ruleListCelda, .ruleContext, .pathIndicator{
+.ruleListCelda, .ruleContext{
 	position relative
+}
+.ruleListCelda, .ruleContext, .pathIndicator{
 	cursor pointer
 	overflow hidden
 	margin 0
@@ -352,6 +377,22 @@ html, body, #content, #inner-content {
 		margin 0
 		line-height: var(--itemHeight);
 		height: var(--itemHeight);
+	}
+	span.ruleNameAndDesc.newRule:after{
+		content: "new!";
+		display: block;
+		position: absolute;
+		top: 50%;
+		margin-top 2px
+		right: 58px;
+		line-height: 1.2;
+		padding: 2px 5px;
+		border-radius: 2px;
+		text-align: center;
+		pointer-events none
+		font-size: var(--smallFontSize);
+		transform: translate(0%, -50%);
+		drop-shadow 0 1px 0 rgba(0,0,0,0.25);
 	}
 	span.ruleName{
 		display block
@@ -377,7 +418,7 @@ html, body, #content, #inner-content {
 	}
 	.ruleInfo{
 		position absolute
-		top 0
+		top 2px
 		width auto
 		right: calc(var(--padding) + var(--iconSize) * 1.85);
 		letter-spacing: 0.25px;
@@ -411,8 +452,8 @@ html, body, #content, #inner-content {
 }
 .pathIndicator .pathName{
 	position absolute
-	top: -6px;
-	margin-left: 1px;
+	top: -10px;
+	margin-left: 2px;
 	line-height calc( var(--searchBoxHeight) * 0.75);
 	font-size: calc(var(--ruleNameFontSize) * 1.5);
 	width auto
@@ -473,6 +514,7 @@ html, body, #content, #inner-content {
 	-webkit-opacity 0
 }
 
+
 //________________________
 //SCROLL
 //________________________
@@ -519,11 +561,15 @@ html, body{
 #mainSearch {
 	color: var(--cursorColor);
 }
+#mainSearchCopy, #searchResult{
+	color var(--textHighColor)
+	color var(--accentColor)
+}
 .contextTitle{
 	color: var(--textHighColor);
 }
 .pathIndicator .pathName{
-	color var(--textLowColor)
+	color var(--textHighColor)
 	-webkit-opacity var(--hiOpacity)
 }
 #mainSearchWrapper, #status-bar{
@@ -533,18 +579,24 @@ html, body{
 //RULES
 .ruleListCelda .ruleInfo{
 	color var(--backColor)
+	opacity 0.1
 }
-.ruleListCelda .ruleInfo.show{
+.ruleListCelda .ruleInfo.showRuleScore{
 	color var(--textLowColor)
-	opacity 0.5
+	opacity 0.6
 }
-.ruleListCelda .ruleIconContext{
+.ruleListCelda .ruleIconContext i{
 	color var(--textLowColor)
 	-webkit-opacity var(--medOpacity)
+	&.mdi-star{
+		-webkit-opacity var(--hiOpacity)
+		color var(--accentColor)
+	}
 	&:hover{
 		-webkit-opacity 1
 	}
 }
+
 
 span.ruleName, .mainSearchIcon{
 	color var(--textLowColor)
@@ -562,6 +614,13 @@ span.ruleName, .mainSearchIcon{
 	}
 }
 
+span.ruleNameAndDesc.newRule:after{
+	color: var(--backColor)
+	background-color var(--accentColor)
+	MX_transition()
+	opacity 1
+}
+
 .ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight{
 	background-color var(--backLightColor)
 	.ruleName{
@@ -572,6 +631,10 @@ span.ruleName, .mainSearchIcon{
 	}
 	.ruleInfo{
 		// -webkit-opacity 1
+	}
+	.newRule:after{
+		color: var(--textHighColor)
+		background-color var(--accentColor)
 	}
 }
 

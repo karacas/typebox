@@ -8,7 +8,7 @@ const electronlog = require('electron-log');
 
 const NULL_FUNCT = () => null;
 
-var logger = {
+const LOGGER = {
     log: console.log,
     info: console.info,
     error: console.error,
@@ -26,16 +26,16 @@ var logger = {
 };
 
 //PRODUCTION or FORCE
-if (!Config.get('dev') || Config.get('here_are_dragons.logger.verboseForceFile')) {
+if (!Config.get('dev') || Config.get('here_are_dragons.LOGGER.verboseForceFile')) {
     if (electronlog.log) {
-        logger.log = electronlog.log;
+        LOGGER.log = electronlog.log;
     } else {
-        logger.log = NULL_FUNCT;
+        LOGGER.log = NULL_FUNCT;
     }
-    if (electronlog.info) logger.info = electronlog.info;
-    if (electronlog.warn) logger.warn = electronlog.warn;
+    if (electronlog.info) LOGGER.info = electronlog.info;
+    if (electronlog.warn) LOGGER.warn = electronlog.warn;
 
-    logger.error = (...args) => {
+    LOGGER.error = (...args) => {
         if (Config.get('here_are_dragons.notificationsErrors')) {
             //KTODO: 2LangModule
             sharedData.toaster.notify('An error had occured. Please see the log file.');
@@ -43,19 +43,17 @@ if (!Config.get('dev') || Config.get('here_are_dragons.logger.verboseForceFile')
         if (electronlog.error) electronlog.error(...args);
     };
 
-    logger.debug = NULL_FUNCT;
-    logger.group = NULL_FUNCT;
-    logger.groupEnd = NULL_FUNCT;
-
-    logger.info('\r\n\r\n________________________________________________________________________________\r\n\r\n');
+    LOGGER.debug = NULL_FUNCT;
+    LOGGER.group = NULL_FUNCT;
+    LOGGER.groupEnd = NULL_FUNCT;
 }
 
-logger.info('[START APP], Settings:');
+LOGGER.info('[START APP RENDER], Settings:');
 
-if (!Config.get('dev') || Config.get('here_are_dragons.logger.verboseForceFile')) {
-    logger.info(JSON.stringify(Config.getAll(), null, 2));
+if (!Config.get('dev') || Config.get('here_are_dragons.LOGGER.verboseForceFile')) {
+    LOGGER.info(JSON.stringify(Config.getAll(), null, 2));
 } else {
-    logger.info(Config.getAll());
+    LOGGER.info(Config.getAll());
 }
 
-module.exports = logger;
+module.exports = LOGGER;

@@ -18,6 +18,8 @@ function executeRule($rule, keys, $objExec, event = null) {
         return;
     }
 
+    let deleteSearchOnFire = true;
+
     if ($rule.generateStaticRule) $rule = getNewRule($rule.generateStaticRule($rule));
 
     if (Config.get('here_are_dragons.debug.no_executeAction')) {
@@ -25,14 +27,14 @@ function executeRule($rule, keys, $objExec, event = null) {
     }
 
     //MAKE RULEOBJ
-    var ruleObj = {
+    let ruleObj = {
         rule: Auxjs.cloneDeep($rule),
         keys: keys,
         path: ListViewStore.store.getState().rulesPath,
         event: event
     };
 
-    var ruleObjPrint = Auxjs.cloneDeep(ruleObj);
+    let ruleObjPrint = Auxjs.cloneDeep(ruleObj);
 
     if (_.result(ruleObjPrint, 'rule.icon.iconData')) {
         ruleObjPrint.rule.icon.iconData = null;
@@ -52,7 +54,7 @@ function executeRule($rule, keys, $objExec, event = null) {
 
     //If exec is String
     if ($objExec && _.isString($objExec)) {
-        var executor = PackagesManager.getExecutorById($objExec);
+        let executor = PackagesManager.getExecutorById($objExec);
         if (executor) {
             $objExec = executor;
         }
@@ -64,7 +66,7 @@ function executeRule($rule, keys, $objExec, event = null) {
         //EXECUTOR
         if ($objExec.exectFunc && $objExec.type && _.has(ruleObj, 'rule.type') && _.includes(ruleObj.rule.type, $objExec.type)) {
             try {
-                $objExec.exectFunc(ruleObj);
+                deleteSearchOnFire = $objExec.exectFunc(ruleObj);
             } catch (e) {
                 Logger.error('objExec exectFunc:', e, $objExec, $objExec.type);
             }
@@ -73,12 +75,12 @@ function executeRule($rule, keys, $objExec, event = null) {
             return;
         }
     } else if (_.has(ruleObj, 'rule.params.changePath')) {
-        var path = _.cloneDeep(ruleObj.rule.params.changePath);
+        let path = _.cloneDeep(ruleObj.rule.params.changePath);
         if (!path.icon) path.icon = ruleObj.rule.icon;
         ListViewStore.storeActions.changeRulesPath(path);
     } else {
         //DEFAULT EXECUTER
-        PackagesManager.executeDefaultAction(ruleObj);
+        deleteSearchOnFire = PackagesManager.executeDefaultAction(ruleObj);
     }
 
     //SAVE IN HISTORY
@@ -88,6 +90,8 @@ function executeRule($rule, keys, $objExec, event = null) {
     LastRulesManager.push(ruleObj.rule);
 
     Logger.info('End rule fire');
+
+    return deleteSearchOnFire;
 }
 
 function auxCallExecutors(rule) {

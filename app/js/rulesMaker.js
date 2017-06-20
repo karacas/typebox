@@ -29,11 +29,11 @@ function makeRulesfromFolder(folder) {
 
 function pushRulesFromFile(fileRule) {
     Logger.info('[Rules] Add file rules:', fileRule);
-    var data = sharedData.dataManager.getFile(fileRule, 'JSON5');
+    let data = sharedData.dataManager.getFile(fileRule, 'JSON5');
     if (!data || !data.rules) {
         return;
     }
-    var ignoreTheseRules = Config.get('ignoreTheseRules');
+    let ignoreTheseRules = Config.get('ignoreTheseRules');
     if (!checkInList(fileRule, ignoreTheseRules)) {
         pushRulePack(data.rules);
     } else {
@@ -42,7 +42,7 @@ function pushRulesFromFile(fileRule) {
 }
 
 function makeRulesTest() {
-    var tmpPack = Array.from(new Array(Config.get('here_are_dragons.debug.makeDummyRules')), (x, i) => i).map(i => {
+    let tmpPack = Array.from(new Array(Config.get('here_are_dragons.debug.makeDummyRules')), (x, i) => i).map(i => {
         return {
             title: 'Test ' + i,
             params: {

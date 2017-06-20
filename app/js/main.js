@@ -17,6 +17,7 @@ require('../js/packagesManager.js').makePackages().then(() => {
     require('../js/favManager.js').loadfav();
     require('../js/lastRulesManager.js').loadlast();
     require('../js/hiddenRulesManager.js').loadHiddenRules();
+    require('../js/newsManager.js').loadnews();
 
     sharedData.app_window_and_systray.windowEvent.emit('mainWindowReady');
 });

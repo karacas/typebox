@@ -6,7 +6,8 @@ const moment = require('moment');
 const Immutable = require('immutable');
 const HistoryManager = require('../js/historyManager.js');
 const hiddenRulesManager = require('../js/hiddenRulesManager.js');
-const favManagerIfFav = require('../js/favManager.js').ifFav;
+const favManager = require('../js/favManager.js');
+const newsManager = require('../js/newsManager.js');
 const PackagesManager = require('../js/packagesManager.js');
 const ListViewStore = require('../js/listViewStore.js');
 const createRule = require('../js/rule.js').getNewRule;
@@ -23,6 +24,7 @@ let virtaulrules = Immutable.OrderedMap();
 let lastRulesCache = Immutable.OrderedMap();
 let lastRulesQuery = null;
 let logTimes = Config.get('here_are_dragons.verboseTimes');
+let filteredRules = Immutable.OrderedMap();
 
 function resetCaches() {
     cache_paths = Immutable.OrderedMap();
@@ -49,6 +51,7 @@ function getFilterRules($keys = '', $optPath) {
     let haveKeys = keys.length !== 0;
     let sortBy = optPath.sortBy;
     let avoidCache = optPath.avoidCache;
+    let checkNews = optPath.checkNews;
 
     if (sortBy) {
         sort = true;
@@ -74,7 +77,7 @@ function getFilterRules($keys = '', $optPath) {
     if (!cache_paths.get(path)) {
         cache_paths = cache_paths.set(path, rules.filter(v => v.path === path));
     }
-    let filteredRules = cache_paths.get(path);
+    filteredRules = cache_paths.get(path);
 
     //CACHE FIRST KEY
     let firstKeyCheck = false;
@@ -102,6 +105,19 @@ function getFilterRules($keys = '', $optPath) {
                 filteredRules = filteredRules.delete(r.id);
             }
         });
+    }
+
+    //FAV
+    if (filteredRules.size) {
+        favManager.getFavItems().map(r => {
+            let ruleFav = filteredRules.get(r.id);
+            if (ruleFav) ruleFav.favorite = true;
+        });
+    }
+
+    // MARK NEWS NEWS
+    if (checkNews) {
+        newsManager.checkNews(filteredRules, optPath);
     }
 
     //FUZZY
@@ -189,8 +205,19 @@ function score_addMatchesRulesHistoryPoints($filteredRules, keys) {
 
     let timeStartH = new moment(new Date());
 
-    //MATCH: historyItemsKeys con rules para _points_current_key
+    let scoreNoKeys = 1;
+    let scoreDistanceKeys = 0;
+    let scoreCurrentKey = 0;
+    let scoreNew = 30;
+    let scoreFav = 10;
+
     if (haveKeys) {
+        scoreNoKeys = 0.1;
+        scoreDistanceKeys = 1;
+        scoreCurrentKey = 10;
+        scoreNew = 1;
+        scoreFav = 2.5;
+        //MATCH: historyItemsKeys con rules para _points_current_key
         let keysArrTpm = $historyItemsKeys.get(keys);
         if (keysArrTpm && _.isArray(keysArrTpm)) {
             keysArrTpm.forEach(o => (tmp_map_historyItemsMatchKeys = tmp_map_historyItemsMatchKeys.set(o.id, o._points_current_key)));
@@ -216,18 +243,10 @@ function score_addMatchesRulesHistoryPoints($filteredRules, keys) {
         tmp_r_id = r.id;
         tmp_r_hist = r.addInHistory;
 
-        if (r.favorite === false) {
-            r.favorite = false;
-        } else {
-            r.favorite = favManagerIfFav(tmp_r_id);
-        }
-
-        if (tmp_r_hist) {
-            allNoHistory = false;
-        }
+        if (tmp_r_hist) allNoHistory = false;
 
         //MATCH: Fuzzy
-        if (true === haveKeys) {
+        if (haveKeys) {
             if (r._distance_keys_cache !== -1) {
                 r._distance_keys = r._distance_keys_cache;
             } else {
@@ -235,8 +254,9 @@ function score_addMatchesRulesHistoryPoints($filteredRules, keys) {
             }
         }
 
+        //KTODO: No se puede hacer por  fuera? como los favs?
         //MATCH: historyItems/rules >_points
-        if (true === tmp_r_hist) {
+        if (tmp_r_hist) {
             tmp_historyItemsMatch = $historyItems.get(tmp_r_id);
             if (undefined !== tmp_historyItemsMatch) {
                 r._points = tmp_historyItemsMatch._points;
@@ -244,7 +264,7 @@ function score_addMatchesRulesHistoryPoints($filteredRules, keys) {
         }
 
         //MATCH: historyItemsKeys/rules >_points
-        if (true === tmp_r_hist && true === haveKeys) {
+        if (tmp_r_hist && haveKeys) {
             tmp_historyItemsMatchK = tmp_map_historyItemsMatchKeys.get(tmp_r_id);
             if (undefined !== tmp_historyItemsMatchK) {
                 r._points_current_key = tmp_historyItemsMatchK;
@@ -252,7 +272,15 @@ function score_addMatchesRulesHistoryPoints($filteredRules, keys) {
         }
 
         //CALC POINTS
-        r._score = ~~(10000 * (r._distance_keys * r._distance_keys + r._points + r._points_current_key * 15 + Number(r.favorite) * 10));
+        r._score = ~~(
+            10000 *
+            (r._distance_keys * r._distance_keys * scoreDistanceKeys +
+                r._points * scoreNoKeys +
+                r._points_current_key * scoreCurrentKey +
+                Number(r.favorite) * scoreFav +
+                Number(r.isNew) * scoreNew) *
+            r.specialScoreMult
+        );
         r._points_p = r._points;
         r._points_current_key_p = r._points_current_key;
         r._score_p = r._score;
@@ -276,19 +304,15 @@ function pushRulePack(objAdd) {
         return;
     }
 
-    let pack = objAdd.map(obj => {
-        obj = createRule(obj);
+    let pack = objAdd.map($obj => {
+        let obj = createRule($obj);
         if (obj !== null) {
             return [obj.id, obj];
         }
     });
 
-    try {
-        rules = rules.concat(Immutable.OrderedMap(pack));
-        resetCaches();
-    } catch (e) {
-        Logger.info('Error adding RulePack: ', objAdd, e);
-    }
+    rules = rules.concat(Immutable.OrderedMap(pack));
+    resetCaches();
 }
 
 function deleteVirtualRules(pluginId) {
@@ -331,13 +355,13 @@ function setVirtualRules(objAdd, pluginId, replace = false) {
         return;
     }
 
-    let pack = objAdd.map(obj => {
-        obj.isVirtual = true;
-        obj = createRule(obj);
+    let pack = objAdd.map($obj => {
+        let obj = createRule($obj);
         if (!obj || !obj.id) {
             Logger.warn('RULE: No obj:', obj);
             return null;
         }
+        obj.isVirtual = true;
         return [obj.id, obj];
     });
 
@@ -384,3 +408,4 @@ module.exports.getFilterRules = getFilterRules;
 module.exports.resetCaches = resetCaches;
 module.exports.resetCacheslastRules = resetCacheslastRules;
 module.exports.forceRefreshRules = forceRefreshRules;
+window.resetRulesCaches = resetCaches;

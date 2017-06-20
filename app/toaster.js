@@ -1,10 +1,13 @@
 'use strict';
 
 const _ = require('lodash');
+const logger = require('./main_logger.js');
+const fs = require('fs');
 const path = require('path');
 const notifier = require('node-notifier');
 
 function toaster(obj) {
+    //KTODO: Ver de hacer nativo
     //https://github.com/mikaelbr/node-notifier
 
     if (global && global.sharedObj.settings_manager && global.sharedObj.settings_manager.getSettings().notifications) {
@@ -13,17 +16,22 @@ function toaster(obj) {
         }
 
         obj.title = obj.title || 'typebox';
-        obj.sound = obj.sound;
-        obj.icon = path.normalize(__dirname + '/assets/icons/color_128.png');
 
-        console.info('[TOASTER]', obj.message, obj.icon);
+        //KTODO: Fix get icon in prod
+        let iconToast = path.normalize(__dirname + '/assets/icons/color_128.png');
+
+        if (process.platform !== 'darwin' && fs.existsSync(iconToast)) {
+            obj.icon = iconToast;
+        }
+
+        logger.info('[TOASTER]', obj.message, iconToast);
 
         try {
             notifier.notify(obj);
         } catch (e) {
-            console.warn('[TOASTER] FAIL:', e);
+            logger.warn('[TOASTER] FAIL:', e);
         }
     }
 }
 
-module.exports.notify = _.debounce(toaster, 1200);
+module.exports.notify = _.throttle(toaster, 3200, { trailing: false });

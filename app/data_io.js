@@ -14,6 +14,7 @@ const JSON5 = require('json5');
 const EventEmitter = require('events');
 const diff = require('deep-diff').diff;
 const default_config = require('./default_config.js');
+const logger = require('./main_logger.js');
 const auxjs = require('./auxfs.js');
 const toaster = require('./toaster.js');
 const defSettings = default_config.settings;
@@ -22,24 +23,24 @@ const watch = require('node-watch');
 const shortcut_normalize = require('electron-shortcut-normalizer');
 const isAccelerator = require('electron-is-accelerator');
 
-var outPutsettings = null;
-var outPutdataManager = null;
+let outPutsettings = null;
+let outPutdataManager = null;
 
-var initiated = false;
-var settings = null;
-var user_settings_file = null;
-var user_settings = null;
-var publicSettings = null;
-var dataLoaded = {};
-var forceDev = false;
-var argv = null;
-var lastUserSettings = null;
-var changeSettingsEvent = new EventEmitter();
+let initiated = false;
+let settings = null;
+let user_settings_file = null;
+let user_settings = null;
+let publicSettings = null;
+let dataLoaded = {};
+let forceDev = false;
+let argv = null;
+let lastUserSettings = null;
+let changeSettingsEvent = new EventEmitter();
 
 function init($argv) {
     if (initiated || global.sharedObj) {
         module.exports.init = function() {
-            console.log('data_io is already definded');
+            logger.log('data_io is already definded');
         };
         module.exports.settings = global.sharedObj.settings_manager;
         module.exports.dataManager = global.sharedObj.dataManager;
@@ -54,8 +55,9 @@ function init($argv) {
     loadfav();
     loadlast();
     loadHiddenRules();
-    configLogger();
+    loadNewsRules();
     setShares();
+    configLogger();
     watchSettings();
 
     initiated = true;
@@ -63,12 +65,13 @@ function init($argv) {
 }
 
 function configLogger() {
-    var logPath = _.result(publicSettings, 'here_are_dragons.paths.logpath') + _.result(publicSettings, 'here_are_dragons.paths.logfile');
+    let logPath = _.result(publicSettings, 'here_are_dragons.paths.logpath') + _.result(publicSettings, 'here_are_dragons.paths.logfile');
     mkpath.sync(path.dirname(logPath));
     electronlog.transports.file.file = logPath;
     electronlog.transports.console.level = _.result(publicSettings, 'here_are_dragons.logger.level');
     electronlog.transports.file.level = _.result(publicSettings, 'here_are_dragons.logger.level');
     electronlog.transports.file.maxSize = _.result(publicSettings, 'here_are_dragons.logger.maxSize');
+    logger.init(settings, global.sharedObj);
 }
 
 //KTODO Mover a un modulo aparte
@@ -77,7 +80,7 @@ function setShares() {
         return;
     }
     global.sharedObj = {};
-    var $global = global.sharedObj;
+    let $global = global.sharedObj;
     $global.app = app;
     $global.settings_manager = module.exports.settings;
     $global.dataManager = module.exports.dataManager;
@@ -104,11 +107,11 @@ function setDevMode(val) {
 }
 
 function printSettings() {
-    console.info(getSettings());
+    logger.info(getSettings());
 }
 
 function load_and_makeSettings() {
-    settings = defSettings;
+    settings = _.cloneDeep(defSettings);
 
     user_settings_file = settings.here_are_dragons.paths.user + settings.here_are_dragons.paths.userSettingsFile;
 
@@ -120,12 +123,12 @@ function load_and_makeSettings() {
 
     user_settings = null;
 
-    var exist_user_settings = fs.existsSync(user_settings_file);
+    let exist_user_settings = fs.existsSync(user_settings_file);
     if (exist_user_settings) {
         user_settings = loadFileSync(user_settings_file, 'JSON5');
         saveFileSync(user_settings_file + '.bak', user_settings, 'HJSON'); //Make bakup
     } else {
-        let user_settings_w_comments = settings2comments(defSettings) + '\{\r\n\r\n\}';
+        let user_settings_w_comments = settings2comments(defSettings) + '{\r\n\r\n}';
         saveFileSync(user_settings_file, user_settings_w_comments, 'TXT');
     }
 
@@ -136,6 +139,14 @@ function load_and_makeSettings() {
 
     settings.here_are_dragons.electron_windows_list_options.width = settings.width;
 
+    if (settings.visibleInTaskBar) {
+        settings.here_are_dragons.electron_windows_list_options.skipTaskbar = false;
+        settings.here_are_dragons.electron_windows_list_options.show = true;
+        settings.here_are_dragons.electron_windows_list_options.minimizable = true;
+        settings.here_are_dragons.startOpen = true;
+        settings.here_are_dragons.search_box_main_window.hideOnBlur = false;
+    }
+
     if (user_settings && user_settings.dev !== undefined) {
         settings.dev = Boolean(user_settings.dev);
     }
@@ -144,7 +155,7 @@ function load_and_makeSettings() {
     settings.mainShortcut = shortcut_normalize(settings.mainShortcut, process.platform);
     if (!isAccelerator(settings.mainShortcut)) {
         settings.mainShortcut = shortcut_normalize(defSettings.mainShortcut);
-        console.warn('settings.mainShortcut is not a valid Accelerator');
+        logger.warn('settings.mainShortcut is not a valid Accelerator');
     }
 
     //Force dev in command line
@@ -202,6 +213,7 @@ function load_and_makeSettings() {
         settings.here_are_dragons.paths.favfile = settings.here_are_dragons.paths.favfile.replace('%TERMNAME%', replaceTermName);
         settings.here_are_dragons.paths.lastfile = settings.here_are_dragons.paths.lastfile.replace('%TERMNAME%', replaceTermName);
         settings.here_are_dragons.paths.launcherCachefile = settings.here_are_dragons.paths.launcherCachefile.replace('%TERMNAME%', replaceTermName);
+        settings.here_are_dragons.paths.newsfile = settings.here_are_dragons.paths.newsfile.replace('%TERMNAME%', replaceTermName);
     }
 
     if (process && process.versions) {
@@ -228,7 +240,7 @@ function load_and_makeSettings() {
 }
 
 function extendSettings($default_settings, $user_settings) {
-    var $settings = auxjs.cloneDeep($default_settings);
+    let $settings = auxjs.cloneDeep($default_settings);
     if ($user_settings) {
         $settings = auxjs.extendObj($settings, $user_settings);
     }
@@ -240,19 +252,19 @@ function getSettings() {
 }
 
 function changeSettings() {
-    console.log('Watch settings fired [1]');
+    logger.log('Watch settings fired [1]');
 
     load_and_makeSettings();
 
-    let differences = diff(settings, lastUserSettings);
+    let differences = _.uniqWith(diff(settings, lastUserSettings), JSON.stringify);
     let all_path = '';
     let diffs = [];
 
     if (differences && differences.length) {
-        let diffs = [];
         _.each(differences, dif => {
             all_path = '';
-            _.each(dif.path, path => {
+            let dif_path = _.uniqWith(dif.path, JSON.stringify);
+            _.each(dif_path, path => {
                 if (all_path.length) {
                     all_path += '.' + path;
                 } else {
@@ -263,8 +275,8 @@ function changeSettings() {
             });
         });
 
-        console.log(
-            '\r\n________________________________________\r\n',
+        logger.log(
+            '\r\n',
             '\r\nUSER SETTINGS:\r\n',
             JSON.stringify(user_settings, null, 2),
             '\r\nCHANGES:\r\n',
@@ -273,54 +285,48 @@ function changeSettings() {
             '\r\n',
             'diffs: [3] ',
             diffs,
-            '\r\n________________________________________\r\n'
+            '\r\n'
         );
 
         lastUserSettings = settings;
     }
 }
 
-let changeSettingsDebounce = _.debounce(changeSettings, 1000);
+let changeSettingsDebounce = _.debounce(changeSettings, 120);
 
 function watchSettings() {
-    var dir = settings.here_are_dragons.paths.user;
-    var userSettings = settings.here_are_dragons.paths.userSettingsFile;
+    let dir = settings.here_are_dragons.paths.user;
+    let userSettings = settings.here_are_dragons.paths.userSettingsFile;
 
-    var exist_userSettings = fs.existsSync(dir + userSettings);
+    let exist_userSettings = fs.existsSync(dir + userSettings);
 
     if (exist_userSettings) {
-        var dirWatch = path.normalize(path.join(dir + userSettings));
+        let dirWatch = path.normalize(path.join(dir + userSettings));
         watch(dirWatch, { recursive: true }, function(evt, name) {
-            console.log('%s changed!!!! [4]', name);
+            logger.log('%s changed!', name);
             // changeSettings();
             changeSettingsDebounce();
         });
     } else {
-        console.warn('Cant watch user settings');
+        logger.warn('Cant watch user settings');
     }
 
     lastUserSettings = settings;
 
-    // console.log(settings);
-    console.log(
-        '\r\n________________________________________\r\n',
-        '\r\nSETTINGS:\r\n\r\n',
-        JSON.stringify(settings, null, 2),
-        '\r\n________________________________________\r\n'
-    );
+    console.log('\r\n', '\r\nSETTINGS:\r\n\r\n', JSON.stringify(settings, null, 2), '\r\n');
 }
 
 //_________________________________________
 //HISTORY
 //_________________________________________
 function saveHistory(data) {
-    var fileName = getSettings().here_are_dragons.paths.historypath + getSettings().here_are_dragons.paths.historyfile;
+    let fileName = getSettings().here_are_dragons.paths.historypath + getSettings().here_are_dragons.paths.historyfile;
     dataLoaded.history = data;
     return saveGenericJson(data, fileName);
 }
 
 function loadHistory() {
-    var fileName = getSettings().here_are_dragons.paths.historypath + getSettings().here_are_dragons.paths.historyfile;
+    let fileName = getSettings().here_are_dragons.paths.historypath + getSettings().here_are_dragons.paths.historyfile;
     dataLoaded.history = loadGenericJson(fileName, getSettings().here_are_dragons.historyBackups);
 }
 
@@ -328,13 +334,13 @@ function loadHistory() {
 //FAV
 //_________________________________________
 function savefav(data) {
-    var fileName = getSettings().here_are_dragons.paths.favpath + getSettings().here_are_dragons.paths.favfile;
+    let fileName = getSettings().here_are_dragons.paths.favpath + getSettings().here_are_dragons.paths.favfile;
     dataLoaded.fav = data;
     return saveGenericJson(data, fileName);
 }
 
 function loadfav() {
-    var fileName = getSettings().here_are_dragons.paths.favpath + getSettings().here_are_dragons.paths.favfile;
+    let fileName = getSettings().here_are_dragons.paths.favpath + getSettings().here_are_dragons.paths.favfile;
     dataLoaded.fav = loadGenericJson(fileName, getSettings().here_are_dragons.favBackups);
 }
 
@@ -342,13 +348,13 @@ function loadfav() {
 //LAST
 //_________________________________________
 function savelast(data) {
-    var fileName = getSettings().here_are_dragons.paths.lastpath + getSettings().here_are_dragons.paths.lastfile;
+    let fileName = getSettings().here_are_dragons.paths.lastpath + getSettings().here_are_dragons.paths.lastfile;
     dataLoaded.last = data;
     return saveGenericJson(data, fileName);
 }
 
 function loadlast() {
-    var fileName = getSettings().here_are_dragons.paths.lastpath + getSettings().here_are_dragons.paths.lastfile;
+    let fileName = getSettings().here_are_dragons.paths.lastpath + getSettings().here_are_dragons.paths.lastfile;
     dataLoaded.last = loadGenericJson(fileName, getSettings().here_are_dragons.lastBackups);
 }
 
@@ -356,13 +362,15 @@ function loadlast() {
 //LAUNCHER CACHE
 //_________________________________________
 function saveLauncherCache(data) {
-    var fileName = getSettings().here_are_dragons.paths.caches + getSettings().here_are_dragons.paths.launcherCachefile;
+    if (!settings.here_are_dragons.launcherCache) return;
+    let fileName = getSettings().here_are_dragons.paths.caches + getSettings().here_are_dragons.paths.launcherCachefile;
     dataLoaded.launcherCache = data;
     return saveGenericJson(data, fileName);
 }
 
 function loadLauncherCache() {
-    var fileName = getSettings().here_are_dragons.paths.caches + getSettings().here_are_dragons.paths.launcherCachefile;
+    if (!settings.here_are_dragons.launcherCache) return;
+    let fileName = getSettings().here_are_dragons.paths.caches + getSettings().here_are_dragons.paths.launcherCachefile;
     dataLoaded.launcherCache = loadGenericJson(fileName, getSettings().here_are_dragons.launcherCacheBackups);
 }
 
@@ -370,14 +378,28 @@ function loadLauncherCache() {
 //HIDDEN RULES
 //_________________________________________
 function saveHiddenRules(data) {
-    var fileName = getSettings().here_are_dragons.paths.hidden_path + getSettings().here_are_dragons.paths.hiddenRulesfile;
+    let fileName = getSettings().here_are_dragons.paths.hidden_path + getSettings().here_are_dragons.paths.hiddenRulesfile;
     dataLoaded.hiddenRules = data;
     return saveGenericJson(data, fileName);
 }
 
 function loadHiddenRules() {
-    var fileName = getSettings().here_are_dragons.paths.hidden_path + getSettings().here_are_dragons.paths.hiddenRulesfile;
+    let fileName = getSettings().here_are_dragons.paths.hidden_path + getSettings().here_are_dragons.paths.hiddenRulesfile;
     dataLoaded.hiddenRules = loadGenericJson(fileName);
+}
+
+//_________________________________________
+//NEWS RULES
+//_________________________________________
+function saveNewsRules(data) {
+    let fileName = getSettings().here_are_dragons.paths.newspath + getSettings().here_are_dragons.paths.newsfile;
+    dataLoaded.newsRules = data;
+    return saveGenericJson(data, fileName);
+}
+
+function loadNewsRules() {
+    let fileName = getSettings().here_are_dragons.paths.newspath + getSettings().here_are_dragons.paths.newsfile;
+    dataLoaded.newsRules = loadGenericJson(fileName);
 }
 
 //_________________________________________
@@ -406,7 +428,7 @@ function loadGenericJson(fileName, useBackup = false) {
 //_________________________________________
 
 function loadFileSync(filename, type, printError = true) {
-    var result = null;
+    let result = null;
 
     try {
         if (fs.existsSync(filename)) {
@@ -428,7 +450,7 @@ function loadFileSync(filename, type, printError = true) {
     }
 
     if (!result && printError) {
-        console.error('Error Loading: ', filename, result);
+        logger.error('Error Loading: ', filename, result);
     }
 
     return result;
@@ -437,10 +459,15 @@ function loadFileSync(filename, type, printError = true) {
 function saveFileSync(filename, data, type) {
     let result = false;
 
+    if (!filename) {
+        logger.error('No filename:', filename);
+        return;
+    }
+
     try {
         mkpath.sync(path.dirname(filename));
     } catch (err) {
-        console.error(err);
+        logger.error(err, filename);
         return false;
     }
 
@@ -461,7 +488,7 @@ function saveFileSync(filename, data, type) {
         result = fs.writeFileSync(filename, data);
     } catch (err) {
         //KTODO: make Logger
-        console.error(err);
+        logger.error(err);
         return false;
     }
 
@@ -474,19 +501,19 @@ function setAndSaveSettings(file, obj) {
     try {
         obj = JSON.parse(JSON.stringify(obj));
     } catch (e) {
-        console.warn('setAndSaveSettings param not valid', e, obj);
+        logger.warn('setAndSaveSettings param not valid', e, obj);
         return false;
     }
 
     if (null == obj || 'undefined' == typeof obj) {
-        console.warn('setAndSaveSettings param not valid', obj);
+        logger.warn('setAndSaveSettings param not valid', obj);
         return false;
     }
 
     //userSettings
     if (file === 'userSettings') {
-        let changedSettings = _.clone(extendSettings(user_settings, obj));
-        let changedSettingsAll = _.clone(extendSettings(settings, obj));
+        let changedSettings = _.cloneDeep(extendSettings(user_settings, obj));
+        let changedSettingsAll = _.cloneDeep(extendSettings(settings, obj));
 
         if (JSON.stringify(settings) === JSON.stringify(changedSettingsAll)) {
             return;
@@ -508,14 +535,14 @@ function setAndSaveSettings(file, obj) {
 }
 
 function settings2comments($settings) {
-    let settingsComments = _.clone($settings);
+    let settingsComments = _.cloneDeep($settings);
     delete settingsComments.load_user_settings;
     delete settingsComments.user_settingsLoaded;
     delete settingsComments.load_user_settings_error;
     delete settingsComments.here_are_dragons;
     delete settingsComments.overwriteDefaultFileAssociations;
     delete settingsComments.defaultTerminalApp;
-    return '\/\*' + JSON.stringify(settingsComments, null, 4) + '\*\/' + '\r\n';
+    return '/*' + JSON.stringify(settingsComments, null, 4).replace(/\*/g, '#') + '*/' + '\r\n';
 }
 
 function deleteUserData() {
@@ -531,7 +558,7 @@ function deleteUserData() {
             }, 100);
         }, 100);
     } catch (e) {
-        console.warn(e);
+        logger.warn(e);
     }
 }
 
@@ -542,7 +569,7 @@ function deleteCaches() {
     try {
         rimraf.sync(cacheFolder);
     } catch (e) {
-        console.warn(e);
+        logger.warn(e);
     }
     global.sharedObj.app_window_and_systray.refreshListWindow();
 }
@@ -553,8 +580,12 @@ function deleteCaches() {
 module.exports.init = init;
 module.exports.settings = {
     getSettings: getSettings,
+    getDefaultSettings: () => _.cloneDeep(defSettings),
     getUserSettings: () => {
-        return _.clone(user_settings);
+        if (!user_settings) {
+            return {};
+        }
+        return _.cloneDeep(user_settings) || {};
     },
     getChangeSettingsEvent: () => {
         return changeSettingsEvent;
@@ -566,6 +597,7 @@ module.exports.dataManager = {
     dataLoaded: dataLoaded,
     savelast: savelast,
     savefav: savefav,
+    saveNewsRules: saveNewsRules,
     saveHiddenRules: saveHiddenRules,
     getFile: loadFileSync,
     setFile: saveFileSync,

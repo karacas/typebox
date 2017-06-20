@@ -10,40 +10,36 @@ const Menu = electron.Menu;
 const Tray = electron.Tray;
 const argv = require('yargs').argv;
 const Moment = require('moment');
+const logger = require('./main_logger.js');
 
-var initiated = false;
+let initiated = false;
 
 function init() {
-    if (setupEvents.handleSquirrelEvent()) {
-        // squirrel event handled and app will exit in 1000ms, so don't do anything else
-        return;
-    }
-
-    if (initiated || !app) {
+    if (setupEvents.handleSquirrelEvent() || initiated || !app) {
         return;
     }
 
     try {
+        //KTODO: Ver esto en mac
         if (app.dock) {
             app.dock.hide();
         }
 
         data_io.init(argv);
 
-        console.log('argv:', argv);
-        console.log('args:', process.argv);
+        logger.log('\r\n');
+        logger.log('[MAIN] Start Background App:', Moment(new Date()).format('HH:mm:ss.SSS'));
+        logger.log('[MAIN] argv:', argv);
+        logger.log('[MAIN] process.args:', process.argv);
 
-        //KTODO: Hacer logger & shareObj acá también
+        //KTODO: Hacer shareObj acá también
         //KTODO: Hecer refactor de inits con promesas
 
         window_and_systray.init();
         initiated = true;
     } catch (e) {
-        console.error('Init error', e);
+        logger.error('[MAIN] Start error', e);
     }
-
-    console.log('\r\n________________________________________\r\n');
-    console.log(Moment(new Date()).format('HH:mm:ss.SSS'));
 
     global.sharedObj.settings_manager.getSettings().here_are_dragons.report.backgroundStartDate = new Date();
 }

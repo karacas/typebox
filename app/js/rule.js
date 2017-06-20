@@ -3,12 +3,12 @@ const _ = require('lodash');
 const removeDiacritics = require('lodash').deburr;
 const Logger = require('../js/logger.js');
 const icon = require('../js/icon.js');
+const { bindKet2actualOs, getKeyFromConfig } = require('../auxfs.js');
 const Config = require('../js/config.js');
 const sub = require('hash-sum');
 
-var copyKey = null;
-var enterKey = null;
-var icons = Config.get('icons');
+let copyKey = null;
+let enterKey = null;
 
 function getStringDescription(rule) {
     //Define enter key
@@ -16,8 +16,7 @@ function getStringDescription(rule) {
         enterKey = Config.get('here_are_dragons.bindKeys').find(o => {
             return o.action === 'ENTER';
         });
-        enterKey = _.result(enterKey, 'keys[0]') || 'Enter11';
-        enterKey = enterKey.toUpperCase();
+        enterKey = getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'ENTER');
     }
 
     //Define copy key
@@ -25,21 +24,22 @@ function getStringDescription(rule) {
         copyKey = Config.get('here_are_dragons.bindKeys').find(o => {
             return o.action === 'COPY_STRING';
         });
-        copyKey = _.result(copyKey, 'keys[0]') || 'ctrl + c';
-        copyKey = copyKey.toUpperCase();
+        copyKey = getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'COPY_STRING');
     }
 
     return 'Press ' + enterKey + ' to expand text / ' + copyKey + ' to clipboard';
 }
 
-module.exports.getNewRule = ruleObj => {
+const getNewRule = ruleObj => {
+    if (!ruleObj) return null;
+
     let rule = {};
 
     rule.isLoading = false;
     rule._internalAct = false;
     rule._noSelect = false;
 
-    if (ruleObj && ruleObj.isLoading) {
+    if (ruleObj.isLoading) {
         ruleObj.title = 'loading';
         ruleObj.icon = icon.getLoader();
         ruleObj.addInHistory = false;
@@ -49,7 +49,7 @@ module.exports.getNewRule = ruleObj => {
         rule._noSelect = true;
     }
 
-    if (!ruleObj || !ruleObj.title || !ruleObj.title.length) {
+    if (!ruleObj.title) {
         Logger.warn('RULE: No title:', ruleObj);
         return null;
     }
@@ -102,22 +102,31 @@ module.exports.getNewRule = ruleObj => {
 
     rule.path = String(ruleObj.path || '/');
 
-    rule.favorite = Boolean(ruleObj.favorite);
+    rule.favorite = false;
 
     //FAV & LAST
     rule.fav_permit = true;
     rule.last_permit = true;
     rule.hidden_permit = true;
+    rule.new_permit = true;
+    rule.isNew = false;
+
+    if (ruleObj.new_permit === false) {
+        rule.new_permit = false;
+    }
 
     if (ruleObj.fav_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
-        rule.favorite = false;
         rule.fav_permit = false;
     }
     if (ruleObj.last_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.last_permit = false;
     }
-    if (ruleObj.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading || rule.favorite) {
+    if (ruleObj.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.hidden_permit = false;
+    }
+    if (rule._internalAct || rule._noSelect || rule.isLoading) {
+        rule.new_permit = false;
+        rule.isNew = false;
     }
 
     rule.params = ruleObj.params || {};
@@ -145,19 +154,26 @@ module.exports.getNewRule = ruleObj => {
 
     rule._score_p = 0;
 
+    rule.specialScoreMult = 1;
+
+    if (ruleObj.specialScoreMult !== undefined && ruleObj.specialScoreMult !== null) {
+        rule.specialScoreMult = Number(ruleObj.specialScoreMult);
+    }
+
     rule._distance_keys_cache = -1;
 
     rule.id = makeHash((ruleObj._id || rule.title) + rule.type[0] + rule.path);
 
-    if (icons) {
-        rule.icon = icon.get(ruleObj.icon);
-    }
+    rule.icon = icon.get(ruleObj.icon);
 
     return rule;
 };
 
+module.exports.getNewRule = getNewRule;
+
 function makeHash(str) {
-    // return str;
+    //return str;
+    //KTODO: Ojo que colisiona
     return sub(str);
 }
 

@@ -15,10 +15,11 @@ const favManager = require('../js/favManager.js');
 const lastRulesManager = require('../js/lastRulesManager.js');
 const aux_webManager = require('../js/aux_webManager.js');
 const aux_viewer = require('../js/aux_viewer.js');
+const packagesManager = require('../js/packagesManager.js');
 const commandCheckerRegExOld = /^\s?(.*?)\s?\((.*?)\)\s?\!$/g;
 const commandCheckerRegEx = /^\s?(.*?)\s?\:\s?(.*?)\s?\!$/g;
 
-var robot = null;
+let robot = null;
 
 try {
     robot = require('robotjs');
@@ -27,27 +28,7 @@ try {
 }
 
 module.exports = (name, pack, url) => {
-    //Check
-    if (!_.isObject(pack)) {
-        onCatchErrorPackage(name, 'is not an object');
-        return null;
-    }
-    if (!name) {
-        onCatchErrorPackage(name, 'no name');
-        return null;
-    }
-    if (pack.name) {
-        onCatchErrorPackage(name, 'invalid pack: package already have a name:', pack.name);
-        return null;
-    }
-
-    //Methods
-
-    var packageDir = () => {
-        return url;
-    };
-
-    var app = {
+    const app = {
         logger: Logger,
         allSetting: Config.getAll(),
         getSetting: setting => {
@@ -60,12 +41,18 @@ module.exports = (name, pack, url) => {
         createViewerHtml: aux_viewer.createViewerHtml,
         createViewerWebView: aux_viewer.createViewerWebView,
         createComponentFromHtml: aux_viewer.createComponentFromHtml,
+        onIdleTimeInterval: sharedData.idleTime.onIdleTimeInterval,
         getQuery: () => {
             return ListViewStore.store.getState().search_text;
         },
         setQuery: string => {
             setTimeout(() => {
                 ListViewStore.storeActions.changeQuery(string);
+            });
+        },
+        setResult: string => {
+            setTimeout(() => {
+                ListViewStore.storeActions.changeResult(string);
             });
         },
         getPath: () => {
@@ -135,6 +122,12 @@ module.exports = (name, pack, url) => {
         },
         getRealClock: () => {
             return sharedData.realClock;
+        },
+        getTime: () => {
+            return sharedData.realClock;
+        },
+        require: req => {
+            return require(req);
         },
         getlastItemsPath: lastRulesManager.getlastItemsPath
     };
@@ -251,34 +244,45 @@ module.exports = (name, pack, url) => {
                 }
             });
         }
-        if (textEvent === 'idleHeavy') {
-            sharedData.idleTime.getIdleEvent().on('idleHeavy', () => {
-                try {
-                    callback();
-                } catch (error) {
-                    onCatchErrorPackage(name, error);
-                    return null;
-                }
-            });
-        }
+    };
+
+    //Check
+    if (_.isFunction(pack)) {
+        pack = pack(app);
+    } else {
+        onCatchErrorPackage(name, 'no export function');
+    }
+
+    if (!name) {
+        onCatchErrorPackage(name, 'no name');
+        return null;
+    }
+
+    if (pack.name) {
+        onCatchErrorPackage(name, 'invalid pack: package already have a name:', pack.name);
+        return null;
+    }
+
+    if (!_.isObject(pack)) {
+        onCatchErrorPackage(name, 'is not an object');
+        return null;
+    }
+
+    let packageDir = () => {
+        return url;
     };
 
     //Set name
     pack.name = name;
 
-    //Set app
-    pack.app = app;
-    pack.packageDir = packageDir;
-
     //Set config
     if (pack.config && !_.isEmpty(pack.config)) {
-        var settingsPackUserUrl = Config.get('here_are_dragons.paths.user') + name + Config.get('here_are_dragons.paths.user_packagesSettingsName');
-
-        var settingsPackUser = sharedData.dataManager.getFile(settingsPackUserUrl, 'JSON5', false);
+        let settingsPackUserUrl = packagesManager.getPackcageSettingsFile(name, true);
+        let settingsPackUser = sharedData.dataManager.getFile(settingsPackUserUrl, 'JSON5', false);
 
         if (!settingsPackUser) {
             let packConfigUser = JSON.stringify(pack.config, null, 4);
-            let packConfigUserCommented = '\/\*' + packConfigUser + '\*\/' + '\r\n\{\r\n\r\n\}';
+            let packConfigUserCommented = '/*' + packConfigUser.replace(/\*/g, '#') + '*/' + '\r\n{\r\n\r\n}';
             sharedData.dataManager.setFile(settingsPackUserUrl, packConfigUserCommented, 'TXT');
         } else {
             pack.config = auxjs.extendObj(pack.config, settingsPackUser);

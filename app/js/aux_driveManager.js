@@ -22,17 +22,16 @@ const child_process = require('child_process');
 const globby = require('globby');
 const app2png = require('app2png');
 
-let cacheFilesImmitable = Immutable.OrderedMap();
-var icons = Config.get('icons');
+let cacheFilesImmutable = Immutable.Map();
+const icons = Config.get('icons');
 
-function getFileInfo(pathname) {
+function getFileInfo($pathname) {
     return new Promise((resolve, reject) => {
-        pathname = path.normalize(pathname);
-
+        let pathname = path.normalize($pathname);
         let isFile = fs.isFileSync(pathname);
 
-        if (cacheFilesImmitable.size && cacheFilesImmitable.size > 0) {
-            let cacheFile = cacheFilesImmitable.get(pathname);
+        if (cacheFilesImmutable.size && cacheFilesImmutable.size > 0) {
+            let cacheFile = cacheFilesImmutable.get(pathname);
             if (cacheFile && cacheFile.params.originalData && cacheFile.icon && cacheFile.icon.iconData) {
                 let dataTmp = cacheFile.params.originalData;
                 if (icons) dataTmp.iconUrl = cacheFile.icon.iconData;
@@ -43,11 +42,9 @@ function getFileInfo(pathname) {
 
         let isDir = !isFile;
         let isEmptyDir = isDir && fs.listSync(pathname).length == 0;
-        let icon = null;
-        let data = {};
 
-        data = {
-            icon: icon,
+        let data = {
+            icon: null,
             iconType: 'null',
             path: pathname,
             isFile: isFile,
@@ -75,9 +72,13 @@ function getFileInfo(pathname) {
             resolve(data);
         } else {
             auxGetFileIcon(pathname, ico => {
-                if (ico) {
+                if (ico && ico.dataUrl) {
                     data.iconType = 'dataURL';
-                    data.iconUrl = ico;
+                    data.iconUrl = ico.dataUrl;
+                }
+                if (ico && ico.type && ico.iconClass) {
+                    data.iconType = ico.type;
+                    data.iconClass = ico.iconClass;
                 }
                 resolve(data);
             });
@@ -90,6 +91,7 @@ function auxGetMacApptoDataUrl(file) {
         let tmpPng = path.normalize(Config.get('here_are_dragons.paths.tmp') + '/' + path.basename(file).replace('.app', '.png'));
         try {
             let dataImg = null;
+
             app2png
                 .convert(file, tmpPng)
                 .then(() => {
@@ -126,10 +128,29 @@ function auxGetFileIcon(file, resolve) {
     }
 
     //KTODO: LAS EXTENCIONES CONOCIADAS USAR UN FONTICON
+    let ext = path.extname(file).toLowerCase();
+    if (ext === '.dll' || ext === '.bin' || ext === '.nls') {
+        resolve();
+        return;
+    }
+    if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.nef' || ext === '.gif') {
+        resolve({
+            type: 'iconFont',
+            iconClass: 'mdi-file-image small_ico text'
+        });
+        return;
+    }
+    if (ext === '.js' || ext === '.jsx' || ext === '.json') {
+        resolve({
+            type: 'iconFont',
+            iconClass: 'mdi-language-javascript small_ico text'
+        });
+        return;
+    }
 
     //MAC APP ICON
     if (/^darwin/.test(process.platform) && file.includes('.app')) {
-        auxGetMacApptoDataUrl(file).then(ico => resolve(ico)).catch(e => {
+        auxGetMacApptoDataUrl(file).then(ico => resolve({ dataUrl: ico })).catch(e => {
             resolve();
         });
         return;
@@ -139,8 +160,9 @@ function auxGetFileIcon(file, resolve) {
 
     try {
         app.getFileIcon(getLinkIconPath(file), { size: 'normal' }, function(err, res) {
-            if (res && res.getSize && res.getSize().width && res.toDataURL().length > 25) {
-                resolve(res.toDataURL());
+            if (res && res.getSize && res.getSize().width) {
+                resolve({ dataUrl: res.toDataURL() });
+                return;
             } else {
                 resolve();
             }
@@ -208,7 +230,7 @@ function checkIsExec(file) {
             }
         } catch (e) {}
         //KTODO: Ver .lnk especiales
-        // var ws = require('windows-shortcuts');
+        // let ws = require('windows-shortcuts');
         //ws.query("c:\\Users\\karacas\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\People - Shortcut.lnk", console.log);
     }
 
@@ -227,12 +249,14 @@ function checkIsExec(file) {
 }
 
 function getMutipleFiles(arr) {
-    let cacheFiles = _.result(sharedData.dataManager, 'dataLoaded.launcherCache') || [];
-    cacheFilesImmitable = Immutable.OrderedMap(
-        cacheFiles.map(el => {
-            return [_.result(el, 'params.originalData.path'), el];
-        })
-    );
+    if (Config.get('here_are_dragons.launcherCache')) {
+        let cacheFiles = _.result(sharedData.dataManager, 'dataLoaded.launcherCache') || [];
+        cacheFilesImmutable = Immutable.Map(
+            cacheFiles.map(el => {
+                return [_.result(el, 'params.originalData.path'), el];
+            })
+        );
+    }
     return new Promise((resolve, reject) => {
         Promise.all(arr.filter(fileExsit).map(getFileInfo)).then(values => resolve(values)).catch(values => resolve(values));
     });
@@ -285,7 +309,7 @@ function getPathRules(pathname) {
 
 //KTODO: ver de hacer un open file with SU
 function openFile(item, forceSU = false, useOverride = true) {
-    let pathItem = _.result(item, 'rule.params.drive_path') || item;
+    let pathItem = _.result(item, 'rule.params.drive_path') || _.result(item, 'params.drive_path') || item;
 
     Logger.info('[OpenFile]', pathItem);
 
@@ -384,13 +408,27 @@ function openFile(item, forceSU = false, useOverride = true) {
 
 //KTODO: ver de hacer un open file with SU
 function openTerminal(item, forceSU = false) {
-    let pathItem = _.result(item, 'rule.params.drive_path');
+    let pathItem = _.result(item, 'rule.params.drive_path') || _.result(item, 'params.drive_path') || item;
+
     if (!pathItem) return;
+
+    let isDir = _.result(item, 'rule.params.isDir') || _.result(item, 'params.isDir');
+    if (!isDir && !_.isString(item)) {
+        pathItem = path.parse(pathItem).dir;
+    }
+
     try {
         //KTODO: MAX/LNX
         if (/^win/.test(process.platform)) {
-            let cmd = Config.get('defaultTerminalApp') || ['cmd', '-\/K'];
-            let params = 'cd ' + pathItem.replace(/\//g, '\\').toLowerCase();
+            let cmd = Config.get('defaultTerminalApp') || ['cmd', '-/K']; //['PowerShell', '-noexit', '-command'];
+
+            let slashD = '';
+            if (cmd[0] === 'cmd') slashD = '/d ';
+
+            let params = 'cd ' + slashD + pathItem.replace(/\//g, '\\').replace(/\\$/, '').toLowerCase();
+
+            Logger.log('[openTerminal]', cmd, params);
+
             opn(params, { app: cmd }).then(() => {
                 //KTODO: Hacer una función global
                 if (Config.get('here_are_dragons.gotoRootOnExec')) {

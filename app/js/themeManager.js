@@ -9,17 +9,17 @@ const sharedData = require('../js/sharedData.js');
 const watch = require('node-watch');
 const EventEmitter = require('events');
 
-var body = null;
-var document = null;
-var themeBaseTag = null;
-var themeBaseOriginalHref = null;
-var themeExtendTag = null;
-var fontThemeTag = null;
-var cssOverWriteTag = null;
-var themes = [];
-var currentTheme = null;
-var currentFont = 'default';
-var availableSubThemes = [];
+let body = null;
+let document = null;
+let themeBaseTag = null;
+let themeBaseOriginalHref = null;
+let themeExtendTag = null;
+let fontThemeTag = null;
+let cssOverWriteTag = null;
+let themes = [];
+let currentTheme = null;
+let currentFont = 'default';
+let availableSubThemes = [];
 
 const themeEvents = new EventEmitter().setMaxListeners(100);
 
@@ -269,15 +269,15 @@ module.exports.init = init;
 module.exports.add = add;
 module.exports.reloadThemes = reloadThemes;
 module.exports.removeLoader = removeLoader;
-module.exports.currentTheme = _.clone(currentTheme);
-module.exports.currentFont = _.clone(currentFont);
+module.exports.currentTheme = _.cloneDeep(currentTheme);
+module.exports.currentFont = _.cloneDeep(currentFont);
 module.exports.setTheme2Settings = setTheme2Settings;
 module.exports.setSubTheme2Settings = setSubTheme2Settings;
 module.exports.setFont2Settings = setFont2Settings;
 module.exports.themeEvents = themeEvents;
 module.exports.getAvaiableThemes = () => {
-    return _.clone(themes);
+    return _.cloneDeep(themes);
 };
 module.exports.getAvaiableSubThemes = () => {
-    return _.clone(availableSubThemes);
+    return _.cloneDeep(availableSubThemes);
 };

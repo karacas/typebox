@@ -9,18 +9,19 @@ const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
 const getTime = sharedData.realClock.getTime;
 
-var lastItems = Immutable.OrderedMap();
-var lastNeedSave = false;
+let lastItems = Immutable.OrderedMap();
+let lastNeedSave = false;
 
-var icon = {
+const icon = {
     type: 'iconFont',
     iconClass: 'mdi-backup-restore palette-Amber-A200 text'
 };
 
-var path = {
+const path = {
+    name: 'history',
     path: 'LAST_RULES_PATH',
     avoidCache: true,
-    avoidHystory: true,
+    avoidHistory: true,
     icon: icon
 };
 
@@ -38,9 +39,9 @@ function push(rulefavObj) {
             lastItems = lastItems.delete(id);
         }
 
-        rulelast.favorite = false;
         rulelast.component = null;
         rulelast.fav_permit = false;
+        rulelast.new_permit = false;
         rulelast.last_permit = false;
         rulelast.description = '(' + Moment(getTime()).format(Config.get('here_are_dragons.dateFormat')) + ') ' + (rulelast.description || '');
         rulelast.hidden_permit = false;
@@ -69,40 +70,45 @@ function remove(rulelast) {
     }
 }
 
-function savelast() {
-    if (!lastNeedSave) {
-        return;
-    }
+const savelast = _.throttle(
+    () => {
+        if (!lastNeedSave) {
+            return;
+        }
 
-    if (!sharedData.dataManager) {
-        return;
-    }
+        if (!sharedData.dataManager) {
+            return;
+        }
 
-    var obj2save = {
-        lastItems: lastItems.toJS()
-    };
+        let obj2save = {
+            lastItems: lastItems.toJS()
+        };
 
-    var resp = sharedData.dataManager.savelast(obj2save);
+        let resp = sharedData.dataManager.savelast(obj2save);
 
-    if (!resp) {
-        Logger.error('[Lasts] Fail savelast:', resp);
-    } else {
-        Logger.info('[Lasts] last Saved ok:', resp);
-        lastNeedSave = false;
-    }
-}
+        if (!resp) {
+            Logger.error('[Lasts] Fail savelast:', resp);
+        } else {
+            Logger.info('[Lasts] last Saved ok:', resp);
+            lastNeedSave = false;
+        }
+    },
+    80,
+    { trailing: false }
+);
 
 function loadlast() {
     if (lastItems.size) {
         return;
     }
-    var load = null;
+    let load = null;
+    let lastItemsTmp = null;
 
     if (sharedData.dataManager.dataLoaded.last) {
-        var load = true;
-        var lastItemsTmp = sharedData.dataManager.dataLoaded.last.lastItems;
+        load = true;
+        lastItemsTmp = sharedData.dataManager.dataLoaded.last.lastItems;
     } else {
-        var load = false;
+        load = false;
         Logger.warn('[Lasts] load last: no last file');
     }
 
@@ -115,6 +121,7 @@ function loadlast() {
 //Save events
 sharedData.idleTime.getIdleEvent().on('idle', savelast);
 sharedData.app_window_and_systray.windowEvent.on('QUIT', savelast);
+sharedData.app_window_and_systray.windowEvent.on('REFRESH_WIN', savelast);
 
 //Public
 module.exports.push = push;
@@ -135,10 +142,7 @@ module.exports.getlastItems = () => {
 
     //FITER PATH-DRIVE
     result.map(r => {
-        if (
-            (r.params && r.params.original_last_path && r.params.original_last_path.includes('typebox-path')) ||
-            (r.params && r.params.original_fav_path && r.params.original_fav_path.includes('typebox-path'))
-        ) {
+        if (r.type.includes('path')) {
             result = result.delete(r.id);
         }
     });

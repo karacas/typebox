@@ -7,29 +7,32 @@ const app = electron.app;
 const Menu = electron.Menu;
 const Tray = electron.Tray;
 const __dirnameRoot = app.getAppPath();
+const logger = require('./main_logger.js');
 const EventEmitter = require('events');
 const idleTime = require('./idletime.js');
 const realClock = require('./real_clock.js');
 const data_io = require('./data_io.js');
 const isElevated = require('is-elevated');
 
-var initiated = false;
-var settings = null;
-var mainWindow = null;
-var trayIcon = null;
-var win_user_X = -1;
-var win_user_Y = -1;
-var win_max_size = -1;
-var firstPos = false;
-var windowEvent = new EventEmitter();
-var lastShortcut = null;
-var currentShortcut = null;
-var oldWin = null;
-var shouldQuit;
+let initiated = false;
+let settings = null;
+let mainWindow = null;
+let trayIcon = null;
+let win_user_X = -1;
+let win_user_Y = -1;
+let win_max_size = -1;
+let firstPos = false;
+let windowEvent = new EventEmitter();
+let lastShortcut = null;
+let currentShortcut = null;
+let oldWin = null;
+let shouldQuit;
 
 const size_threshold = 4;
-var delay2show = 1200;
-var elevated = null;
+let delay2show = 1200;
+let elevated = null;
+let pop_unpopThrottle = () => {};
+let closeOnQuit = true;
 
 function init() {
     if (initiated || !app) {
@@ -37,12 +40,14 @@ function init() {
     }
 
     if (!global.sharedObj) {
-        console.log('No global.sharedObj', global.sharedObj);
+        logger.log('No global.sharedObj', global.sharedObj);
         return;
     }
 
     settings = global.sharedObj.settings_manager.getSettings();
     delay2show = settings.here_are_dragons.delay2show;
+
+    pop_unpopThrottle = _.throttle(pop_unpop, _.result(settings, 'here_are_dragons.throttleTime_pop_unpop') || 240, { trailing: false });
 
     setShares();
     realClock.init(_.result(settings, 'here_are_dragons.realClockOptions'), _.result(settings, 'here_are_dragons.realClockEnabled'));
@@ -52,7 +57,7 @@ function init() {
 
     app.on('before-quit', beforequit);
 
-    if (app.dock) {
+    if (app.dock && !settings.visibleInTaskBar) {
         app.dock.hide();
     }
 
@@ -60,6 +65,9 @@ function init() {
 
     isElevated().then(ele => {
         elevated = ele;
+        if (settings && settings.here_are_dragons && settings.here_are_dragons.report) {
+            settings.here_are_dragons.report.isElevated = elevated;
+        }
     });
 
     //ON CHANGE SETTINGS
@@ -105,7 +113,7 @@ function init() {
 
 function setShares() {
     //KTODO: Hacer módulo aparte
-    var $global = global.sharedObj;
+    let $global = global.sharedObj;
     $global.electron_app = app;
     $global.app_window_and_systray.unpopWin = unpopWin;
     $global.app_window_and_systray.popWin = popWin;
@@ -129,7 +137,7 @@ function setShares() {
 
 function registerWindow() {
     if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-        // settings.here_are_dragons.electron_windows_list_options.show = true
+        settings.here_are_dragons.electron_windows_list_options.show = true;
     }
 
     mainWindow = new BrowserWindow(settings.here_are_dragons.electron_windows_list_options);
@@ -144,17 +152,17 @@ function registerWindow() {
     if (settings.dev && settings.here_are_dragons.chromiumConsole) {
         openDevTools();
     } else {
-        settings.here_are_dragons.delay2show = 100;
+        settings.here_are_dragons.delay2show = 160;
     }
 
     if (settings.verbose) {
-        console.log('Win list created');
+        logger.log('Win list created');
     }
     handleWindow();
 
     setTimeout(() => {
         if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-            popWin(true);
+            popWin();
         }
     }, delay2show);
 }
@@ -173,48 +181,43 @@ function refreshListWindow() {
         return;
     }
 
+    windowEvent.emit('REFRESH_WIN');
+    closeOnQuit = false;
+
+    unpopWin();
+    mainWindow.closeDevTools();
     oldWin = mainWindow;
 
-    mainWindow.closeDevTools();
-    unpopWin();
+    win_user_X = -1;
+    win_user_Y = -1;
+    firstPos = false;
 
     setTimeout(() => {
-        win_user_X = -1;
-        win_user_Y = -1;
-        firstPos = false;
-
         settings = global.sharedObj.settings_manager.getSettings();
 
         if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-            // settings.here_are_dragons.electron_windows_list_options.show = true
+            settings.here_are_dragons.electron_windows_list_options.show = true;
         }
 
-        //KTODO: percent width
         mainWindow = new BrowserWindow(settings.here_are_dragons.electron_windows_list_options);
         windowEvent = new EventEmitter();
         idleTime.init(windowEvent);
+        mainWindow.webContents.loadURL('file://' + __dirname + '/list_view.html');
 
         setShares();
         handleWindow();
 
-        mainWindow.webContents.loadURL('file://' + __dirname + '/list_view.html');
-
-        if (settings.dev && settings.here_are_dragons.chromiumConsole) {
-            openDevTools();
-        }
+        if (oldWin && oldWin.close) oldWin.close();
+        if (settings.dev && settings.here_are_dragons.chromiumConsole) openDevTools();
 
         setTimeout(registerMainShortcut);
 
-        if (oldWin && oldWin.close) {
-            oldWin.close();
+        if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
+            setTimeout(popWin, delay2show);
         }
 
-        setTimeout(() => {
-            if (settings.here_are_dragons.startOpen || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-                popWin(popWin);
-            }
-        }, delay2show + 10);
-    }, 10);
+        closeOnQuit = true;
+    }, 100);
 }
 
 function registerMainShortcut() {
@@ -232,7 +235,7 @@ function registerMainShortcut() {
     }
     if (!globalShortcut.isRegistered(currentShortcut)) {
         globalShortcut.register(currentShortcut, () => {
-            popWin(true);
+            popWin();
         });
     }
 }
@@ -242,7 +245,7 @@ function handleWindow() {
         return;
     }
 
-    if (settings.dev || settings.here_are_dragons.search_box_main_window.hideOnBlur) {
+    if (settings.here_are_dragons.search_box_main_window.hideOnBlur) {
         mainWindow.on('blur', unpopWin);
     }
 
@@ -259,6 +262,11 @@ function handleWindow() {
                 setWindowSize(widthInFile, null);
             }
         }
+    });
+
+    mainWindow.on('close', (path, dif) => {
+        if (!closeOnQuit) return;
+        forceQuit();
     });
 
     registerMainShortcut();
@@ -285,11 +293,11 @@ function registerSystray() {
 
     trayIcon = new Tray(__dirname + trayIconFile);
 
-    var contextMenu = Menu.buildFromTemplate([
+    let contextMenu = Menu.buildFromTemplate([
         {
             label: 'Open [' + settings.mainShortcut + ']',
             click: () => {
-                popWin(true);
+                popWin();
             }
         },
         {
@@ -310,90 +318,73 @@ function registerSystray() {
         }
     ]);
 
-    trayIcon.setToolTip('Typebox');
+    trayIcon.setToolTip('typebox' + ' v' + app.getVersion());
     trayIcon.setContextMenu(contextMenu);
-    trayIcon.on('click', togleWinDebounce);
+    trayIcon.on('click', togleWin);
 
     if (settings.verbose) {
-        console.log('Systray created');
+        logger.log('Systray created');
     }
 }
 
-function popWin(force = false) {
-    if (!mainWindow || !app) {
-        return;
-    }
-
-    let isvisible = true;
-
-    if (!mainWindow.isVisible()) {
-        isvisible = false;
-        if (app && app.show) app.show();
-        mainWindow.show();
-    }
-
-    if (mainWindow.isMinimized()) {
-        isvisible = false;
-        if (mainWindow.restore) mainWindow.restore();
-    }
-
-    if (!mainWindow.isFocused()) {
-        isvisible = false;
-        mainWindow.focus();
-    }
-
-    if (force) {
-        if (app && app.show) app.show();
-        if (mainWindow.restore) mainWindow.restore();
-        mainWindow.show();
-        mainWindow.focus();
-    }
-
-    if (!isvisible) {
-        windowEvent.emit('SHOW');
-    }
+function popWin() {
+    pop_unpopThrottle(true);
 }
 
-function unpopWin(force = false) {
-    //KTODO: Si sale con esc que no haga focus en la app anterior
-    if (!mainWindow || _.result(settings, 'here_are_dragons.debug.noUnpopWin')) {
-        return;
-    }
-
-    let isvisible = false;
-
-    if (mainWindow.isFocused()) {
-        isvisible = true;
-        mainWindow.blur();
-    }
-
-    if (mainWindow.isVisible()) {
-        isvisible = true;
-        if (app && app.hide) app.hide();
-        mainWindow.hide();
-    }
-
-    if (force) {
-        mainWindow.blur();
-        mainWindow.hide();
-        if (app && app.hide) app.hide();
-    }
-
-    if (isvisible) {
-        windowEvent.emit('HIDE');
-    }
+function unpopWin() {
+    pop_unpopThrottle(false);
 }
-
-let togleWinDebounce = _.debounce(togleWin, 320);
 
 function togleWin() {
-    if (!mainWindow) {
-        return;
-    }
-    if (mainWindow.isVisible() && mainWindow.isFocused()) {
+    if (mainWindow.isVisible()) {
         unpopWin();
     } else {
         popWin();
+    }
+}
+
+function pop_unpop(pop) {
+    if (!mainWindow || !app) return;
+
+    if (pop) {
+        //OPEN
+        if (!mainWindow.isVisible() || !mainWindow.isFocused() || mainWindow.isMinimized()) {
+            setTimeout(() => {
+                windowEvent.emit('SHOW');
+            }, 0);
+        }
+
+        if (!settings.visibleInTaskBar) {
+            if (app && app.show) app.show();
+        }
+
+        if (mainWindow.isMinimized() && mainWindow.restore) mainWindow.restore();
+
+        mainWindow.show();
+
+        if (!mainWindow.isFocused()) {
+            mainWindow.focus();
+        }
+    } else {
+        //CLOSE
+        if (_.result(settings, 'here_are_dragons.debug.noUnpopWin')) return;
+
+        if (mainWindow.isVisible() || mainWindow.isFocused() || !mainWindow.isMinimized()) {
+            setTimeout(() => {
+                windowEvent.emit('HIDE');
+            }, 0);
+        }
+
+        if (mainWindow.isFocused()) {
+            mainWindow.blur();
+        }
+
+        if (!settings.visibleInTaskBar) {
+            mainWindow.hide();
+            if (app && app.hide) app.hide();
+        } else {
+            mainWindow.minimize();
+        }
     }
 }
 
@@ -460,10 +451,7 @@ function userMove() {
 
 function getValidSizes(w, h) {
     if (!mainWindow || !electron.screen) {
-        return {
-            w,
-            h
-        };
+        return { w, h };
     }
     try {
         let maxW = electron.screen.getPrimaryDisplay().workAreaSize.width;
@@ -493,8 +481,8 @@ function getValidSizes(w, h) {
     }
 }
 
-var handleResize_lastW = 0;
-var handleResize_lastH = 0;
+let handleResize_lastW = 0;
+let handleResize_lastH = 0;
 
 function handleResize(e) {
     if (!mainWindow) return null;
@@ -551,7 +539,7 @@ function setWindowSize(width, height) {
 
         mainWindow.setSize(newW, newH);
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -565,24 +553,30 @@ function winIsVisible() {
 
 function singleInstance() {
     //ANOTHER ISNTANCE
-    shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-        if (mainWindow) {
-            if (settings.verbose) {
-                console.log('Another instance create, i quit');
+    try {
+        shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+            if (mainWindow) {
+                if (commandLine.join(' ').includes('electron') && !settings.dev) {
+                    return;
+                }
+                if (settings.verbose) {
+                    logger.log('Another instance create, i quit.', commandLine, workingDirectory);
+                }
+                forceQuit();
             }
-            forceQuit();
+        });
+        if (shouldQuit) {
+            if (settings.verbose) {
+                logger.log('Another instance create, i pop.');
+            }
+            setTimeout(() => {
+                popWin();
+                registerMainShortcut();
+            }, settings.here_are_dragons.delayBeforeQuit * 2);
+            return;
         }
-    });
-    if (shouldQuit) {
-        if (settings.verbose) {
-            console.log('Another instance create, i pop');
-        }
-        setTimeout(() => {
-            popWin();
-            singleInstance();
-            registerMainShortcut();
-        }, settings.here_are_dragons.delayBeforeQuit * 2);
-        return;
+    } catch (e) {
+        logger.warn(e);
     }
 }
 
@@ -621,7 +615,7 @@ function beforequit(event) {
     setTimeout(() => {
         if (app && app.exit) {
             if (settings.verbose) {
-                console.log('Exit');
+                logger.log('Exit');
             }
             app.exit(0);
         }

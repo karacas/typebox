@@ -12,8 +12,7 @@ function createViewerWebView() {
     return InfCreateClass({
         getInitialState: function() {
             return {
-                compo: createElement('Loading'),
-                unmount: false
+                compo: createElement('Loading')
             };
         },
         onClickRule: function(obj) {
@@ -23,9 +22,11 @@ function createViewerWebView() {
             }
             if (html) aux_webManager.openUrl(html, false);
         },
+        componentWillMount: function() {
+            this.removeWebView(document.querySelector('webview'));
+        },
         componentDidMount: function() {
             //KTODO: Que se puedan extender los settings
-            this.timeOut = null;
             this.options = {
                 useragent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko',
                 useragent: 'Mozilla/5.0 (Android 4.4; Mobile; rv:41.0) Gecko/41.0 Firefox/41.0',
@@ -33,8 +34,12 @@ function createViewerWebView() {
                 audiomute: true,
                 zoom: 1
             };
+
             this.fetchHtml = _.debounce(rule => {
-                if (rule.id !== this.props.rule.id) return;
+                if (rule.id !== this.props.rule.id || this.deleted) {
+                    this.removeWebView(document.querySelector('webview'));
+                    return;
+                }
                 this.setState(prevState => ({
                     compo: createElement(
                         'span',
@@ -46,35 +51,50 @@ function createViewerWebView() {
                             src: _.result(this, 'props.rule.params.openUrl'),
                             disableguestresize: true,
                             useragent: this.options.useragent,
-                            partition: this.options.partition
+                            __guestinstance: 'test',
+                            __partition: this.options.partition
                         }),
                         createElement('buttonsViewer', {}, createElement('a', { className: 'feather-stack-2', onClick: linkEvent(null, this.onClickRule) }))
                     )
                 }));
             }, Config.get('here_are_dragons.debounceTime_viewer'));
-            this.fetchHtml(_.clone(this.props.rule));
+
+            this.fetchHtml(_.cloneDeep(this.props.rule));
         },
         componentWillReceiveProps: function(nextProps) {
-            if (this.timeOut) {
-                clearTimeout(this.timeOut);
-                this.timeOut = null;
-            }
-            this.state.compo = this.getInitialState().compo;
-            this.fetchHtml(_.clone(nextProps.rule));
+            if (nextProps.rule && this.props.rule && nextProps.rule.id === this.props.rule.id) return;
+            this.removeWebView(document.querySelector('webview'));
+            this.setState(prevState => ({
+                compo: this.getInitialState().compo
+            }));
+            this.fetchHtml(_.cloneDeep(nextProps.rule));
         },
         componentWillUnmount: function() {
-            if (this.webview) {
-                this.webview.stop();
-                this.webview.closeDevTools();
+            this.deleted = true;
+            this.removeWebView(this.webview);
+            this.webview = null;
+            this.iFrameView = null;
+        },
+        removeWebView: function($webview) {
+            if ($webview) {
+                try {
+                    if ($webview.closeDevTools) $webview.closeDevTools();
+                } catch (e) {}
+                try {
+                    if ($webview.stop) $webview.stop();
+                } catch (e) {}
+                if ($webview.src) $webview.src = 'about:blank';
+                $webview = null;
             }
-            this.webview = false;
-            this.iFrameView = false;
         },
         componentDidUpdate: function(props) {
             this.webview = document.querySelector('webview');
             this.iFrameView = document.getElementById('iFrameView');
+
             if (this.webview) {
                 this.webview.addEventListener('did-frame-finish-load', () => {
+                    if (!this.webview || this.deleted) return;
+
                     this.openUrl = this.webview.getURL();
 
                     let accentColor = window.getComputedStyle(document.querySelector('body')).getPropertyValue('--accentColor');
@@ -95,11 +115,11 @@ function createViewerWebView() {
                     this.webview.setAudioMuted(Boolean(this.options.audiomute));
                     this.webview.setZoomFactor(Number(this.options.zoom));
 
-                    setTimeout(() => {
-                        if (this.iFrameView) this.iFrameView.className = this.iFrameView.className.replace('frameInLoad', 'frameLoaded');
-                    }, 1);
+                    if (this.iFrameView) this.iFrameView.className = this.iFrameView.className.replace('frameInLoad', 'frameLoaded');
                 });
+
                 this.webview.addEventListener('did-start-loading', () => {
+                    if (this.deleted) return;
                     if (this.iFrameView) this.iFrameView.className = this.iFrameView.className.replace('frameLoaded', 'frameInLoad');
                 });
             }
@@ -114,8 +134,7 @@ function createViewerHtml(htmlPromiseComponent) {
     return InfCreateClass({
         getInitialState: function() {
             return {
-                compo: createElement('Loading'),
-                unmount: false
+                compo: createElement('Loading')
             };
         },
         onClickRule: function(obj) {
@@ -127,8 +146,9 @@ function createViewerHtml(htmlPromiseComponent) {
         },
         componentDidMount: function() {
             this.fetchHtml = _.debounce(rule => {
-                if (rule.id !== this.props.rule.id) return;
+                if (this.deleted || rule.id !== this.props.rule.id) return;
                 new Promise((resolve, reject) => htmlPromiseComponent(resolve, reject, this.props.rule)).then(obj => {
+                    if (this.deleted) return;
                     if (rule.id !== this.props.rule.id) return;
                     this.setState(prevState => ({
                         compo: createElement(
@@ -140,15 +160,18 @@ function createViewerHtml(htmlPromiseComponent) {
                     }));
                 });
             }, Config.get('here_are_dragons.debounceTime_viewer'));
-            this.fetchHtml(_.clone(this.props.rule));
+
+            this.fetchHtml(_.cloneDeep(this.props.rule));
+        },
+        componentWillUnmount: function() {
+            this.deleted = true;
         },
         componentWillReceiveProps: function(nextProps) {
-            if (this.timeOut) {
-                clearTimeout(this.timeOut);
-                this.timeOut = null;
-            }
-            this.state.compo = this.getInitialState().compo;
-            this.fetchHtml(_.clone(nextProps.rule));
+            if (nextProps.rule && this.props.rule && nextProps.rule.id === this.props.rule.id) return;
+            this.setState(prevState => ({
+                compo: this.getInitialState().compo
+            }));
+            this.fetchHtml(_.cloneDeep(nextProps.rule));
         },
         render: function() {
             return this.state.compo;

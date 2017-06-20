@@ -1,34 +1,49 @@
 'use strict';
 
+const { webFrame, clipboard, remote } = require('electron');
 const _ = require('lodash');
 const Moment = require('moment');
 const Mousetrap = require('mousetrap');
-const Executor = require('../js/executor.js');
-const ListViewStore = require('../js/listViewStore.js');
-const PackagesManager = require('../js/packagesManager.js');
-const Logger = require('../js/logger.js');
-const Config = require('../js/config.js');
-const sharedData = require('../js/sharedData.js');
-const favManager = require('../js/favManager.js');
-const themeManager = require('../js/themeManager.js');
-const lastRulesManager = require('../js/lastRulesManager.js');
-
 const Inferno = require('inferno');
 const linkEvent = require('inferno').linkEvent;
 const Component = require('inferno-component');
 const InfCreateClass = require('inferno-create-class');
 
+const Executor = require('../js/executor.js');
+const ListViewStore = require('../js/listViewStore.js');
+const PackagesManager = require('../js/packagesManager.js');
+const Logger = require('../js/logger.js');
+const driveManager = require('../js/aux_driveManager.js');
+const Config = require('../js/config.js');
+const sharedData = require('../js/sharedData.js');
+const favManager = require('../js/favManager.js');
+const themeManager = require('../js/themeManager.js');
+const lastRulesManager = require('../js/lastRulesManager.js');
+const resetScore = require('../js/historyManager.js').remove;
+const togleHidden = require('../js/hiddenRulesManager.js').toggle;
+const { bindKet2actualOs, getKeyFromConfig } = require('../auxfs.js');
+
 const store = ListViewStore.store;
 const window_and_systray = sharedData.app_window_and_systray;
 
-//START COMPONENT
+let labelToolTipContext = '';
+let labelToolTipFav = '';
+
 function init() {
-    if (document) {
-        themeManager.init(document);
-    } else {
+    if (!document) {
         Logger.error('no document element');
         return;
     }
+
+    themeManager.init(document);
+
+    if (Config.get('dev')) {
+        window.clearCaches = clearCaches;
+    }
+
+    sharedData.idleTime.onIdleTimeInterval(() => {
+        clearCaches();
+    }, 10 * 60 * 1000);
 
     const render = () => Inferno.render(<ReactContent store={store.getState()} storeDispatch={store.dispatch} />, document.getElementById('contentReact'));
 
@@ -47,6 +62,18 @@ function init() {
     );
 
     themeManager.removeLoader();
+}
+
+function clearCaches() {
+    Logger.log('clear caches');
+    if (remote && remote.getCurrentWindow) remote.getCurrentWindow().webContents.session.clearCache(clear => {});
+    if (webFrame && webFrame.clearCache) webFrame.clearCache();
+    try {
+        if (gc) gc();
+    } catch (e) {}
+    if (Config.get('dev')) {
+        // Logger.log('clear caches');
+    }
 }
 
 //MAIN REACT COMPONENT
@@ -71,7 +98,7 @@ class ReactContent extends Component {
 }
 
 //SEARCH + LIST + ETC
-var FilterList = InfCreateClass({
+let FilterList = InfCreateClass({
     componentDidMount: function() {
         let debounceTime = Config.get('here_are_dragons.debounceTime_actionsKeys');
 
@@ -79,6 +106,13 @@ var FilterList = InfCreateClass({
         Config.getChangeSettingsEvent().on('changeSettings', (path, dif) => {
             setTimeout(this.forceUpdate, 1);
         });
+
+        labelToolTipContext = '';
+        labelToolTipFav = '';
+        if (Config.get('toolTips')) {
+            labelToolTipContext = 'Options [ ' + getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'CONTEXT_MENU') + ' ]';
+            labelToolTipFav = 'Toggle Fav [ ' + getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'TOGGLE_FAVORITE') + ' ]';
+        }
 
         //ON SHOW
         if (Config.get('here_are_dragons.gotoRootOnShow') && this.props.storeDispatch && this.props.store && window_and_systray) {
@@ -112,6 +146,20 @@ var FilterList = InfCreateClass({
                 return;
             }
 
+            if ($action === 'OPEN_IN_TERMINAL') {
+                driveManager.openTerminal(this.props.store.lastRuleSelected);
+                return;
+            }
+
+            if ($action === 'RESET_SCORE') {
+                let $id = _.result(this.props.store.lastRuleSelected, 'id');
+                if ($id) {
+                    resetScore($id);
+                    ListViewStore.storeActions.updateFilterlist(true);
+                }
+                return;
+            }
+
             if ($action === 'HISTORY') {
                 if (PackagesManager.getPluginByName('internal_pack_last_rules')) {
                     this.props.storeDispatch(ListViewStore.changeRulesPath(lastRulesManager.getPath()));
@@ -126,6 +174,15 @@ var FilterList = InfCreateClass({
                 return;
             }
 
+            if ($action === 'PASTE_TO_SEARCH' && /^darwin/.test(process.platform)) {
+                let clipboardText = clipboard.readText();
+                if (clipboardText) {
+                    let change = ListViewStore.changeQuery(clipboardText);
+                    this.props.storeDispatch(change);
+                }
+                return;
+            }
+
             if ($action === 'BACKESCPACE') {
                 if (this.props.store.executors !== null) {
                     this.props.storeDispatch(ListViewStore.removeSubExecutors());
@@ -134,17 +191,26 @@ var FilterList = InfCreateClass({
                 if (this.props.store.search_text_is_empty) {
                     this.props.storeDispatch(ListViewStore.backRulesPath());
                 }
+                return;
             }
 
             if ($action === 'CONTEXT_MENU') {
                 if (this.props.store.lastRuleSelected) {
                     Executor.auxCallExecutors(this.props.store.lastRuleSelected);
                 }
+                return;
             }
 
             if ($action === 'CLOSE_WIN') {
                 this.props.storeDispatch(ListViewStore.backRootRulesPath());
                 window_and_systray.unpopWin();
+                return;
+            }
+
+            if ($action === 'DEV_COPY_RULE') {
+                clipboard.writeText(JSON.stringify(this.props.store.lastRuleSelected, null, 4));
+                if (event.preventDefault) event.preventDefault();
+                return;
             }
 
             if ($action === 'COPY_STRING') {
@@ -154,6 +220,7 @@ var FilterList = InfCreateClass({
                     Config.get('here_are_dragons.defaultExecForTypes.string_copy'),
                     event
                 );
+                return;
             }
 
             if ($action === 'TOGGLE_FAVORITE') {
@@ -161,22 +228,35 @@ var FilterList = InfCreateClass({
                     favManager.toggle(this.props.store.lastRuleSelected);
                     ListViewStore.storeActions.updateFilterlist();
                 }
+                return;
+            }
+
+            if ($action === 'TOGGLE_HIDDEN') {
+                if (this.props.store.executors === null && this.props.store.lastRuleSelected) {
+                    togleHidden(this.props.store.lastRuleSelected);
+                    this.ruleSelected(null);
+                    ListViewStore.storeActions.updateFilterlist(true);
+                }
+                return;
             }
 
             if ($action === 'GOTO_ROOT') {
                 this.props.storeDispatch(ListViewStore.backRootRulesPath());
+                return;
             }
         }, debounceTime);
 
         //BIND KEYS
         let bindKeysArr = Config.get('here_are_dragons.bindKeys');
         bindKeysArr.forEach(entry => {
-            Mousetrap.bind(entry.keys, event => {
-                this.debounceMouseTrap(event, entry.action);
-            });
+            if (entry.level === 'main') {
+                Mousetrap.bind(entry.keys, event => {
+                    this.debounceMouseTrap(event, entry.action);
+                });
+            }
         });
 
-        //BIND KEYS VIEWER
+        //BIND KEYS VIEWER -> //KTODO: Mover a config
         Mousetrap.bind(['shift+down'], e => {
             if (this.componentViewer && this.componentViewerProps && document) {
                 if (document.querySelector('webview')) {
@@ -206,14 +286,17 @@ var FilterList = InfCreateClass({
         if (!obj) {
             return;
         }
+
+        let deleteSearchOnFire = true;
+
         if (obj.exectFunc && this.props.store.lastRuleSelected) {
-            Executor.executeRule(this.props.store.lastRuleSelected, this.props.store.search_text, obj);
+            deleteSearchOnFire = Executor.executeRule(this.props.store.lastRuleSelected, this.props.store.search_text, obj);
         } else {
             //Normal rule
-            Executor.executeRule(obj, this.props.store.search_text);
+            deleteSearchOnFire = Executor.executeRule(obj, this.props.store.search_text);
         }
 
-        if (Config.get('here_are_dragons.deleteSearchOnFire')) {
+        if (Config.get('here_are_dragons.deleteSearchOnFire') && deleteSearchOnFire !== false) {
             ListViewStore.storeActions.deleteSearchBox();
         }
     },
@@ -289,6 +372,7 @@ var FilterList = InfCreateClass({
                         <MainSearch
                             path={this.props.store.rulesPath}
                             text={this.props.store.search_text}
+                            result_text={this.props.store.result_text}
                             storeDispatch={this.props.storeDispatch}
                             disableKewys={Config.get('here_are_dragons.disableKeysOnSearchBox')}
                             debounceTime={Config.get('here_are_dragons.debounceTime_searchKeys')}
@@ -328,14 +412,16 @@ var FilterList = InfCreateClass({
 });
 
 //SEARCHBOX
-var MainSearch = InfCreateClass({
+let MainSearch = InfCreateClass({
     componentDidMount: function() {
         //KTODO: Deacoplar el store directo
 
         this.searchField = document.getElementById('mainSearch');
+        this.txtvalue = '';
 
-        if (this.props && this.props.text && this.props.text.length) {
+        if (this.props && this.props.text) {
             this.searchField.value = this.props.text;
+            this.txtvalue = this.props.text;
             this.reFocus();
         } else {
             //Get first list
@@ -345,9 +431,7 @@ var MainSearch = InfCreateClass({
         //Debounce change
         this.debounceChange = _.debounce(() => {
             let change = ListViewStore.changeQuery(this.searchField.value || '');
-            if (change && change.type) {
-                this.props.storeDispatch(change);
-            }
+            if (change && change.type) this.props.storeDispatch(change);
         }, this.props.debounceTime);
 
         //Disable Keys
@@ -364,9 +448,13 @@ var MainSearch = InfCreateClass({
         ListViewStore.storeEvents.on('CHANGE_SEARCH_TEXT', txt => {
             if (this.searchField && txt !== this.searchField.value) {
                 this.searchField.value = txt;
+                this.txtvalue = this.searchField.value;
                 this.reFocus();
             }
         });
+
+        this.forceUpdate();
+        this.reFocus();
     },
     componentWillUnmount: function() {
         clearInterval(this.interval);
@@ -374,20 +462,22 @@ var MainSearch = InfCreateClass({
     },
     onChange: function(event) {
         this.debounceChange();
-    },
-    reFocus: function() {
-        window.focus();
-        if (this.searchField) {
-            this.searchField.focus();
+        if (this.searchField && this.props.result_text && this.txtvalue !== this.searchField.value) {
+            this.txtvalue = this.searchField.value;
+            this.forceUpdate();
         }
     },
+    reFocus: function() {
+        if (this.searchField) this.searchField.focus();
+    },
     onblur: function(e) {
-        //Always focus
         this.reFocus();
     },
     render: function() {
         this.reFocus();
         let path = this.props.path;
+        if (this.searchField) this.txtvalue = this.searchField.value;
+        if (this.txtvalue) this.txtvalue = this.txtvalue.replace(/ /g, '\u00a0');
         return (
             <span>
                 <i class="feather-search mainSearchIcon" />
@@ -397,13 +487,16 @@ var MainSearch = InfCreateClass({
                         {path.name && <span className="pathName">{path.name}</span>}
                     </span>}
                 <input className="mousetrap" id="mainSearch" type="text" placeholder="search" onBlur={this.onblur} onInput={this.onChange} />
+                <span class="searchResultWrapp">
+                    <span id="mainSearchCopy">{this.txtvalue}</span><span id="searchResult">{this.props.result_text}</span>
+                </span>
             </span>
         );
     }
 });
 
 //LIST
-var ListCelds = InfCreateClass({
+let ListCelds = InfCreateClass({
     //KTODO: Modificar todo con set
     getInitialState: function() {
         return {
@@ -429,7 +522,7 @@ var ListCelds = InfCreateClass({
         //MouseWhell
         setTimeout(() => {
             if (document.getElementsByClassName('ruleList')[0]) {
-                document.getElementsByClassName('ruleList')[0].addEventListener('mousewheel', this.mouseWheelHandler, false);
+                document.getElementsByClassName('ruleList')[0].addEventListener('mousewheel', this.mouseWheelHandler, { passive: true });
             }
         }, 0);
 
@@ -571,7 +664,7 @@ var ListCelds = InfCreateClass({
         }
     },
     changeLastHighlighted: function() {
-        if (this.state.items) {
+        if (this.state.items && this.state.items.size) {
             let lastRange = this.getRangeItemsRender();
             this.state.itemsSlice = this.state.items.slice(lastRange.first, lastRange.last).toArray();
             this.props.ruleSelected(this.state.itemsSlice[this.state.actualScrollLine], this.state.actual);
@@ -636,7 +729,7 @@ var ListCelds = InfCreateClass({
             let $maxValidHeight = this.getValidWinSize(this.state.size_items_visible * Math.round(this.ruleHeight) + deltaObj);
 
             if ($validHeight) {
-                //KTODO: PASAR A VAR el style
+                //KTODO: PASAR A --VARIABLE el style
                 this.ruleListado.style.height = $validHeight.height - deltaObj + 'px';
                 window_and_systray.setWindowSize(null, $validHeight.height);
             }
@@ -790,8 +883,8 @@ var ListCelds = InfCreateClass({
 });
 
 //ICON
-var getIcon = icon => {
-    if (!icon) return;
+let getIcon = icon => {
+    if (!icon || !Config.get('icons')) return;
 
     let classNameIco = ['main_ico'];
 
@@ -831,7 +924,7 @@ var getIcon = icon => {
 };
 
 //GETRULE
-var getRule = (item, clickContext, clickToggleFav) => {
+let getRule = (item, clickContext, clickToggleFav) => {
     if (!item) return;
 
     let ruleIconContext = false;
@@ -849,14 +942,17 @@ var getRule = (item, clickContext, clickToggleFav) => {
 
     let infoClassName = 'ruleInfo';
 
-    if (Config.get('here_are_dragons.printRulePoints') || Config.get('here_are_dragons.debug.printRulePoints')) {
-        infoClassName += ' show';
+    if (Config.get('here_are_dragons.showRuleScore') || Config.get('here_are_dragons.debug.showRuleScore')) {
+        infoClassName += ' showRuleScore';
     }
+
+    let rootClass = 'ruleNameAndDesc';
+    if (item.isNew) rootClass += ' newRule';
 
     return (
         <span>
             {!item.component &&
-                <span className="ruleNameAndDesc">
+                <span className={rootClass}>
                     <span className="ruleName">
                         {item.title}
                     </span>
@@ -882,16 +978,18 @@ var getRule = (item, clickContext, clickToggleFav) => {
 
             {ruleIconContext &&
                 !item.exectFunc &&
+                Config.get('icons') &&
                 clickContext &&
-                <span className="ruleIconContext smallContext small_ico" onClick={linkEvent(item, clickContext)}>
+                <span className="ruleIconContext smallContext small_ico" title={labelToolTipContext} onClick={linkEvent(item, clickContext)}>
                     <i className="mdi-dots-vertical" />
                 </span>}
 
             {ruleIconContext &&
                 !item.exectFunc &&
+                Config.get('icons') &&
                 item.fav_permit &&
                 clickToggleFav &&
-                <span className="ruleIconContext smallContext small_ico" onClick={linkEvent(item, clickToggleFav)}>
+                <span className="ruleIconContext smallContext small_ico" title={labelToolTipFav} onClick={linkEvent(item, clickToggleFav)}>
                     <i className={iconFav} />
                 </span>}
 
@@ -900,7 +998,7 @@ var getRule = (item, clickContext, clickToggleFav) => {
 };
 
 //RULESELECTED-CONTEXT
-var getRuleSelected = item => {
+let getRuleSelected = item => {
     if (!item) return;
 
     this.ruleselected = document.getElementById('ruleselected');
@@ -922,7 +1020,7 @@ var getRuleSelected = item => {
 };
 
 //STATUSBAR
-var getStatusBar = params => {
+let getStatusBar = params => {
     if (!params) return;
 
     let dev = 'P';
