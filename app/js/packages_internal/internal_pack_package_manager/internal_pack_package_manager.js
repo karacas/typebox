@@ -89,11 +89,19 @@ module.exports = context => {
             ]);
             //Name to rule
             this.getRule = (namePack, $path, obj) => {
-                let isntalled = packagesManager.isInUserSettingPackages(namePack);
-                let isntalledStr = '';
-                if (isntalled) isntalledStr = ' [installed]';
+                let installed = packagesManager.isInUserSettingPackages(namePack);
+                let localJson = packagesManager.requierePackageJson(namePack);
+
+                let installedStr = '';
+                let remoteVersion = '';
+                let insVersion = '';
+
+                if (_.result(obj, 'package.version')) remoteVersion = ' ' + _.result(obj, 'package.version');
+                if (installed) insVersion = ' ' + localJson.version;
+                if (installed) installedStr = ' [ installed ' + insVersion + ' ]';
+
                 let pack = {
-                    title: namePack + isntalledStr,
+                    title: namePack + ' ' + remoteVersion + installedStr,
                     path: $path,
                     addInHistory: false,
                     fav_permit: false,
@@ -108,27 +116,29 @@ module.exports = context => {
                         obj: obj,
                         openUrl:
                             _.result(obj, 'package.homepage') ||
-                                _.result(obj, 'package.links.homepage') ||
-                                _.result(obj, 'package.repository.url') ||
-                                _.result(obj, 'package.repository') ||
-                                this.config.urlOpen.replace('{{pack}}', namePack)
+                            _.result(obj, 'package.links.homepage') ||
+                            _.result(obj, 'package.repository.url') ||
+                            _.result(obj, 'package.repository') ||
+                            this.config.urlOpen.replace('{{pack}}', namePack)
                     },
                     type: [this.pathname]
                 };
 
-                if (isntalled) pack.new_permit = false;
+                if (installed) pack.new_permit = false;
 
                 return pack;
             };
 
             //Add result rules
             this.addFetchedRules = ($pck, pcktxt) => {
+                if (context.getPath().path !== this.pathname) return;
+
                 let pck = $pck.objects;
                 let packs = [];
                 for (let i = 0; i < pck.length; i++) {
                     let obj = pck[i];
                     let namePack = _.result(obj, 'package.name');
-                    if (obj && namePack && packagesManager.validatePackage(obj.package)) {
+                    if (obj && namePack && packagesManager.validatePackage(obj.package) && !namePack.includes('-dev')) {
                         packs.push(this.getRule(namePack, this.pathname, obj));
                     }
                 }
@@ -156,7 +166,7 @@ module.exports = context => {
             //Change Path
             context.on('changePath', path => {
                 if (path === this.pathname) {
-                    context.putLoader(this.pathname);
+                    context.putLoader(this.pathname, 'Searching packages');
                     this.fetchRules();
                 }
                 if (path === this.pathInstalled.path) {
@@ -197,12 +207,17 @@ module.exports = context => {
                         return false;
                     },
                     exectFunc: obj => {
-                        context.setPath(this.pm_path.path + 'load');
-                        context.putLoader(this.pm_path.path + 'load');
+                        context.setPath({
+                            path: this.pm_path.path + 'load',
+                            avoidHistory: true
+                        });
+                        context.putLoader(this.pm_path.path + 'load', 'Check packages updates');
                         packagesManager.updateAllPackages().then(res => {
-                            if (!res || !res.length > 0) {
-                                context.removeLoader(this.pm_path.path + 'load');
-                                context.setPath(this.pm_path);
+                            if (context.getPath().path === this.pm_path.path + 'load') {
+                                if (!res || !res.length > 0) {
+                                    context.removeLoader(this.pm_path.path + 'load');
+                                    context.setPath(this.pm_path);
+                                }
                             }
                         });
                     }
@@ -223,13 +238,21 @@ module.exports = context => {
                         let name = _.result(obj, 'rule.params.name');
 
                         context.setQuery('');
-                        context.setPath(this.pm_path.path + 'load');
-                        context.putLoader(this.pm_path.path + 'load');
-
-                        packagesManager.addPackage(name).then(() => {}).catch(() => {
-                            context.removeLoader('load');
-                            ListViewStore.storeActions.backRulesPath();
+                        context.setPath({
+                            path: this.pm_path.path + 'load',
+                            avoidHistory: true
                         });
+                        context.putLoader(this.pm_path.path + 'load', 'Check package updates');
+
+                        packagesManager
+                            .addPackage(name)
+                            .then(() => {})
+                            .catch(() => {
+                                if (context.getPath().path === this.pm_path.path + 'load') {
+                                    context.removeLoader('load');
+                                    ListViewStore.storeActions.backRulesPath();
+                                }
+                            });
                     }
                 },
                 {
@@ -248,8 +271,11 @@ module.exports = context => {
                         let name = _.result(obj, 'rule.params.name');
                         context.setQuery('');
                         if (packagesManager.removePackage(name)) {
-                            context.setPath(this.pm_path.path + 'load');
-                            context.putLoader(this.pm_path.path + 'load');
+                            context.setPath({
+                                path: this.pm_path.path + 'load',
+                                avoidHistory: true
+                            });
+                            context.putLoader(this.pm_path.path + 'load', 'Removing package');
                         }
                     }
                 },
@@ -268,17 +294,25 @@ module.exports = context => {
                     exectFunc: obj => {
                         let name = _.result(obj, 'rule.params.name');
                         if (!name) return;
-                        context.setPath(this.pm_path.path + 'load');
-                        context.putLoader(this.pm_path.path + 'load');
+                        context.setPath({
+                            path: this.pm_path.path + 'load',
+                            avoidHistory: true
+                        });
+                        context.putLoader(this.pm_path.path + 'load', 'Updating package');
+
                         packagesManager
                             .updatePackage(name)
                             .then(res => {
-                                context.removeLoader(this.pm_path.path + 'load');
-                                context.setPath(this.pm_path);
+                                if (context.getPath().path === this.pm_path.path + 'load') {
+                                    context.removeLoader(this.pm_path.path + 'load');
+                                    context.setPath(this.pm_path);
+                                }
                             })
                             .catch(res => {
-                                context.removeLoader(this.pm_path.path + 'load');
-                                context.setPath(this.pm_path);
+                                if (context.getPath().path === this.pm_path.path + 'load') {
+                                    context.removeLoader(this.pm_path.path + 'load');
+                                    context.setPath(this.pm_path);
+                                }
                             });
                     }
                 },
@@ -313,7 +347,7 @@ module.exports = context => {
                 {
                     type: this.pathname,
                     title: 'Package Viewer',
-                    viewerComp: context.createViewerHtml((resolve, reject, rule) => {
+                    viewerComp: context.createViewerHtml({ geturl: rule => rule.params.openUrl }, (resolve, reject, rule) => {
                         let packName = _.result(rule, 'params.name');
                         if (!packName) return;
 
@@ -321,22 +355,18 @@ module.exports = context => {
                             getPackageReadme(packName, (error, readme) => {
                                 if (error || err || !url || !readme) {
                                     resolve({
-                                        component: context.createComponentFromHtml('<div>' + 404 + '</div>'),
+                                        component: context.createComponentFromHtml(404),
                                         openUrl: String(_.result(rule, 'params.openUrl'))
                                     });
                                     return;
                                 }
 
-                                let html = marked(readme);
                                 let urlGitHubBaseImg = url.replace('https://github.com', 'https://raw.githubusercontent.com') + '/master';
-
-                                html = context.aux_webManager.replaceHtmlSrc(html, urlGitHubBaseImg);
-                                html = context.aux_webManager.replaceHtmlHrefs(html, url);
 
                                 //KTODO: Cache
 
                                 resolve({
-                                    component: context.createComponentFromHtml("<div class='markdownView'>" + html + '</div>'),
+                                    component: context.createComponentFromMarkDown(readme, url, urlGitHubBaseImg),
                                     openUrl: String(_.result(rule, 'params.openUrl'))
                                 });
                             });

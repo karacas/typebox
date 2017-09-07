@@ -8,7 +8,7 @@ const InfCreateClass = require('inferno-create-class');
 const createElement = require('inferno-create-element');
 
 /*https://electron.atom.io/docs/api/webview-tag/*/
-function createViewerWebView() {
+function createViewerWebView(params) {
     return InfCreateClass({
         getInitialState: function() {
             return {
@@ -16,45 +16,48 @@ function createViewerWebView() {
             };
         },
         onClickRule: function(obj) {
-            let html = _.result(this, 'props.rule.params.openUrl');
-            if (obj.openUrl) {
-                html = obj.openUrl;
-            }
+            if (!params || !params.geturl) return;
+            let html = params.geturl(this.props.rule);
             if (html) aux_webManager.openUrl(html, false);
         },
         componentWillMount: function() {
             this.removeWebView(document.querySelector('webview'));
         },
         componentDidMount: function() {
-            //KTODO: Que se puedan extender los settings
-            this.options = {
-                useragent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko',
-                useragent: 'Mozilla/5.0 (Android 4.4; Mobile; rv:41.0) Gecko/41.0 Firefox/41.0',
-                partition: 'viewer',
-                audiomute: true,
-                zoom: 1
-            };
+            params.webviewConfig = params.webviewConfig || {};
+            this.options = _.cloneDeep(params.webviewConfig);
+            this.options.id = 'iFrameViewFrame';
+            this.options.className = 'withTrans';
+            this.options.src = params.geturl(this.props.rule);
+            this.options.disableguestresize = true;
+            this.options.partition = 'viewer';
+            this.options.audiomute = true;
+            this.options.zoom = 1;
+            if (_.result(params, 'webviewConfig.audiomute') !== undefined) this.options.audiomute = params.webviewConfig.audiomute;
+            if (_.result(params, 'webviewConfig.zoom') !== undefined) this.options.zoom = params.webviewConfig.zoom;
 
             this.fetchHtml = _.debounce(rule => {
                 if (rule.id !== this.props.rule.id || this.deleted) {
                     this.removeWebView(document.querySelector('webview'));
                     return;
                 }
+
+                let createButton = null;
+                if ((params && params.geturl && params.geturl(this.props.rule)) || (obj && obj.openUrl)) {
+                    createButton = createElement(
+                        'buttonsViewer',
+                        {},
+                        createElement('a', { className: 'feather-stack-2', onClick: linkEvent(null, this.onClickRule) })
+                    );
+                }
+
                 this.setState(prevState => ({
                     compo: createElement(
                         'span',
                         { id: 'iFrameView', className: 'frameInLoad', allowtransparency: 'false' },
                         createElement('Loading', {}),
-                        createElement('webview', {
-                            id: 'iFrameViewFrame',
-                            className: 'withTrans',
-                            src: _.result(this, 'props.rule.params.openUrl'),
-                            disableguestresize: true,
-                            useragent: this.options.useragent,
-                            __guestinstance: 'test',
-                            __partition: this.options.partition
-                        }),
-                        createElement('buttonsViewer', {}, createElement('a', { className: 'feather-stack-2', onClick: linkEvent(null, this.onClickRule) }))
+                        createElement('webview', this.options),
+                        createButton
                     )
                 }));
             }, Config.get('here_are_dragons.debounceTime_viewer'));
@@ -102,8 +105,7 @@ function createViewerWebView() {
                         accentColor = '#ccc';
                     }
 
-                    //KTODO: Que se pueda setear directo como opcion del plugin
-                    this.webview.insertCSS(String('.logo{display:none!important} h1.lemma {margin: 15px 0 0 0!important;} #footer{display:none!important;}}'));
+                    if (params && params.insertCSS) this.webview.insertCSS(params.insertCSS);
 
                     this.webview.insertCSS(
                         String(
@@ -111,7 +113,6 @@ function createViewerWebView() {
                         ).replace('{{accentColor}}', accentColor)
                     );
 
-                    //KTODO: Que se pueda setear directo como opcion del plugin
                     this.webview.setAudioMuted(Boolean(this.options.audiomute));
                     this.webview.setZoomFactor(Number(this.options.zoom));
 
@@ -130,7 +131,7 @@ function createViewerWebView() {
     });
 }
 
-function createViewerHtml(htmlPromiseComponent) {
+function createViewerHtml(params, htmlPromiseComponent) {
     return InfCreateClass({
         getInitialState: function() {
             return {
@@ -138,8 +139,11 @@ function createViewerHtml(htmlPromiseComponent) {
             };
         },
         onClickRule: function(obj) {
-            let html = _.result(this, 'props.rule.params.openUrl');
-            if (obj.openUrl) {
+            let html = null;
+            if (params && params.geturl) {
+                html = params.geturl(this.props.rule);
+            }
+            if (!html && obj && obj.openUrl) {
                 html = obj.openUrl;
             }
             if (html) aux_webManager.openUrl(html, false);
@@ -150,13 +154,18 @@ function createViewerHtml(htmlPromiseComponent) {
                 new Promise((resolve, reject) => htmlPromiseComponent(resolve, reject, this.props.rule)).then(obj => {
                     if (this.deleted) return;
                     if (rule.id !== this.props.rule.id) return;
-                    this.setState(prevState => ({
-                        compo: createElement(
-                            'span',
+
+                    let createButton = null;
+                    if ((params && params.geturl && params.geturl(this.props.rule)) || (obj && obj.openUrl)) {
+                        createButton = createElement(
+                            'buttonsViewer',
                             {},
-                            obj.component,
-                            createElement('buttonsViewer', {}, createElement('a', { className: 'feather-stack-2', onClick: linkEvent(obj, this.onClickRule) }))
-                        )
+                            createElement('a', { className: 'feather-stack-2', onClick: linkEvent(obj, this.onClickRule) })
+                        );
+                    }
+
+                    this.setState(prevState => ({
+                        compo: createElement('span', {}, obj.component, createButton)
                     }));
                 });
             }, Config.get('here_are_dragons.debounceTime_viewer'));
@@ -183,6 +192,18 @@ function createComponentFromHtml(html) {
     return createElement('div', { dangerouslySetInnerHTML: { __html: html } });
 }
 
+function createComponentFromMarkDown(md, baseHref, baseImg) {
+    let html = marked(md);
+
+    if (baseHref) {
+        html = aux_webManager.replaceHtmlSrc(html, baseImg || baseHref);
+        html = aux_webManager.replaceHtmlHrefs(html, baseHref);
+    }
+
+    return createComponentFromHtml("<div class='markdownView'>" + html + '</div>');
+}
+
 module.exports.createViewerHtml = createViewerHtml;
 module.exports.createViewerWebView = createViewerWebView;
 module.exports.createComponentFromHtml = createComponentFromHtml;
+module.exports.createComponentFromMarkDown = createComponentFromMarkDown;

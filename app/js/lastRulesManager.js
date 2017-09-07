@@ -49,7 +49,10 @@ function push(rulefavObj) {
         rulelast.params.original_last_path = rulelast.path;
         rulelast.params.lastDate = getTime();
 
-        lastItems = lastItems.set(id, rulelast).sortBy(r => -r.params.lastDate).slice(0, Config.get('here_are_dragons.maxLastRules'));
+        lastItems = lastItems
+            .set(id, rulelast)
+            .sortBy(r => -r.params.lastDate)
+            .slice(0, Config.get('here_are_dragons.maxLastRules'));
         lastNeedSave = true;
     }
 }
@@ -127,7 +130,7 @@ sharedData.app_window_and_systray.windowEvent.on('REFRESH_WIN', savelast);
 module.exports.push = push;
 module.exports.remove = remove;
 module.exports.loadlast = loadlast;
-module.exports.getlastItems = () => {
+module.exports.getlastItems = (filterPaths = true) => {
     let result = lastItems;
 
     //FILTER HIDDEN
@@ -141,11 +144,13 @@ module.exports.getlastItems = () => {
     }
 
     //FITER PATH-DRIVE
-    result.map(r => {
-        if (r.type.includes('path')) {
-            result = result.delete(r.id);
-        }
-    });
+    if (filterPaths) {
+        result.map(r => {
+            if (r.type.includes('path')) {
+                result = result.delete(r.id);
+            }
+        });
+    }
 
     return result.sortBy(r => -r.params.lastDate).toArray();
 };
@@ -153,11 +158,20 @@ module.exports.getAllLastItems = () => {
     return lastItems.sortBy(r => -r.params.lastDate).toArray();
 };
 module.exports.getlastItemsPath = path => {
-    return lastItems.filter(v => v.params.original_last_path === path).sortBy(r => -r.params.lastDate).toArray();
+    return lastItems
+        .filter(v => v.params.original_last_path === path)
+        .sortBy(r => -r.params.lastDate)
+        .toArray();
 };
 module.exports.getIcon = () => {
     return icon;
 };
 module.exports.getPath = () => {
     return path;
+};
+module.exports.getFolderLastsPath = () => {
+    let fpath = _.cloneDeep(path);
+    fpath.name = 'Last folders';
+    fpath.path = 'LASTS_DRIVE';
+    return fpath;
 };

@@ -9,6 +9,7 @@ let lastRules = [];
 module.exports = context => {
     return {
         init() {
+            let fixedOptions = Number(Config.get('fixedTypeBoxOptions'));
             //Add main rule
             context.addPermanentRules([
                 {
@@ -17,7 +18,8 @@ module.exports = context => {
                     description: '[ shortcut: ' + getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'HISTORY') + ' ]',
                     icon: lastRulesManager.getIcon(),
                     fav_permit: false,
-                    initSort: 10,
+                    initSort: 5,
+                    posFixed: fixedOptions * 5,
                     params: {
                         changePath: lastRulesManager.getPath()
                     }

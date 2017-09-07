@@ -10,7 +10,10 @@ describe('Main tests', () => {
     if (true) {
         it('opens a app window', function() {
             this.timeout(120000);
-            return this.app.client.waitUntilWindowLoaded().getWindowCount().should.eventually.equal(1);
+            return this.app.client
+                .waitUntilWindowLoaded()
+                .getWindowCount()
+                .should.eventually.equal(1);
         });
     }
 
@@ -27,28 +30,34 @@ describe('Main tests', () => {
         it('should type something', function() {
             this.timeout(120000);
             const TEXT_SEARCH = 'algo';
-            return this.app.client.windowByIndex(0).keys(TEXT_SEARCH).then(() => {
-                return Q.delay(C.DELAY_KEY).then(() => {
-                    var search = this.app.client.windowByIndex(0).getValue('#mainSearch');
-                    return search.then(val => {
-                        return assert.equal(val, TEXT_SEARCH);
+            return this.app.client
+                .windowByIndex(0)
+                .keys(TEXT_SEARCH)
+                .then(() => {
+                    return Q.delay(C.DELAY_KEY).then(() => {
+                        var search = this.app.client.windowByIndex(0).getValue('#mainSearch');
+                        return search.then(val => {
+                            return assert.equal(val, TEXT_SEARCH);
+                        });
                     });
                 });
-            });
         });
     }
 
     if (true) {
         it('should change searchbox', function() {
             this.timeout(120000);
-            return this.app.client.windowByIndex(0).keys('c!').then(() => {
-                return Q.delay(C.DELAY_KEY * 3).then(() => {
-                    var search = this.app.client.windowByIndex(0).getValue('#mainSearch');
-                    return search.then(val => {
-                        return assert.equal(val, 'CHANGE_OK');
+            return this.app.client
+                .windowByIndex(0)
+                .keys('c!')
+                .then(() => {
+                    return Q.delay(C.DELAY_KEY * 3).then(() => {
+                        var search = this.app.client.windowByIndex(0).getValue('#mainSearch');
+                        return search.then(val => {
+                            return assert.equal(val, 'CHANGE_OK');
+                        });
                     });
                 });
-            });
         });
     }
 

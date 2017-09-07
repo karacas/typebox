@@ -78,8 +78,22 @@ function handleThemes() {
 
     handleFont();
 
-    Logger.info('[Font]', 'Avaiable fonts:', themes.filter(theme => _.result(theme, 'packagejson.theme') === 'font').map(theme => theme.name).join(', '));
-    Logger.info('[Theme]', 'Avaiable themes:', themes.filter(theme => _.result(theme, 'packagejson.theme') === 'ui').map(theme => theme.name).join(', '));
+    Logger.info(
+        '[Font]',
+        'Avaiable fonts:',
+        themes
+            .filter(theme => _.result(theme, 'packagejson.theme') === 'font')
+            .map(theme => theme.name)
+            .join(', ')
+    );
+    Logger.info(
+        '[Theme]',
+        'Avaiable themes:',
+        themes
+            .filter(theme => _.result(theme, 'packagejson.theme') === 'ui')
+            .map(theme => theme.name)
+            .join(', ')
+    );
     Logger.info('[Theme]', 'CurrentTheme:', currentTheme.name, '/ AvailableSubThemes:', availableSubThemes.join(', '), '/ currentFont:', currentFont);
 
     if (window) {

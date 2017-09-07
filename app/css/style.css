@@ -239,6 +239,7 @@ body,
   padding: 0;
   margin: 0;
   position: relative;
+  user-select: none;
 }
 #mainSearchWrapper {
   width: auto;
@@ -626,7 +627,23 @@ span.ruleNameAndDesc.newRule:after {
 }
 .ruleViewer code,
 .ruleViewer code[class] {
+  font-family: 'Roboto Mono', Consolas, Monaco, monospace;
   background-color: var(--backLightColor);
+}
+.ruleViewer code.noBack,
+.ruleViewer code[class].noBack {
+  background-color: transparent;
+}
+.ruleViewer code.big,
+.ruleViewer code[class].big {
+  font-size: 15px;
+}
+.ruleViewer .extraMargin {
+  padding-left: var(--padding);
+  padding-right: var(--padding);
+}
+.ruleViewer .word-wrap {
+  word-wrap: break-word;
 }
 .ruleViewer blockquote {
   border-left: 2px var(--accentColor) solid;
@@ -680,26 +697,27 @@ span.ruleNameAndDesc.newRule:after {
   width: 100%;
   display: block;
   z-index: 4;
-  transition: all calc(0.25s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: 0;
+  transition: all calc(0.2s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
 }
 .boxContentWrapperList .ruleViewer {
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
+  width: calc(100% - var(--propRulesView));
   overflow-x: hidden;
   display: block;
   z-index: 1;
-  transition: all calc(0.25s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
-/*KTODO: Disable via JS Settings*/
   mix-blend-mode: var(--iframeBlendMode);
+  user-select: initial;
+}
+.boxContentWrapperList .ruleViewer.noBlend {
+  mix-blend-mode: initial;
 }
 .boxContentWrapperList.withViewer .listadoRules {
   width: var(--propRulesView);
-  transition-delay: 0.32s;
-}
-.boxContentWrapperList.withViewer .ruleViewer {
-  width: calc(100% - var(--propRulesView));
+  transition-delay: 0.3s;
+  transition: all 0 cubic-bezier(0.19, 1, 0.22, 1);
 }
 .ruleViewer {
   height: 100%;

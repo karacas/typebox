@@ -370,6 +370,7 @@ function pop_unpop(pop) {
         if (_.result(settings, 'here_are_dragons.debug.noUnpopWin')) return;
 
         if (mainWindow.isVisible() || mainWindow.isFocused() || !mainWindow.isMinimized()) {
+            windowEvent.emit('BEFORE_HIDE');
             setTimeout(() => {
                 windowEvent.emit('HIDE');
             }, 0);

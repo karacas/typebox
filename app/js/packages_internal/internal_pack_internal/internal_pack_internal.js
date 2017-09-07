@@ -8,6 +8,22 @@ const { bindKet2actualOs, getKeyFromConfig } = require('../../../auxfs.js');
 const Logger = require('../../logger.js');
 const aux_webManager = require('../../aux_webManager.js');
 
+let robot = null;
+
+try {
+    robot = require('robotjs');
+} catch (e) {}
+
+function textToHTML(text) {
+    return ((text || '') + '') // make sure it is a string;
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\t/g, '    ')
+        .replace(/ /g, '&#8203;&nbsp;&#8203;')
+        .replace(/\r\n|\r|\n/g, '<br />');
+}
+
 module.exports = context => {
     return {
         init() {
@@ -27,10 +43,10 @@ module.exports = context => {
                         iconClass: 'mdi-pencil-box small_ico'
                     },
                     enabled: obj => {
-                        return Boolean(context.getRobotJs);
+                        return Boolean(robot);
                     },
                     exectFunc: obj => {
-                        if (!Boolean(context.getRobotJs)) {
+                        if (!Boolean(robot)) {
                             context.copyToClipboard(obj.rule.params.string || obj.rule.title, !(obj.event && obj.event.shiftKey));
                             return;
                         }
@@ -60,6 +76,34 @@ module.exports = context => {
                         return obj && obj.params && obj.params.openUrl && isUrl(obj.params.openUrl);
                     },
                     exectFunc: aux_webManager.openUrl
+                }
+            ];
+        },
+        defineTypeViewers() {
+            const viewerComp = context.createViewerHtml({}, (resolve, reject, rule) => {
+                let str = textToHTML(_.result(rule, 'params.plain_code') || _.result(rule, 'params.snippet') || _.result(rule, 'params.string') || rule.title);
+                resolve({
+                    component: context.createComponentFromHtml('<div class="extraMargin"><code class="noBack word-wrap big">' + str + '</code></"div">')
+                });
+            });
+            return [
+                {
+                    type: 'string',
+                    title: 'String Viewer',
+                    enabled: obj => {
+                        return obj.type[0] === 'string' && _.result(obj, 'params.string') && _.result(obj, 'params.string') !== obj.title;
+                    },
+                    viewerComp: viewerComp
+                },
+                {
+                    type: 'snippet',
+                    title: 'snippet Viewer',
+                    viewerComp: viewerComp
+                },
+                {
+                    type: 'plain_code',
+                    title: 'code Viewer',
+                    viewerComp: viewerComp
                 }
             ];
         }

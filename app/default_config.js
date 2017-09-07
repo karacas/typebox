@@ -38,13 +38,17 @@ const __dirNameData = path.normalize(__dirNameRoot + '/_data/').replace(/\\/g, '
 
 //KTODO: TEST 4 MAC / WIN/LNX OK
 //KTODO: Cambiar el name de %TERMNAME% por %HOSTNAME%
-let terminalName = String(os.hostname()).replace(/[^a-z0-9]/gi, '_').toLowerCase();
+let terminalName = String(os.hostname())
+    .replace(/[^a-z0-9]/gi, '_')
+    .toLowerCase();
 
 let settings = {
     mainShortcut: 'CmdOrCtrl+alt+space',
     animations: false,
     notifications: true,
+    fixedTypeBoxOptions: true,
     toolTips: true,
+    gotoRootAfterAction: true,
     ignoreThesePackages: [],
     ignoreTheseRules: [],
     packages: [],
@@ -65,18 +69,22 @@ let settings = {
             { keys: ['esc'], action: 'ESCAPE', level: 'main' },
             { keys: ['enter', 'tab'], action: 'ENTER', level: 'main' },
             { keys: ['backspace'], action: 'BACKESCPACE', level: 'main' },
-            { keys: ['mod+backspace', 'shift+backspace'], action: 'GOTO_ROOT', level: 'main' },
+            { keys: ['alt+left', 'mod+backspace', 'shift+backspace'], action: 'GOTO_ROOT', level: 'main' },
             { keys: ['mod+enter'], action: 'CONTEXT_MENU', level: 'main' },
-            { keys: ['shift+esc', 'mod+esc'], action: 'CLOSE_WIN', level: 'main' },
+            { keys: ['shift+esc', 'mod+alt+left', 'mod+esc'], action: 'CLOSE_WIN', level: 'main' },
             { keys: ['mod+c', 'mod+shift+c'], action: 'COPY_STRING', level: 'main' },
             { keys: ['mod+alt+shift+c'], action: 'DEV_COPY_RULE', level: 'main' },
             { keys: ['mod+v'], action: 'PASTE_TO_SEARCH', level: 'main' },
             { keys: ['alt+down'], action: 'HISTORY', level: 'main' },
-            { keys: ['mod+shift+f'], action: 'FAVS', level: 'main' },
+            { keys: ['alt+up'], action: 'FAVS', level: 'main' },
+            { keys: ['alt+right'], action: 'RESET_SIZE', level: 'main' },
+            { keys: ['mod+d'], action: 'FOLDER_FAVS', level: 'main' },
             { keys: ['mod+del'], action: 'RESET_SCORE', level: 'main' },
             { keys: ['mod+t'], action: 'OPEN_IN_TERMINAL', level: 'main' },
             { keys: ['mod+shift+h'], action: 'TOGGLE_HIDDEN', level: 'main' },
-            { keys: ['mod+f'], action: 'TOGGLE_FAVORITE', level: 'main' }
+            { keys: ['mod+f'], action: 'TOGGLE_FAVORITE', level: 'main' },
+            { keys: ['shift+down'], action: 'SCROLL_DOWN_WEBVIEW', level: 'null' },
+            { keys: ['shift+up'], action: 'SCROLL_UP_WEBVIEW', level: 'null' }
         ],
         themeDefaultSubThemes: ['default', 'atom', 'cream', 'big', 'small'],
         os: null,
@@ -102,14 +110,13 @@ let settings = {
         gotoRootOnExec: true,
         unpopAfterCopy: true,
         showRuleScore: false,
-        gotoRootOnShow: false,
         rulesViewer: true,
         debounceTime_actionsKeys: 24,
         debounceTime_searchKeys: 80,
         debounceTime_viewer: 480,
         throttleTime_moveList: 0,
-        debounceTime_resize_win: 240,
-        throttleTime_pop_unpop: 240,
+        debounceTime_resize_win: 200,
+        throttleTime_pop_unpop: 200,
         loadPackages: true,
         loadPackagesDev: true,
         deletePackages: true,
@@ -235,6 +242,11 @@ if (true && (terminalName === 'prystore2' || terminalName === 'der2')) {
         }
     ];
     settings.here_are_dragons.realClockEnabled = true;
+}
+
+//MAC OVERWRITES
+if (/^darwin/.test(process.platform)) {
+    settings.defaultTerminalApp = 'Terminal';
 }
 
 module.exports.settings = settings;

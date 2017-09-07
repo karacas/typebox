@@ -163,7 +163,18 @@ function getFilterRules($keys = '', $optPath) {
 
         if (!sortBy) {
             if (!(!haveKeys && allNoHistory)) {
-                filteredRules = filteredRules.toSeq().sortBy(r => r.order).sortBy(r => -r.initSort).sortBy(r => -r._score);
+                if (!haveKeys) {
+                    filteredRules = filteredRules
+                        .toSeq()
+                        .sortBy(r => r.order)
+                        .sortBy(r => -r.initSort)
+                        .sortBy(r => -r._score)
+                        .sortBy(r => -r.posFixed)
+                        .sortBy(r => -Number(r.isNew));
+                } else {
+                    // filteredRules = filteredRules.toSeq().sortBy(r => r.order).sortBy(r => -r.initSort).sortBy(r => -r._score);
+                    filteredRules = filteredRules.sortBy(r => -r._score);
+                }
             }
         } else {
             filteredRules = filteredRules.sortBy(r => r[sortBy]);
@@ -326,16 +337,17 @@ function deleteVirtualRules(pluginId) {
     }
 }
 
-function loadingAction(path) {
+function loadingAction(path, nameLoader = null) {
     return {
         path: path,
-        isLoading: true
+        isLoading: true,
+        title: nameLoader
     };
 }
 
-function addLoader(path, pluginId, replace) {
+function addLoader(path, pluginId, replace, nameLoader) {
     if (path) {
-        setVirtualRules([loadingAction(path)], pluginId, replace);
+        setVirtualRules([loadingAction(path, nameLoader)], pluginId, replace);
     }
 }
 

@@ -25,10 +25,19 @@ module.exports = context => {
                     iconClass: 'mdi-calculator text'
                 };
 
+                const CALC_PATH = {
+                    path: this.name,
+                    icon: CALC_ICON,
+                    name: 'calc',
+                    keepQueryValue: true
+                };
+
                 if ((txt.length > 2 && RULES_PATH === '/') || RULES_PATH === this.name || txt === '=') {
+                    let txtToExp = txt;
                     let exp = null;
                     try {
-                        exp = mathjs.eval(txt);
+                        if (txtToExp[0] === '=') txtToExp = txtToExp.substring(1);
+                        exp = mathjs.eval(txtToExp);
                         if (String(exp).includes('undefined') || String(exp).includes('function') || String(exp).includes('drop')) {
                             exp = null;
                         }
@@ -37,10 +46,11 @@ module.exports = context => {
                     if (exp !== null && exp !== Number(txt)) {
                         context.setRules([
                             {
-                                title: txt + ' = ' + exp,
+                                title: txtToExp + ' = ' + exp,
                                 addInHistory: false,
                                 hidden_permit: false,
                                 persistFuzzy: true,
+                                posFixed: 1,
                                 path: this.name,
                                 icon: CALC_ICON,
                                 generateStaticRule: generateStaticRule,
@@ -67,12 +77,7 @@ module.exports = context => {
                                 return last;
                             })
                         );
-                        context.setPath({
-                            path: this.name,
-                            icon: CALC_ICON,
-                            name: 'calc',
-                            keepQueryValue: true
-                        });
+                        context.setPath(CALC_PATH);
                     } else {
                         context.setResult('');
                         context.deleteRules();

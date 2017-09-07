@@ -19,14 +19,6 @@ const packagesManager = require('../js/packagesManager.js');
 const commandCheckerRegExOld = /^\s?(.*?)\s?\((.*?)\)\s?\!$/g;
 const commandCheckerRegEx = /^\s?(.*?)\s?\:\s?(.*?)\s?\!$/g;
 
-let robot = null;
-
-try {
-    robot = require('robotjs');
-} catch (e) {
-    Logger.error('NO ROBOTJS', e);
-}
-
 module.exports = (name, pack, url) => {
     const app = {
         logger: Logger,
@@ -60,11 +52,9 @@ module.exports = (name, pack, url) => {
             return ListViewStore.store.getState().rulesPath;
         },
         getDriveManager: () => {
-            //KTODO: Cambiar nombre getRulesPath
             return driveManager;
         },
         setPath: changePathObj => {
-            //KTODO: Cambiar nombre setRulesPath
             setTimeout(() => {
                 ListViewStore.storeActions.changeRulesPath(changePathObj);
             });
@@ -81,11 +71,11 @@ module.exports = (name, pack, url) => {
         addPermanentRules: rules => {
             return ruleManager.pushRulePack(rules);
         },
-        _addLoader: path => {
-            return ruleManager.addLoader(path, name, false);
+        _addLoader: (path, nameLoader) => {
+            return ruleManager.addLoader(path, name, false, nameLoader);
         },
-        putLoader: path => {
-            return ruleManager.addLoader(path, name, true);
+        putLoader: (path, nameLoader) => {
+            return ruleManager.addLoader(path, name, true, nameLoader);
         },
         add2fav: obj => {
             return favManager.push(obj);
@@ -116,9 +106,6 @@ module.exports = (name, pack, url) => {
         },
         hide: () => {
             return sharedData.app_window_and_systray.unpopWin();
-        },
-        getRobotJs: () => {
-            return robot;
         },
         getRealClock: () => {
             return sharedData.realClock;

@@ -97,7 +97,10 @@ function auxGetMacApptoDataUrl(file) {
                 .then(() => {
                     try {
                         //KTODO: En macs no retina usar 32x32
-                        dataImg = nativeImage.createFromPath(tmpPng).resize({ width: 64, height: 64 }).toDataURL();
+                        dataImg = nativeImage
+                            .createFromPath(tmpPng)
+                            .resize({ width: 64, height: 64 })
+                            .toDataURL();
                     } catch (e) {}
                     if (dataImg) {
                         resolve(dataImg);
@@ -150,9 +153,11 @@ function auxGetFileIcon(file, resolve) {
 
     //MAC APP ICON
     if (/^darwin/.test(process.platform) && file.includes('.app')) {
-        auxGetMacApptoDataUrl(file).then(ico => resolve({ dataUrl: ico })).catch(e => {
-            resolve();
-        });
+        auxGetMacApptoDataUrl(file)
+            .then(ico => resolve({ dataUrl: ico }))
+            .catch(e => {
+                resolve();
+            });
         return;
     }
 
@@ -258,7 +263,9 @@ function getMutipleFiles(arr) {
         );
     }
     return new Promise((resolve, reject) => {
-        Promise.all(arr.filter(fileExsit).map(getFileInfo)).then(values => resolve(values)).catch(values => resolve(values));
+        Promise.all(arr.filter(fileExsit).map(getFileInfo))
+            .then(values => resolve(values))
+            .catch(values => resolve(values));
     });
 }
 
@@ -296,14 +303,21 @@ function pathToArray(pathname) {
 
 function getPathRules(pathname) {
     if (pathname == '/' && /^win/.test(process.platform)) {
-        let drives = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('').filter(item => existDriveWin(item)).map(item => item + ':/');
+        let drives = 'abcdefghijklmnopqrstuvwxyz'
+            .toUpperCase()
+            .split('')
+            .filter(item => existDriveWin(item))
+            .map(item => item + ':/');
         if (drives.length) {
             return getMutipleFiles(drives);
         }
     }
 
     return new Promise((resolve, reject) => {
-        pathToArray(pathname).then(arr => getMutipleFiles(arr)).then(resolve).catch(reject);
+        pathToArray(pathname)
+            .then(arr => getMutipleFiles(arr))
+            .then(resolve)
+            .catch(reject);
     });
 }
 
@@ -412,20 +426,47 @@ function openTerminal(item, forceSU = false) {
 
     if (!pathItem) return;
 
+    let cmd;
+    let params;
+
     let isDir = _.result(item, 'rule.params.isDir') || _.result(item, 'params.isDir');
     if (!isDir && !_.isString(item)) {
         pathItem = path.parse(pathItem).dir;
     }
 
-    try {
-        //KTODO: MAX/LNX
-        if (/^win/.test(process.platform)) {
-            let cmd = Config.get('defaultTerminalApp') || ['cmd', '-/K']; //['PowerShell', '-noexit', '-command'];
+    //KTODO: LNX
+
+    if (/^darwin/.test(process.platform)) {
+        try {
+            cmd = Config.get('defaultTerminalApp') || 'Terminal';
+            params = pathItem;
+            Logger.log('[openTerminal]', cmd, params);
+            opn(params, { app: cmd }).then(() => {
+                //KTODO: Hacer una función global
+                if (Config.get('here_are_dragons.gotoRootOnExec')) {
+                    ListViewStore.storeActions.backRootRulesPath();
+                    sharedData.app_window_and_systray.unpopWin();
+                }
+            });
+        } catch (e) {
+            Logger.error(e);
+        }
+    }
+
+    if (/^win/.test(process.platform)) {
+        try {
+            cmd = Config.get('defaultTerminalApp') || ['cmd', '-/K']; //['PowerShell', '-noexit', '-command'];
 
             let slashD = '';
             if (cmd[0] === 'cmd') slashD = '/d ';
 
-            let params = 'cd ' + slashD + pathItem.replace(/\//g, '\\').replace(/\\$/, '').toLowerCase();
+            params =
+                'cd ' +
+                slashD +
+                pathItem
+                    .replace(/\//g, '\\')
+                    .replace(/\\$/, '')
+                    .toLowerCase();
 
             Logger.log('[openTerminal]', cmd, params);
 
@@ -436,16 +477,17 @@ function openTerminal(item, forceSU = false) {
                     sharedData.app_window_and_systray.unpopWin();
                 }
             });
+        } catch (e) {
+            Logger.error(e);
         }
-    } catch (e) {
-        Logger.error(e);
     }
 }
 
 function walkPaths(arr, params) {
     return new Promise((resolve, reject) => {
-        //KTODO: VER DE SEPARARLO EN VARIOS, ASI SE CONSUME TODO
-        return globby(arr, params.options).then(values => resolve(_.uniq(_.flatten(values)))).catch(values => resolve(_.uniq(_.flatten(values))));
+        return globby(arr, params.options)
+            .then(values => resolve(_.uniq(_.flatten(values))))
+            .catch(values => resolve(_.uniq(_.flatten(values))));
     });
 }
 
@@ -458,12 +500,10 @@ function pathsReplaceEnvVar(p) {
 }
 
 function deleteCaches() {
-    //KTODO: Hacer directo
     sharedData.dataManager.deleteCaches();
 }
 
 function deleteUserData() {
-    //KTODO: Hacer directo
     sharedData.dataManager.deleteUserData();
 }
 

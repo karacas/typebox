@@ -116,7 +116,10 @@ function depure(force = false) {
 
         //FILTER historyItems
         historyItems = historyItems.sortBy(r => -r.date).slice(0, Math.abs(historyItems_max * 1.1));
-        historyItems = historyItems.sortBy(r => -r.date).sortBy(r => -r._points).slice(0, historyItems_max);
+        historyItems = historyItems
+            .sortBy(r => -r.date)
+            .sortBy(r => -r._points)
+            .slice(0, historyItems_max);
 
         //FILTER historyItemsKeys
         let historyItemsKeysNew = Immutable.OrderedMap();

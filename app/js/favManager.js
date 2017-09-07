@@ -46,7 +46,10 @@ function push($rulefavObj) {
         rulefav.params.original_fav_path = rulefav.path;
         rulefav.params.lastDate = getTime();
 
-        favItems = favItems.set(id, rulefav).sortBy(r => -r.params.lastDate).slice(0, Config.get('here_are_dragons.maxFavsRules'));
+        favItems = favItems
+            .set(id, rulefav)
+            .sortBy(r => -r.params.lastDate)
+            .slice(0, Config.get('here_are_dragons.maxFavsRules'));
         favNeedSave = true;
     }
 }
@@ -138,4 +141,10 @@ module.exports.getIcon = () => {
 };
 module.exports.getPath = () => {
     return path;
+};
+module.exports.getFolderFavsPath = () => {
+    let fpath = _.cloneDeep(path);
+    fpath.name = 'Favorite folders';
+    fpath.path = 'FAVS_DRIVE';
+    return fpath;
 };

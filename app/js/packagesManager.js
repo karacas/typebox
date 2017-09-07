@@ -101,7 +101,9 @@ function checkDifRemove(path) {
             return;
         }
 
-        Promise.all(getPackagesIsInDisk().map(checkAndRemove)).then(resolve).catch(reject);
+        Promise.all(getPackagesIsInDisk().map(checkAndRemove))
+            .then(resolve)
+            .catch(reject);
     });
 }
 
@@ -153,7 +155,9 @@ function checkDifPackagesInstall() {
             return;
         }
 
-        Promise.all(packList.map(checkAndInstall)).then(resolve).catch(reject);
+        Promise.all(packList.map(checkAndInstall))
+            .then(resolve)
+            .catch(reject);
     });
 }
 
@@ -350,7 +354,11 @@ function registerExecutors(executor, name) {
         $executor.namePlugin = name;
         $executor.icon = icon.get(executor.icon);
 
-        $executor.id = executor.id || String(executor.namePlugin + '_' + executor.title + '_' + executor.type).toLowerCase().replace(' ', '');
+        $executor.id =
+            executor.id ||
+            String(executor.namePlugin + '_' + executor.title + '_' + executor.type)
+                .toLowerCase()
+                .replace(' ', '');
 
         if ($executor.title && $executor.type && $executor.exectFunc) {
             executors.push($executor);
@@ -379,11 +387,17 @@ function registerViewers(viewer, name) {
         let $viewer = {};
         $viewer.title = viewer.title;
         $viewer.type = viewer.type;
+        $viewer.useBlend = viewer.useBlend || false;
         // $viewer.viewerComp = InfCreateClass(viewer.viewerComp)
+        $viewer.enabled = viewer.enabled;
         $viewer.viewerComp = viewer.viewerComp;
         $viewer.namePlugin = name;
 
-        $viewer.id = viewer.id || String(name + '_' + viewer.name).toLowerCase().replace(' ', '');
+        $viewer.id =
+            viewer.id ||
+            String(name + '_' + viewer.name)
+                .toLowerCase()
+                .replace(' ', '');
 
         if ($viewer.title && $viewer.type && $viewer.viewerComp) {
             viewers.push($viewer);

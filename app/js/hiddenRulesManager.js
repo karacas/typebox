@@ -55,7 +55,10 @@ function push($hiddenItem) {
         hiddenItem.params.original_hidden_path = hiddenItem.path;
         hiddenItem.params.hiddentDate = getTime();
 
-        hiddenItems = hiddenItems.set(id, hiddenItem).sortBy(r => -r.params.hiddentDate).slice(0, Config.get('here_are_dragons.maxHiddenRules'));
+        hiddenItems = hiddenItems
+            .set(id, hiddenItem)
+            .sortBy(r => -r.params.hiddentDate)
+            .slice(0, Config.get('here_are_dragons.maxHiddenRules'));
         hiddenNeedSave = true;
     }
 }

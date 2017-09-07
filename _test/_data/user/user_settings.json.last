@@ -2,6 +2,7 @@
     "mainShortcut": "Control+Alt+Space",
     "animations": false,
     "notifications": false,
+    "fixedTypeBoxOptions": true,
     "toolTips": true,
     "ignoreThesePackages": [
         "fs_paths",
@@ -129,6 +130,13 @@
             },
             {
                 "keys": [
+                    "mod+d"
+                ],
+                "action": "FOLDER_FAVS",
+                "level": "main"
+            },
+            {
+                "keys": [
                     "mod+del"
                 ],
                 "action": "RESET_SCORE",
@@ -154,6 +162,20 @@
                 ],
                 "action": "TOGGLE_FAVORITE",
                 "level": "main"
+            },
+            {
+                "keys": [
+                    "shift+down"
+                ],
+                "action": "SCROLL_DOWN_WEBVIEW",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "shift+up"
+                ],
+                "action": "SCROLL_UP_WEBVIEW",
+                "level": "null"
             }
         ],
         "themeDefaultSubThemes": [
@@ -251,33 +273,33 @@
             "maxSize": 1048576
         },
         "addTermNametoPaths": true,
-        "terminalName": "der2",
+        "terminalName": "prystore2",
         "paths": {
-            "root": "d:/DEV/usbwebserver/htdocs/typebox",
-            "rootDataStored": "d:/DEV/usbwebserver/htdocs/typebox/_data/",
-            "packages": "d:/DEV/usbwebserver/htdocs/typebox/_data/packages/",
-            "packages_dev": "d:/DEV/usbwebserver/htdocs/typebox/_data/packages_dev/",
-            "packages_updates": "d:/DEV/usbwebserver/htdocs/typebox/_data/packages_tmp_updates/",
-            "caches": "d:/DEV/usbwebserver/htdocs/typebox/_data/caches/",
-            "tmp": "d:/DEV/usbwebserver/htdocs/typebox/_data/tmp/",
-            "rules": "d:/DEV/usbwebserver/htdocs/typebox/_data/rules/",
-            "user": "d:/DEV/usbwebserver/htdocs/typebox/_data/user/",
-            "user_rules": "d:/DEV/usbwebserver/htdocs/typebox/_data/user_rules/",
+            "root": "d:/xampp/htdocs/typebox",
+            "rootDataStored": "d:/xampp/htdocs/typebox/_data/",
+            "packages": "d:/xampp/htdocs/typebox/_data/packages/",
+            "packages_dev": "d:/xampp/htdocs/typebox/_data/packages_dev/",
+            "packages_updates": "d:/xampp/htdocs/typebox/_data/packages_tmp_updates/",
+            "caches": "d:/xampp/htdocs/typebox/_data/caches/",
+            "tmp": "d:/xampp/htdocs/typebox/_data/tmp/",
+            "rules": "d:/xampp/htdocs/typebox/_data/rules/",
+            "user": "d:/xampp/htdocs/typebox/_data/user/",
+            "user_rules": "d:/xampp/htdocs/typebox/_data/user_rules/",
             "historypath": "_test/_data/history/",
             "favpath": "_test/_data/favorites/",
-            "newspath": "d:/DEV/usbwebserver/htdocs/typebox/_data/news/",
-            "lastpath": "d:/DEV/usbwebserver/htdocs/typebox/_data/lastrules/",
+            "newspath": "d:/xampp/htdocs/typebox/_data/news/",
+            "lastpath": "d:/xampp/htdocs/typebox/_data/lastrules/",
             "logpath": "_test/_data/log/",
-            "hidden_path": "d:/DEV/usbwebserver/htdocs/typebox/_data/hidden/",
+            "hidden_path": "d:/xampp/htdocs/typebox/_data/hidden/",
             "user_packagesSettingsName": "_user_settings.json",
             "userSettingsFile": "user_settings.json",
             "hiddenRulesfile": "hidden_rules.json",
-            "logfile": "log_der2.log",
-            "historyfile": "history_der2",
-            "favfile": "favorites_der2",
-            "newsfile": "news_der2",
-            "lastfile": "lastrules_der2",
-            "launcherCachefile": "launcher_der2"
+            "logfile": "log_prystore2.log",
+            "historyfile": "history_prystore2",
+            "favfile": "favorites_prystore2",
+            "newsfile": "news_prystore2",
+            "lastfile": "lastrules_prystore2",
+            "launcherCachefile": "launcher_prystore2"
         },
         "language": {
             "changeSettings": "Refresh settings 1"
@@ -310,10 +332,10 @@
         },
         "report": {
             "appName": "typebox",
-            "__dirNameRoot": "d:/DEV/usbwebserver/htdocs/typebox",
-            "__dirnameRootApp": "d:\\DEV\\usbwebserver\\htdocs\\typebox",
-            "version": "0.48.34",
-            "version_electron": "1.7.1",
+            "__dirNameRoot": "d:/xampp/htdocs/typebox",
+            "__dirnameRootApp": "d:\\xampp\\htdocs\\typebox",
+            "version": "0.49.40",
+            "version_electron": "1.7.3",
             "version_chrome": "58.0.3029.110",
             "version_node": "7.9.0"
         },
@@ -344,8 +366,8 @@
             "enableLogging": true,
             "ignore-certificate-errors": true,
             "ignoreCertificateErrors": true,
-            "load-component-extension": "d:\\TEMP\\TempLocal2\\scoped_dir9484_1873\\internal",
-            "loadComponentExtension": "d:\\TEMP\\TempLocal2\\scoped_dir9484_1873\\internal",
+            "load-component-extension": "d:\\TEMP\\WIN-TE~1\\scoped_dir9132_19455\\internal",
+            "loadComponentExtension": "d:\\TEMP\\WIN-TE~1\\scoped_dir9132_19455\\internal",
             "log-level": 0,
             "logLevel": 0,
             "metrics-recording-only": true,
@@ -354,16 +376,16 @@
             "firstRun": false,
             "password-store": "basic",
             "passwordStore": "basic",
-            "remote-debugging-port": 12077,
-            "remoteDebuggingPort": 12077,
+            "remote-debugging-port": 12542,
+            "remoteDebuggingPort": 12542,
             "safebrowsing-disable-auto-update": true,
             "safebrowsingDisableAutoUpdate": true,
             "test-type": "webdriver",
             "testType": "webdriver",
             "use-mock-keychain": true,
             "useMockKeychain": true,
-            "user-data-dir": "d:\\TEMP\\TempLocal2\\scoped_dir9484_5564",
-            "userDataDir": "d:\\TEMP\\TempLocal2\\scoped_dir9484_5564",
+            "user-data-dir": "d:\\TEMP\\WIN-TE~1\\scoped_dir9132_25723",
+            "userDataDir": "d:\\TEMP\\WIN-TE~1\\scoped_dir9132_25723",
             "$0": "node_modules\\electron\\dist\\electron.exe"
         }
     },

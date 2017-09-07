@@ -129,7 +129,10 @@ module.exports = context => {
                     .getMutipleFiles(resp) /* ID:X13 : <- un parametro que le diga si usar cache o no*/
                     .then(execs => {
                         if (params.config.uniqByExec) {
-                            execs = _.chain(execs).orderBy(['lnkSource'], ['asc']).uniqBy('realSource').value();
+                            execs = _.chain(execs)
+                                .orderBy(['lnkSource'], ['asc'])
+                                .uniqBy('realSource')
+                                .value();
                         }
 
                         execs = execs.map(file2rule);

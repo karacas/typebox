@@ -1,31 +1,64 @@
 'use strict';
-
 const _ = require('lodash');
 const path = require('path');
+const favManager = require('../../favManager.js');
+const lastRulesManager = require('../../lastRulesManager.js');
 const Config = require('../../config.js');
 const { bindKet2actualOs, getKeyFromConfig } = require('../../../auxfs.js');
-
-let driveManager;
-
-//KTODO: Usar fontIcons con colores
-let iconFolder = {
-    type: 'iconFont',
-    iconClass: 'mdi-folder palette-Amber-A200 text'
-};
-let iconFile = {
-    type: 'iconFont',
-    iconClass: 'mdi-file small_ico text'
-};
-let iconArchive = {
-    type: 'iconFont',
-    iconClass: 'mdi-harddisk palette-Cyan-A700 text'
-};
+let lastFavs = [];
+let lastRules = [];
 
 module.exports = context => {
+    let driveManager;
+
+    let iconFolder = {
+        type: 'iconFont',
+        iconClass: 'mdi-folder palette-Amber-A200 text'
+    };
+    let iconFile = {
+        type: 'iconFont',
+        iconClass: 'mdi-file small_ico text'
+    };
+    let iconArchive = {
+        type: 'iconFont',
+        iconClass: 'mdi-harddisk palette-Cyan-A700 text'
+    };
+
+    let pathFav = favManager.getFolderFavsPath();
+    let pathLast = lastRulesManager.getFolderLastsPath();
+
+    //KTODO: Hacer un replace de "typebox-path"
+
     return {
         config: {},
         init() {
             this.driveManager = context.getDriveManager();
+
+            context.addPermanentRules([
+                {
+                    title: 'Favorite folders',
+                    path: 'typebox-path/',
+                    icon: favManager.getIcon(),
+                    description: '[ shortcut: ' + getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'FOLDER_FAVS') + ' ]',
+                    specialScoreMult: 0,
+                    initSort: -1,
+                    params: {
+                        changePath: pathFav
+                    },
+                    type: ['null']
+                },
+                {
+                    title: 'Last folders',
+                    path: 'typebox-path/',
+                    icon: lastRulesManager.getIcon(),
+                    specialScoreMult: 0,
+                    initSort: -2,
+                    params: {
+                        changePath: pathLast
+                    },
+                    type: ['null']
+                }
+            ]);
 
             this.returnPathsFromItem = item => {
                 let pathItem = _.result(item, 'rule.params.drive_path');
@@ -61,7 +94,10 @@ module.exports = context => {
                             };
 
                             if (file.isDir) {
-                                ruleFile.title = String(file.path).split(path.sep).slice(-1)[0] || file.path;
+                                ruleFile.title =
+                                    String(file.path)
+                                        .split(path.sep)
+                                        .slice(-1)[0] || file.path;
                                 ruleFile.searchField = ruleFile.title;
                                 ruleFile.icon = iconFolder;
                                 ruleFile.type = ['path', 'string'];
@@ -93,9 +129,70 @@ module.exports = context => {
                 });
             };
 
+            this.pushFavRules = () => {
+                let favs = favManager.getFavItems();
+                if (_.isEqual(favs, lastFavs)) {
+                    //Avoid Loop
+                    return;
+                }
+
+                lastFavs = favs;
+                let packFav = [];
+
+                favs.forEach(fav => {
+                    fav.path = pathFav.path;
+                    fav.addInHistory = false;
+                    fav.fav_permit = true;
+                    if (fav.type.includes('path')) {
+                        packFav.push(fav);
+                    }
+                });
+                context.setRules(packFav);
+            };
+
+            this.pushLastRules = () => {
+                let lasts = lastRulesManager.getlastItems(false);
+                if (_.isEqual(lasts, lastRules)) {
+                    //Avoid Loop
+                    return;
+                }
+                lastRules = lasts;
+                let packlast = [];
+                lasts.forEach(last => {
+                    last.persistFuzzy = false;
+                    last.path = pathLast.path;
+                    last.addInHistory = false;
+                    if (last.type.includes('path')) {
+                        packlast.push(last);
+                    }
+                });
+                context.setRules(packlast);
+            };
+
             context.on('changePath', path => {
                 if (_.startsWith(path, 'typebox-path')) {
                     this.returnPaths(path.replace('typebox-path', ''));
+                }
+
+                if (path === pathFav.path) {
+                    this.pushFavRules();
+                } else {
+                    lastFavs = [];
+                }
+
+                if (path === pathLast.path) {
+                    this.pushLastRules();
+                } else {
+                    lastRules = [];
+                }
+            });
+
+            context.on('avoidCache', path => {
+                if (context.getPath().path === pathFav.path) {
+                    this.pushFavRules();
+                }
+                if (context.getPath().path === pathLast.path) {
+                    this.pushLastRules();
                 }
             });
 

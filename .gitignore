@@ -70,3 +70,7 @@ package-lock.log
 typebox-gist-sync_user_settings.json
 
 compileCache*
+
+choco/tools/*.exe
+choco/tools/*.nupkg
+choco/*.nupkg

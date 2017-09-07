@@ -21,7 +21,6 @@ module.exports.get = (icon = {}) => {
     return Object.assign({}, defaultIconCopy, icon);
 };
 
-//KTODO: VER COLOR
 module.exports.getLoader = () => {
     return {
         type: 'iconSvg',

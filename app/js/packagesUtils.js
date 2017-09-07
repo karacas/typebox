@@ -159,7 +159,9 @@ function make_npi(name, options) {
                 return;
             }
             Logger.info('make_npi / move files', name);
-            move_files(name, options).then(resolve).catch(reject);
+            move_files(name, options)
+                .then(resolve)
+                .catch(reject);
             return;
         });
     });

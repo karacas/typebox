@@ -82,7 +82,7 @@ module.exports = context => {
                     setTimeout(() => {
                         window_and_systray.setWindowSize(Config.getDeafult('width'), null);
                         window_and_systray.centerWin(true);
-                    }, 360);
+                    }, 340);
                 }
                 if (txt === 'f!' || txt === 'favs!') {
                     context.setQuery('');
@@ -149,10 +149,13 @@ module.exports = context => {
 
                     context.setPath('load');
                     context.putLoader('load');
-                    packagesManager.addPackage(name).then(() => {}).catch(() => {
-                        context.removeLoader('load');
-                        ListViewStore.storeActions.backRulesPath();
-                    });
+                    packagesManager
+                        .addPackage(name)
+                        .then(() => {})
+                        .catch(() => {
+                            context.removeLoader('load');
+                            ListViewStore.storeActions.backRulesPath();
+                        });
                 }
 
                 //REMOVE PACKAGE: removePackage

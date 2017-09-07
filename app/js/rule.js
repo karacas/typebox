@@ -40,7 +40,7 @@ const getNewRule = ruleObj => {
     rule._noSelect = false;
 
     if (ruleObj.isLoading) {
-        ruleObj.title = 'loading';
+        ruleObj.title = ruleObj.title || 'loading';
         ruleObj.icon = icon.getLoader();
         ruleObj.addInHistory = false;
         ruleObj.persistFuzzy = true;
@@ -158,6 +158,12 @@ const getNewRule = ruleObj => {
 
     if (ruleObj.specialScoreMult !== undefined && ruleObj.specialScoreMult !== null) {
         rule.specialScoreMult = Number(ruleObj.specialScoreMult);
+    }
+
+    rule.posFixed = 0;
+
+    if (ruleObj.posFixed !== undefined && ruleObj.posFixed !== null) {
+        rule.posFixed = Number(ruleObj.posFixed);
     }
 
     rule._distance_keys_cache = -1;

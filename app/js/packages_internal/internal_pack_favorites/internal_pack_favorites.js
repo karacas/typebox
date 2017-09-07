@@ -9,6 +9,7 @@ let lastFavs = [];
 module.exports = context => {
     return {
         init() {
+            let fixedOptions = Number(Config.get('fixedTypeBoxOptions'));
             //Add main rule
             context.addPermanentRules([
                 {
@@ -17,7 +18,8 @@ module.exports = context => {
                     description: '[ command: f! / shortcut: ' + getKeyFromConfig(Config.get('here_are_dragons.bindKeys'), 'FAVS') + ' ]',
                     icon: favManager.getIcon(),
                     fav_permit: false,
-                    initSort: 5,
+                    initSort: 10,
+                    posFixed: fixedOptions * 10,
                     params: {
                         changePath: favManager.getPath()
                     }
@@ -90,7 +92,7 @@ module.exports = context => {
                         return false;
                     },
                     exectFunc: obj => {
-                        context.toggle(obj.rule, 2222222222222);
+                        context.toggle(obj.rule);
                         return false;
                     }
                 }

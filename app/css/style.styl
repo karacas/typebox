@@ -290,6 +290,7 @@ html, body, #content, #inner-content {
 	padding 0
 	margin 0
 	position relative
+	user-select none
 }
 #mainSearchWrapper{
 	width auto
@@ -673,7 +674,21 @@ span.ruleNameAndDesc.newRule:after{
 		background-color: var(--backLightColor);
 	}
 	code, code[class]{
+		font-family: 'Roboto Mono', Consolas, Monaco, monospace;
 		background-color: var(--backLightColor);
+		&.noBack{
+			background-color transparent
+		}
+		&.big{
+			font-size 15px
+		}
+	}
+	.extraMargin{
+		padding-left var(--padding)
+		padding-right var(--padding)
+	}
+	.word-wrap{
+		word-wrap: break-word;
 	}
 	blockquote {
 		border-left: 2px var(--accentColor) solid;
@@ -735,29 +750,30 @@ span.ruleNameAndDesc.newRule:after{
 		width 100%
 		display block
 		z-index 4
-		MX_transition(calc(0.25s * var(--animSpeedFactor)))
+		transition-delay: 0
+		MX_transition(calc(0.2s * var(--animSpeedFactor)))
 	}
 	.ruleViewer{
 		position absolute
 		top 0
 		right 0
-		width 50%
+		width calc(100% - var(--propRulesView))
 		overflow-x hidden
 		display block
 		z-index 1
-		MX_transition(calc(0.25s * var(--animSpeedFactor)))
-		/*KTODO: Disable via JS Settings*/
 		mix-blend-mode: var(--iframeBlendMode);
+		user-select initial
+		&.noBlend{
+			mix-blend-mode: initial;
+		}
 	}
 }
 
 .boxContentWrapperList.withViewer{
 	.listadoRules{
 		width: var(--propRulesView)
-		transition-delay: 0.32s
-	}
-	.ruleViewer{
-		width calc(100% - var(--propRulesView))
+		transition-delay: 0.3s
+		MX_transition(0)
 	}
 }
 

@@ -39,7 +39,7 @@ describe('RAE tests', function() {
                 .then(() => RAE('a', 'ca', false))
                 .then(() => RAE('m', 'cama', false))
                 .then(() => RAE('i', 'camio', false))
-                .then(() => RAE('n', 'camino', false))
+                .then(() => RAE('n', 'caminí', false))
                 .then(() => RAE('o', 'camino', false));
         });
     }

@@ -1,5 +1,6 @@
 const electron = require('electron');
 const app = electron.app;
+const Notification = require('electron').Notification;
 
 module.exports = {
     handleSquirrelEvent: function() {
@@ -39,9 +40,13 @@ module.exports = {
                 // explorer context menus
 
                 // Install desktop and start menu shortcuts
+                new Notification({ title: 'typebox', body: 'Installing typebox...' }).show();
                 spawnUpdate(['--createShortcut', exeName]);
 
-                setTimeout(app.quit, 1000);
+                setTimeout(() => {
+                    app.quit();
+                }, 1000);
+
                 return true;
 
             case '--squirrel-uninstall':
@@ -51,7 +56,11 @@ module.exports = {
                 // Remove desktop and start menu shortcuts
                 spawnUpdate(['--removeShortcut', exeName]);
 
-                setTimeout(app.quit, 1000);
+                setTimeout(() => {
+                    new Notification({ title: 'typebox', body: 'Typebox removed OK, =(' }).show();
+                    app.quit();
+                }, 1000);
+
                 return true;
 
             case '--squirrel-obsolete':
@@ -61,6 +70,11 @@ module.exports = {
 
                 app.quit();
                 return true;
+
+            case '--squirrel-firstrun':
+                setTimeout(() => {
+                    new Notification({ title: 'typebox', body: 'Typebox installed OK!' }).show();
+                }, 1);
         }
     }
 };
