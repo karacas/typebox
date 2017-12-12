@@ -2,15 +2,18 @@
 const _ = require('lodash');
 const Redux = require('redux');
 const ruleManager = require('../js/ruleManager.js');
+const lastRulesManager = require('../js/lastRulesManager.js');
 const makeRulePath = require('../js/path.js');
 const Moment = require('moment');
 const Reduxobservers = require('redux-observers');
 const EventEmitter = require('events');
+const Logger = require('../js/logger.js');
 
 const rootPathInitialState = makeRulePath.get();
 
 const storeInitialState = {
     search_text: '',
+    result_text: '',
     search_text_is_empty: true,
     filteredRules: null,
     rulesPathHist: [rootPathInitialState],
@@ -25,25 +28,27 @@ const storeInitialState = {
 
 //AUX CHANGE RULES
 function change_rules(text = storeInitialState.search_text, pathObj = rootPathInitialState) {
-    var timeStart1 = new Moment(new Date());
+    let timeStart1 = new Moment(new Date());
 
-    var rules = ruleManager.getFilterRules(text, pathObj);
+    let rules = ruleManager.getFilterRules(text, pathObj);
 
-    var time = new Moment(new Date()).diff(timeStart1);
-    if (time < 3) {
-        time = store.getState().statusBar_totalTime;
-    }
+    let time = new Moment(new Date()).diff(timeStart1);
 
     return { rules: rules, time: time };
 }
 
 //REDUCERS
 function storeList(state = storeInitialState, action) {
+    let obj, newState, text, rulesPathHist;
+    if (!action || !action.type) {
+        Logger.warn('[storeList] No action or action.type');
+        return;
+    }
     switch (action.type) {
         case 'CHANGE_SEARCH':
-            var text = action.text || '';
-            var obj = change_rules(text, state.rulesPath);
-            var newState = {
+            text = action.text || '';
+            obj = change_rules(text, state.rulesPath);
+            newState = {
                 search_text: text,
                 search_text_is_empty: !text.length,
                 statusBar_actual: 0,
@@ -53,9 +58,10 @@ function storeList(state = storeInitialState, action) {
             return Object.assign({}, state, newState);
 
         case 'DELETE_SEARCH':
-            var obj = change_rules('', state.rulesPath);
-            var newState = {
+            obj = change_rules('', state.rulesPath);
+            newState = {
                 search_text: '',
+                result_text: '',
                 search_text_is_empty: true,
                 statusBar_actual: 0,
                 filteredRules: obj.rules,
@@ -63,48 +69,67 @@ function storeList(state = storeInitialState, action) {
             };
             return Object.assign({}, state, newState);
 
+        case 'CHANGE_RESULT':
+            let result_text = action.result_text || '';
+            newState = {
+                result_text: result_text
+            };
+            return Object.assign({}, state, newState);
+
         case 'UPDATE_LIST':
-            var obj = change_rules(state.search_text, state.rulesPath);
-            var newState = { filteredRules: obj.rules, statusBar_totalTime: obj.time };
+            obj = change_rules(state.search_text, state.rulesPath);
+            newState = { filteredRules: obj.rules, statusBar_totalTime: obj.time };
+            return Object.assign({}, state, newState);
+        case 'UPDATE_LIST':
+
+        case 'UPDATE_LIST_FORCE':
+            let rulePath = _.cloneDeep(state.rulesPath);
+            rulePath.avoidCache = true;
+            obj = change_rules(state.search_text, rulePath);
+            newState = { filteredRules: obj.rules, statusBar_totalTime: obj.time, statusBar_actual: 0 };
             return Object.assign({}, state, newState);
 
         case 'CHANGE_RULES_PATH':
-            var objPath = action.obj;
-            var path = objPath.path || rootPathInitialState.path;
-            var name = objPath.name || rootPathInitialState.name;
-            var sort = objPath.sort || rootPathInitialState.sort;
-            var icon = objPath.icon || rootPathInitialState.icon;
-            var avoidCache = objPath.avoidCache || rootPathInitialState.avoidCache;
-            var avoidHystory = objPath.avoidHystory || rootPathInitialState.avoidHystory;
+            let objPath = action.obj;
+            let path = objPath.path || rootPathInitialState.path;
+            let name = objPath.name || rootPathInitialState.name;
+            let sort = objPath.sort || rootPathInitialState.sort;
+            let icon = objPath.icon || rootPathInitialState.icon;
+            let checkNews = Boolean(objPath.checkNews);
+            let avoidCache = objPath.avoidCache || rootPathInitialState.avoidCache;
+            let avoidHistory = objPath.avoidHistory || rootPathInitialState.avoidHistory;
 
-            var sortBy = objPath.sortBy;
-            var keepQueryValue = objPath.keepQueryValue || rootPathInitialState.keepQueryValue;
+            let sortBy = objPath.sortBy;
+            let keepQueryValue = objPath.keepQueryValue || rootPathInitialState.keepQueryValue;
+            let ephemeral = objPath.ephemeral || rootPathInitialState.ephemeral;
 
-            var rulesPathHist = state.rulesPathHist;
+            rulesPathHist = state.rulesPathHist;
 
             if (path === state.rulesPath.path) {
                 return state;
             }
 
-            var pathObj = {
+            let pathObj = {
                 path: path,
                 name: name,
                 sort: sort,
                 sortBy: sortBy,
                 icon: icon,
+                checkNews: checkNews,
                 avoidCache: avoidCache,
-                avoidHystory: avoidHystory
+                avoidHistory: avoidHistory,
+                ephemeral: ephemeral
             };
 
             if (path !== rootPathInitialState.path) {
-                if (path !== _.takeRight(rulesPathHist)[0].path && !pathObj.avoidHystory) {
+                if (path !== _.takeRight(rulesPathHist)[0].path && !pathObj.avoidHistory) {
                     rulesPathHist.push(pathObj);
                 }
             } else {
                 rulesPathHist = [rootPathInitialState];
             }
 
-            var obj = {};
+            obj = {};
 
             if (objPath.keepQueryValue) {
                 obj = change_rules(state.search_text, pathObj);
@@ -112,7 +137,11 @@ function storeList(state = storeInitialState, action) {
                 obj = change_rules('', pathObj);
             }
 
-            var newState = {
+            if (objPath.ephemeral) {
+                lastRulesManager.pushToephemeralPaths(pathObj.path);
+            }
+
+            newState = {
                 rulesPath: pathObj,
                 rulesPathHist: rulesPathHist,
                 filteredRules: obj.rules,
@@ -122,13 +151,14 @@ function storeList(state = storeInitialState, action) {
 
             if (!objPath.keepQueryValue) {
                 newState.search_text = '';
+                newState.result_text = '';
                 newState.search_text_is_empty = true;
             }
 
             return Object.assign({}, state, newState);
 
         case 'BACK_RULES_PATH':
-            var rulesPathHist = _.clone(state.rulesPathHist);
+            rulesPathHist = _.cloneDeep(state.rulesPathHist);
 
             if (rulesPathHist.length > 1) {
                 rulesPathHist = _.dropRight(rulesPathHist, 1);
@@ -136,12 +166,13 @@ function storeList(state = storeInitialState, action) {
                 rulesPathHist = [rootPathInitialState];
             }
 
-            var rulesPath = _.takeRight(rulesPathHist)[0];
-            var obj = change_rules(state.search_text, rulesPath);
+            let rulesPath = _.takeRight(rulesPathHist)[0];
+            obj = change_rules(state.search_text, rulesPath);
 
             return Object.assign({}, state, {
                 search_text: '',
                 search_text_is_empty: true,
+                result_text: '',
                 rulesPath: rulesPath,
                 rulesPathHist: rulesPathHist,
                 filteredRules: obj.rules,
@@ -151,15 +182,15 @@ function storeList(state = storeInitialState, action) {
             });
 
         case 'BACK_ROOT_RULES_PATH':
-            var obj = change_rules('', rootPathInitialState);
+            obj = change_rules('', rootPathInitialState);
             return Object.assign({}, state, {
                 search_text: '',
                 search_text_is_empty: true,
+                result_text: '',
                 rulesPath: rootPathInitialState,
                 rulesPathHist: [rootPathInitialState],
                 executors: null,
                 lastExcutorSelected: null,
-                statusBar_actual: null,
                 filteredRules: obj.rules,
                 statusBar_actual: 0,
                 statusBar_totalTime: obj.time
@@ -172,7 +203,7 @@ function storeList(state = storeInitialState, action) {
             return Object.assign({}, state, { lastExcutorSelected: action.obj, statusBar_actual: action.index });
 
         case 'PLACE_SUBEXECUTORS':
-            var newState = { executors: action.execs };
+            newState = { executors: action.execs };
             if (action.execs == null) {
                 newState.lastExcutorSelected = null;
                 newState.lastRuleSelected = state.lastRuleSelected;
@@ -193,7 +224,7 @@ function storeList(state = storeInitialState, action) {
 //ACTIONS
 module.exports.changeQuery = (text = '') => {
     if (store && text === store.getState().search_text) {
-        return {};
+        // return {};
     }
     return { type: 'CHANGE_SEARCH', text: text };
 };
@@ -202,11 +233,19 @@ module.exports.deleteSearchBox = () => {
     return { type: 'DELETE_SEARCH' };
 };
 
-module.exports.updateFilterlist = () => {
-    if (store.getState().rulesPath.avoidCache) {
+//ACTIONS
+module.exports.changeResult = (result_text = '') => {
+    return { type: 'CHANGE_RESULT', result_text: result_text };
+};
+
+module.exports.updateFilterlist = (force = false) => {
+    if (store.getState().rulesPath.avoidCache || force === true) {
         setTimeout(() => {
             storeEvents.emit('AVOID_CACHE');
         });
+    }
+    if (force) {
+        return { type: 'UPDATE_LIST_FORCE' };
     }
     return { type: 'UPDATE_LIST' };
 };
@@ -277,10 +316,14 @@ module.exports.storeActions = {
     deleteSearchBox: () => {
         store.dispatch(module.exports.deleteSearchBox());
     },
-    updateFilterlist: () => {
-        store.dispatch(module.exports.updateFilterlist());
+    changeResult: result_text => {
+        store.dispatch(module.exports.changeResult(result_text));
+    },
+    updateFilterlist: force => {
+        store.dispatch(module.exports.updateFilterlist(force));
     },
     changeRulesPath: obj => {
+        if (obj === null) return;
         store.dispatch(module.exports.changeRulesPath(obj));
     },
     backRulesPath: () => {
@@ -296,3 +339,5 @@ module.exports.storeActions = {
         store.dispatch(module.exports.placeSubExecutors(execs));
     }
 };
+
+window.changeResult = module.exports.storeActions.changeResult;

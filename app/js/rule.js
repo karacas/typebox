@@ -1,47 +1,34 @@
 'use strict';
-const _ = require('lodash');
-const removeDiacritics = require('lodash').deburr;
+
+const kebabCase = require('lodash').kebabCase;
+const removeDiacritics = require('diacritics').remove;
 const Logger = require('../js/logger.js');
 const icon = require('../js/icon.js');
+const { bindKet2actualOs, getKeyFromConfig } = require('../auxfs.js');
 const Config = require('../js/config.js');
-const sub = require('hash-sum');
+const URLSafeBase64 = require('urlsafe-base64');
 
-var copyKey = null;
-var enterKey = null;
-var icons = Config.get('icons');
+const BINDKEYS = Config.get('here_are_dragons.bindKeys');
+const ENTERKEY = getKeyFromConfig(BINDKEYS, 'ENTER');
+const COPYKEY = getKeyFromConfig(BINDKEYS, 'COPY_STRING');
+const ICONLOADER = icon.getLoader();
+const ICONINFO = icon.getInfo();
 
-function getStringDescription(rule) {
-    //Define enter key
-    if (!enterKey) {
-        enterKey = Config.get('here_are_dragons.bindKeys').find(o => {
-            return o.action === 'ENTER';
-        });
-        enterKey = _.result(enterKey, 'keys[0]') || 'Enter11';
-        enterKey = enterKey.toUpperCase();
-    }
+const getStringDescription = rule => 'Press ' + ENTERKEY + ' to expand text / ' + COPYKEY + ' to clipboard';
 
-    //Define copy key
-    if (!copyKey) {
-        copyKey = Config.get('here_are_dragons.bindKeys').find(o => {
-            return o.action === 'COPY_STRING';
-        });
-        copyKey = _.result(copyKey, 'keys[0]') || 'ctrl + c';
-        copyKey = copyKey.toUpperCase();
-    }
+const getNewRule = (ruleObj, generated = false) => {
+    if (!ruleObj) return null;
 
-    return 'Press ' + enterKey + ' to expand text / ' + copyKey + ' to clipboard';
-}
-
-module.exports.getNewRule = ruleObj => {
     let rule = {};
 
     rule.isLoading = false;
+    rule.isInfo = false;
     rule._internalAct = false;
     rule._noSelect = false;
 
-    if (ruleObj && ruleObj.isLoading) {
-        ruleObj.title = 'loading';
-        ruleObj.icon = icon.getLoader();
+    if (ruleObj.isLoading) {
+        ruleObj.title = ruleObj.title || 'loading';
+        ruleObj.icon = ICONLOADER;
         ruleObj.addInHistory = false;
         ruleObj.persistFuzzy = true;
         rule.isLoading = true;
@@ -49,7 +36,17 @@ module.exports.getNewRule = ruleObj => {
         rule._noSelect = true;
     }
 
-    if (!ruleObj || !ruleObj.title || !ruleObj.title.length) {
+    if (ruleObj.isInfo) {
+        ruleObj.title = ruleObj.title || null;
+        ruleObj.icon = ICONINFO;
+        ruleObj.addInHistory = false;
+        ruleObj.persistFuzzy = true;
+        rule.isInfo = true;
+        rule._internalAct = true;
+        rule._noSelect = true;
+    }
+
+    if (!ruleObj.title) {
         Logger.warn('RULE: No title:', ruleObj);
         return null;
     }
@@ -65,14 +62,13 @@ module.exports.getNewRule = ruleObj => {
 
     //Type
     if (ruleObj.type) {
-        if (_.isArray(ruleObj.type)) {
+        if (typeof ruleObj.type === 'string' || ruleObj.type instanceof String) {
+            rule.type = [ruleObj.type];
+        } else {
             rule.type = ruleObj.type;
         }
-        if (_.isString(ruleObj.type) && ruleObj.type !== 'object') {
-            rule.type = [ruleObj.type];
-        }
     } else {
-        if (!_.has(ruleObj, 'ruleObj.changePath') && !rule._internalAct) {
+        if (!rule._internalAct && !ruleObj.changePath) {
             rule.type = ['string'];
             rule.description = rule.description || getStringDescription(rule);
         } else {
@@ -80,7 +76,7 @@ module.exports.getNewRule = ruleObj => {
         }
     }
 
-    if (!_.includes(rule.type, 'object') && !_.includes(rule.type, 'null')) {
+    if (!rule.type.includes('object') && !rule.type.includes('null')) {
         rule.type.push('object');
     }
 
@@ -92,43 +88,59 @@ module.exports.getNewRule = ruleObj => {
         rule.type = ['null'];
     }
 
-    rule.initSort = ruleObj.initSort || 0;
+    rule.initSort = Number(ruleObj.initSort || 0);
 
     rule.order = ruleObj.order || ruleObj.title;
 
-    rule.generateStaticRule = ruleObj.generateStaticRule || null;
+    if (!generated) {
+        rule.generateStaticRule = ruleObj.generateStaticRule || null;
+    }
 
     rule.component = ruleObj.component || null;
 
     rule.path = String(ruleObj.path || '/');
 
-    rule.favorite = Boolean(ruleObj.favorite);
+    rule.favorite = false;
 
     //FAV & LAST
     rule.fav_permit = true;
     rule.last_permit = true;
     rule.hidden_permit = true;
+    rule.new_permit = true;
+    rule.isNew = false;
+
+    if (ruleObj.new_permit === false) {
+        rule.new_permit = false;
+    }
 
     if (ruleObj.fav_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
-        rule.favorite = false;
         rule.fav_permit = false;
     }
     if (ruleObj.last_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.last_permit = false;
     }
-    if (ruleObj.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading || rule.favorite) {
+    if (ruleObj.hidden_permit === false || rule._internalAct || rule._noSelect || rule.isLoading) {
         rule.hidden_permit = false;
+    }
+    if (rule._internalAct || rule._noSelect || rule.isLoading) {
+        rule.new_permit = false;
+        rule.isNew = false;
     }
 
     rule.params = ruleObj.params || {};
 
-    rule.isVirtual = Boolean(ruleObj.isVirtual);
+    rule.isVirtual = !!ruleObj.isVirtual;
 
-    rule.searchField = ruleObj.searchField || rule.title;
+    rule.searchField = removeDiacritics(
+        (ruleObj.searchField || rule.title)
+            .replace(/([^A-Z])([A-Z])/g, '$1 $2')
+            .replace(/\-/g, ' ')
+            .replace(/\_/g, ' ')
+            .replace(/ +(?= )/g, '')
+            .toLowerCase()
+    );
 
-    rule.searchField = removeDiacritics(rule.searchField.toLowerCase());
-
-    rule.persistFuzzy = ruleObj.persistFuzzy || false;
+    rule.persistFuzzy = !!ruleObj.persistFuzzy || false;
 
     rule.viewer = true;
     if (ruleObj.viewer === false) {
@@ -145,20 +157,31 @@ module.exports.getNewRule = ruleObj => {
 
     rule._score_p = 0;
 
+    rule.specialScoreMult = 1;
+
+    if (ruleObj.specialScoreMult !== undefined && ruleObj.specialScoreMult !== null) {
+        rule.specialScoreMult = Number(ruleObj.specialScoreMult);
+    }
+
+    rule.posFixed = 0;
+
+    if (ruleObj.posFixed !== undefined && ruleObj.posFixed !== null) {
+        rule.posFixed = Number(ruleObj.posFixed);
+    }
+
     rule._distance_keys_cache = -1;
 
     rule.id = makeHash((ruleObj._id || rule.title) + rule.type[0] + rule.path);
 
-    if (icons) {
-        rule.icon = icon.get(ruleObj.icon);
-    }
+    rule.icon = icon.get(ruleObj.icon);
 
     return rule;
 };
 
-function makeHash(str) {
-    // return str;
-    return sub(str);
-}
+const makeHash = str => {
+    return URLSafeBase64.encode(Buffer.from(str).toString('base64'));
+};
 
+module.exports.getNewRule = getNewRule;
 module.exports.makeRuleIdHash = makeHash;
+module.exports.makeHash = makeHash;

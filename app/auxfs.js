@@ -16,11 +16,11 @@ function customizer(objValue, srcValue) {
 }
 
 function extendObj(obj1, obj2, obj3) {
-    var result = null;
+    let result = null;
     if (!obj3) {
-        var result = _.mergeWith(cloneDeep(obj1), cloneDeep(obj2), customizer);
+        result = _.mergeWith(cloneDeep(obj1), cloneDeep(obj2), customizer);
     } else {
-        var result = _.mergeWith(cloneDeep(obj1), cloneDeep(obj2), cloneDeep(obj3), customizer);
+        result = _.mergeWith(cloneDeep(obj1), cloneDeep(obj2), cloneDeep(obj3), customizer);
     }
     return result;
 }
@@ -36,13 +36,27 @@ function getFiles(dir, files) {
         mkpath.sync(dir);
     }
     return fs.readdirSync(dir).map(function(file) {
-        var name = dir + '/' + file;
+        let name = dir + '/' + file;
         if (fs.statSync(name).isDirectory()) {
             return getFiles(name, files);
         } else {
             return name;
         }
     });
+}
+
+function bindKet2actualOs(bind) {
+    if (!bind) return '';
+    let mod = 'ctrl';
+    if (process.platform === 'darwin') mod = 'command';
+    return bind.replace('mod', mod);
+}
+
+function getKeyFromConfig(arr, action) {
+    let k = (arr || []).find(k => k.action === action);
+    if (!k || !k.keys) return '';
+    k = k.keys[0];
+    return bindKet2actualOs(k);
 }
 
 function krange(
@@ -53,14 +67,14 @@ function krange(
     $newMax, //NUEVO MAXIMO
     $outPutLimit //LIMITE DEL OUPUT
 ) {
-    var oldMin = $oldMin || 0;
-    var oldMax = $oldMax || 1;
-    var newMin = $newMin || 0;
-    var newMax = $newMax || 1;
-    var outPutLimit = $outPutLimit || false;
+    let oldMin = $oldMin || 0;
+    let oldMax = $oldMax || 1;
+    let newMin = $newMin || 0;
+    let newMax = $newMax || 1;
+    let outPutLimit = $outPutLimit || false;
 
-    var range1 = ($value - oldMin) / (oldMax - oldMin);
-    var range2 = (newMax - newMin) * range1 + newMin;
+    let range1 = ($value - oldMin) / (oldMax - oldMin);
+    let range2 = (newMax - newMin) * range1 + newMin;
 
     if (outPutLimit) {
         if (range2 < newMin) range2 = newMin;
@@ -69,8 +83,22 @@ function krange(
     return range2;
 }
 
+const aux_getDirName = $__dirname => {
+    let __$dirname = String($__dirname);
+    if (__$dirname.includes('resources')) {
+        __$dirname = __$dirname.slice(0, __$dirname.indexOf('resources'));
+    }
+    if (__$dirname.includes('node_modules')) {
+        __$dirname = __$dirname.slice(0, __$dirname.indexOf('node_modules'));
+    }
+    return path.normalize(__$dirname).replace(/\\/g, '/');
+};
+
 module.exports.cloneDeep = cloneDeep;
 module.exports.extendObj = extendObj;
 module.exports.getDirectories = getDirectories;
 module.exports.getFiles = getFiles;
 module.exports.krange = krange;
+module.exports.bindKet2actualOs = bindKet2actualOs;
+module.exports.getKeyFromConfig = getKeyFromConfig;
+module.exports.aux_getDirName = aux_getDirName;

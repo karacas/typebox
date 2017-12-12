@@ -6,10 +6,11 @@ const clipboard = require('electron').clipboard;
 const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
+const ListViewStore = require('../js/listViewStore.js');
 
-var robot = null;
-var setDefaultDelay = Config.get('here_are_dragons.setDefaultDelay');
-var storeClpboard = { type: null, value: null };
+let robot = null;
+let setDefaultDelay = Config.get('here_are_dragons.setDefaultDelay');
+const storeClpboard = { type: null, value: null };
 
 sharedData.app_window_and_systray.windowEvent.on('mainWindowReady', loadRobotJS);
 
@@ -49,6 +50,7 @@ function placeText_internal(str) {
         return;
     }
 
+    //KTODO: Volar Q
     Q.fcall(function() {
         //KTODO: FIX: Mac no hace foco
         sharedData.app_window_and_systray.unpopWin();
@@ -70,12 +72,15 @@ function placeText_internal(str) {
         .delay(setDefaultDelay)
         .then(() => {
             restoreClipboard();
+            if (Config.get('here_are_dragons.gotoRootOnExec')) {
+                ListViewStore.storeActions.backRootRulesPath();
+            }
         });
 }
 
 function saveClipboard() {
-    var formats = clipboard.availableFormats();
-    var format = formats[formats.length - 1];
+    let formats = clipboard.availableFormats();
+    let format = formats[formats.length - 1];
     storeClpboard.type = format;
     storeClpboard.value = null;
 
@@ -101,7 +106,7 @@ function restoreClipboard() {
         return;
     }
 
-    var format = storeClpboard.type;
+    let format = storeClpboard.type;
 
     if (format === 'text/plain') {
         clipboard.writeText(storeClpboard.value);
@@ -129,6 +134,9 @@ function copyToClipboard_internal(str, permitClose = true) {
 
     clipboard.writeText(str);
 
+    if (Config.get('here_are_dragons.gotoRootOnExec') && permitClose) {
+        ListViewStore.storeActions.backRootRulesPath();
+    }
     if (Config.get('here_are_dragons.unpopAfterCopy') && permitClose) {
         sharedData.app_window_and_systray.unpopWin();
     }

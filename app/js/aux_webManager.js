@@ -11,7 +11,7 @@ const Config = require('../js/config.js');
 const ListViewStore = require('../js/listViewStore.js');
 
 function openUrl(item, close = true) {
-    let pathItem = _.result(item, 'rule.params.openUrl') || item;
+    let pathItem = _.get(item, 'rule.params.openUrl') || item;
 
     if (!(pathItem && isUrl(pathItem))) {
         Logger.warn('Not have url', item);

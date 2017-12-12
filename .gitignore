@@ -3,6 +3,7 @@ out/
 build/
 
 *.DS_Store
+*.js.map
 tmp_/
 tmp
 .tmp_/
@@ -20,14 +21,24 @@ tmp
 /_data/caches/*
 /_data/packages
 /_data/packages/*
+/_data/packages_tmp_updates
+/_data/packages_tmp_updates/*
 /_data/hidden
 /_data/hidden/*
+/_data/news
+/_data/news/*
 
 _test//_data/*
 /_test/_data/history
 /_test/_data/log
 /_test/_data/favorites
 /_test/_data/caches
+/_test/_data/hidden
+/_test/_data/news
+/_test/_data/packages
+/_test/_data/packages/*
+/_test/_data/packages_tmp_updates
+/_test/_data/packages_tmp_updates/*
 
 v8-compile-cache-0
 /v8-compile-cache-0/*
@@ -53,7 +64,13 @@ npm-debug.log*
 
 yarn.lock
 yarn-error.log
+package-lock.json
+package-lock.log
 
 typebox-gist-sync_user_settings.json
 
 compileCache*
+
+_choco/tools/*.exe
+_choco/tools/*.nupkg
+_choco/*.nupkg

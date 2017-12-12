@@ -7,19 +7,20 @@ const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
 const watch = require('node-watch');
+const tinycolor = require('tinycolor2');
 const EventEmitter = require('events');
 
-var body = null;
-var document = null;
-var themeBaseTag = null;
-var themeBaseOriginalHref = null;
-var themeExtendTag = null;
-var fontThemeTag = null;
-var cssOverWriteTag = null;
-var themes = [];
-var currentTheme = null;
-var currentFont = 'default';
-var availableSubThemes = [];
+let body = null;
+let document = null;
+let themeBaseTag = null;
+let themeBaseOriginalHref = null;
+let themeExtendTag = null;
+let fontThemeTag = null;
+let cssOverWriteTag = null;
+let themes = [];
+let currentTheme = null;
+let currentFont = 'default';
+let availableSubThemes = [];
 
 const themeEvents = new EventEmitter().setMaxListeners(100);
 
@@ -34,15 +35,15 @@ function handleThemes() {
 
     if (Config.get('theme.name') !== 'default') {
         let theme = getTheme(Config.get('theme.name'));
-        if (theme && _.result(theme, 'packagejson.theme') === 'ui') {
+        if (theme && _.get(theme, 'packagejson.theme') === 'ui') {
             let cssPath = path.normalize(path.join(theme.url, theme.packagejson.main));
             if (fs.existsSync(cssPath)) {
                 currentTheme = theme;
                 if (themeExtendTag) themeExtendTag.setAttribute('href', cssPath);
-                if (_.isArray(_.result(theme, 'packagejson.subThemes'))) {
-                    availableSubThemes = [].concat(_.result(theme, 'packagejson.subThemes'));
+                if (_.isArray(_.get(theme, 'packagejson.subThemes'))) {
+                    availableSubThemes = [].concat(_.get(theme, 'packagejson.subThemes'));
                 }
-                if (_.result(theme, 'packagejson.overwriteBaseTheme')) {
+                if (_.get(theme, 'packagejson.overwriteBaseTheme')) {
                     if (themeBaseTag) themeBaseTag.setAttribute('href', '');
                 } else {
                     availableSubThemes = availableSubThemes.concat(Config.get('here_are_dragons.themeDefaultSubThemes'));
@@ -78,12 +79,39 @@ function handleThemes() {
 
     handleFont();
 
-    Logger.info('[Font]', 'Avaiable fonts:', themes.filter(theme => _.result(theme, 'packagejson.theme') === 'font').map(theme => theme.name).join(', '));
-    Logger.info('[Theme]', 'Avaiable themes:', themes.filter(theme => _.result(theme, 'packagejson.theme') === 'ui').map(theme => theme.name).join(', '));
+    Logger.info(
+        '[Font]',
+        'Avaiable fonts:',
+        themes
+            .filter(theme => _.get(theme, 'packagejson.theme') === 'font')
+            .map(theme => theme.name)
+            .join(', ')
+    );
+    Logger.info(
+        '[Theme]',
+        'Avaiable themes:',
+        themes
+            .filter(theme => _.get(theme, 'packagejson.theme') === 'ui')
+            .map(theme => theme.name)
+            .join(', ')
+    );
     Logger.info('[Theme]', 'CurrentTheme:', currentTheme.name, '/ AvailableSubThemes:', availableSubThemes.join(', '), '/ currentFont:', currentFont);
 
     if (window) {
         let backColor = window.getComputedStyle(document.querySelector('body')).getPropertyValue('--backColor');
+
+        // ADD CLASS TO BODY: isLight / isDark
+        let backColorValue = tinycolor(backColor);
+        document.querySelector('body').className = document
+            .querySelector('body')
+            .className.replace('isLight', '')
+            .replace('isDark', '');
+        if (backColorValue.isLight()) {
+            document.querySelector('body').className += ' ' + 'isLight';
+        } else {
+            document.querySelector('body').className += ' ' + 'isDark';
+        }
+
         setTimeout(() => {
             if (backColor) document.querySelector('html').style.setProperty('background', backColor);
         }, 1);
@@ -114,7 +142,7 @@ function handleFont() {
 
     if (userFontPackage && userFontPackage !== 'default') {
         let fontPackage = getTheme(userFontPackage);
-        if (fontPackage && _.result(fontPackage, 'packagejson.theme') === 'font') {
+        if (fontPackage && _.get(fontPackage, 'packagejson.theme') === 'font') {
             let fontCssPath = path.normalize(path.join(fontPackage.url, fontPackage.packagejson.main));
             if (fontCssPath && fs.existsSync(fontCssPath)) {
                 currentFont = userFontPackage;
@@ -142,7 +170,7 @@ function add(name, url, packagejson) {
     if (name && url && packagejson) {
         if (getTheme(name)) return;
         themes.push({ name, url, packagejson });
-        if (_.result(packagejson, 'theme') !== 'font') {
+        if (_.get(packagejson, 'theme') !== 'font') {
             Logger.info('[Theme]', name, 'theme load ok:');
         }
     } else {
@@ -269,15 +297,15 @@ module.exports.init = init;
 module.exports.add = add;
 module.exports.reloadThemes = reloadThemes;
 module.exports.removeLoader = removeLoader;
-module.exports.currentTheme = _.clone(currentTheme);
-module.exports.currentFont = _.clone(currentFont);
+module.exports.currentTheme = _.cloneDeep(currentTheme);
+module.exports.currentFont = _.cloneDeep(currentFont);
 module.exports.setTheme2Settings = setTheme2Settings;
 module.exports.setSubTheme2Settings = setSubTheme2Settings;
 module.exports.setFont2Settings = setFont2Settings;
 module.exports.themeEvents = themeEvents;
 module.exports.getAvaiableThemes = () => {
-    return _.clone(themes);
+    return _.cloneDeep(themes);
 };
 module.exports.getAvaiableSubThemes = () => {
-    return _.clone(availableSubThemes);
+    return _.cloneDeep(availableSubThemes);
 };

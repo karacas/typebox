@@ -1,0 +1,716 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_es6js_snipetts
+enabled: true
+icon: mdi-language-javascript palette-Amber-A200 text
+rules:
+
+- title: jses6 snippets
+  type: 'object'
+  params:
+    codeclass: 'javascript'
+    changePath:
+      path: JSES6snip
+
+- title: null function
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      let nullfunc = () => {};
+
+- title: arrow function
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      (obj) => {return obj};
+
+- title: array.filter
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      let arr = arr.filter(obj => String(obj.id) === String(id));
+
+- title: array.map
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      let newArr = arr.map(obj => obj.length);
+
+- title: array merge
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      let newArr = [...arr1, ...arr2]
+
+- title: array.find
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      let obj = arr.find(obj => obj.id === id);
+
+- title: export
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      export default {}; //browser
+      module.exports {}; //node
+
+- title: array.from (repeater)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      let tmp = Array.from({ length: 10 }, (v, i) => {
+          return { id: i };
+      });
+
+- title: require
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      const path = require('path');
+
+- title: import
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      import angular from 'angular';
+
+- title: typeof
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      if (typeof obj === 'string' || obj instanceof String) {}
+
+- title: settimeout
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      setTimeout(() => {}, 0);
+
+- title: setinterval
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      setInterval(() => {}, 0);
+
+- title: try catch
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      try {} catch (e) {
+          return null;
+      }
+
+- title: obj
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      {
+          foo: 'bar',
+          foo2: 'bar'
+      }
+
+- title: json obj
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      {
+        'foo': 'bar',
+        'foo2': 'bar'
+      }
+
+- title: json.parse
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      JSON.parse(str);
+
+- title: json.stringify
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      JSON.stringify(obj);
+
+- title: date
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      new Date()
+
+- title: date full
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      new Date("Mar 30, 2017 00:00:00")
+
+- title: promise
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      return new Promise((resolve, reject) => {
+        resolve(arr);
+      });
+
+- title: promise all
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      Promise.all([p1, p2, p3]).then(values => {
+        console.log(values);
+      });
+
+- title: touppercase
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      .toUpperCase()
+
+- title: JSON.stringify
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      JSON.stringify(temp1,​ ​null,​ ​2)
+
+- title: tolowercase
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      .toLowerCase()
+
+- title: length
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      .length
+
+- title: console.log
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      console.log('')
+
+- title: all utf8 characters
+  path: JSES6snip
+  params:
+    snippet: |-
+      abcdefghijklmnopqrstuvwxyz @©®§?£$&_+-'"(),./\:;?!<>«»àáâçèêéûÈÉÊ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ*ÁáÉéÍíÓóÚúñÑüÜ¿?¡!àâçèêëïî—»«ÿûùœôäößÄÖ„“”°€£ ’.:"()/|I[]l‘òËÏãõÃÕÁáÉéÍíÓóÚúñÑüÜ¿?¡! ÁáÉéÍíÓóÚúñÑüÜ¿?¡!àâçèêëïî—»«ÿûùœôäößÄÖ„“”°€£ ’.:"()/|I[]l‘òËÏãõÃÕ%•º
+
+- title: function
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      function test (){}
+
+- title: for
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      for (var i = 0; i < arr.length; i++) {
+          var obj = arr[i];
+      }
+
+- title: window.copy stringify
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      window.copy(JSON.stringify(temp1, null, 2))
+
+- title: replace all spaces
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      str.replace(/\s/g, '');
+
+- title: replace all string
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      str.replace(/abc/g, '');
+
+- title: remove obj in array (splice)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      arr.splice(arr.findIndex((i) => i.x === c.x ), 1);
+
+- title: remove obj in array (es6)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      arr = arr.filter(e => e !== element)
+
+- title: array.splice
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      array.splice(start, deleteCount)
+
+- title: delete obj prop
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      delete obj.prop;
+
+- title: dynamically load script
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      function dynamicallyLoadScript(url) {
+          var script = document.createElement("script");
+          script.src = url;
+          document.head.appendChild(script);
+      }
+
+- title: encodeuricomponent string
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      encodeURIComponent(str)
+
+- title: template literals / multiline string
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      var html = `
+        <div>
+          <span>Some HTML here</span>
+        </div>
+      `;
+
+- title: keys length
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+     Object.keys(myArray).length
+
+- title: object assign (extend)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+     Object.assign({}, obj1, obj2);
+
+- title: full url location
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+     window.location.href
+
+- title: history pushstate
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+     window.history.pushState('page2', 'Title', '/page2.php');
+
+- title: encodeuri string
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      encodeURI(str)
+
+- title: array.sort
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      arr.sort(function(a, b) {
+          //ASC  -> a.length - b.length
+          //DESC -> b.length - a.length
+          return b.length - a.length;
+      });
+
+- title: array.sort complex
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      arr.sort(function(a, b) {
+          var nameA = a.name.toUpperCase();
+          //ignore upper and lowercase
+
+          var nameB = b.name.toUpperCase();
+          //ignore upper and lowercase
+
+          if (nameA < nameB) {
+              return -1;
+          }
+
+          if (nameA > nameB) {
+              return 1;
+          }
+
+          //names must be equal
+          return 0;
+      });
+
+- title: array.foreach
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      arr.forEach(obj => {
+          console.log(obj);
+      });
+
+- title: parsefloat
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      num = parseFloat(num).toFixed(2);
+
+- title: tofixed (cant decimals)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      num = num.toFixed(4);
+
+- title: switch case
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      function getCategory(age) {
+          var category = '';
+          switch (true) {
+              case isNaN(age):
+                  category = 'not an age';
+                  break;
+              case age >= 50:
+                  category = 'Old';
+                  break;
+              case age <= 20:
+                  category = 'Baby';
+                  break;
+              default:
+                  category = 'Young';
+                  break;
+          }
+          return category;
+      }
+      getCategory(5); //will return "Baby"
+
+- title: array chain
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      arr
+          .map(el => {
+              el.age++;
+              return el;
+          })
+          .filter(el => {
+              return el.age < 12;
+          })
+          .map(el => {
+              console.log(el.name);
+          });
+
+- title: parseint
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      var num = parseInt(num, 10);
+
+- title: short conditional (ternary)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      var a = (true) ? 1 : 2;
+
+- title: short conditional value (ternary)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      console.log(true ? 1 : 2);
+
+- title: short conditional function (ternary)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      true ? console.log('1') : console.log('2');
+
+- title: regex test
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      /world/i.test('Hello World');
+
+- title: random()
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      Math.random()
+
+- title: html onclick tag
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      onclick="history.back();return false;"
+
+- title: getelementbyid (get element)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementById('')
+
+- title: getelementsbytagname (get element)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementsByTagName('')
+
+- title: queryselector (get element)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.querySelector('')
+
+- title: queryselectorall (get element)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.querySelectorAll('')
+
+- title: getelementsbyclassname (get element)
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementsByClassName('')
+
+- title: use strict
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      'use strict';
+
+- title: stop propagation
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      ev.preventDefault()
+      ev.stopPropagation()
+      return false
+
+- title: window location
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      window.location = 'test.html';
+
+- title: history back
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      history.back()
+
+- title: string indexof
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      if (str.indexOf('jsx') !== -1) {}
+
+- title: add space sep
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+       + ' ' +
+
+- title: break string sep
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+       ' + mivar + '
+
+- title: break string sep double
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+        + " " +
+
+- title: arr some
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      return arrayIndex.some(arr => {
+          if (name.indexOf(arr) !== -1 && arr.length) {
+              return true;
+          }
+      });
+
+- title: detect mobile
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      if (
+          navigator.userAgent.match(/Android/i) ||
+          navigator.userAgent.match(/webOS/i) ||
+          navigator.userAgent.match(/iPhone/i) ||
+          navigator.userAgent.match(/iPad/i) ||
+          navigator.userAgent.match(/iPod/i) ||
+          navigator.userAgent.match(/BlackBerry/i) ||
+          navigator.userAgent.match(/Windows Phone/i)
+      ) {
+          return true;
+      } else {
+          return false;
+      }
+
+- title: array.concat
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      var arr3 = arr1.concat(arr2);
+
+- title: string includes substring
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      string.includes(substring);
+
+- title: getAttribute
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getAttribute('');
+
+- title: setAttribute
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.setAttribute('','');
+
+- title: classList.add
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementById("myDIV").classList.add("mystyle");
+
+- title: classList.remove
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementById("myDIV").classList.remove("mystyle");
+
+- title: classList.toggle
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementById("myDIV").classList.toggle("mystyle");
+
+- title: addEventListener
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      document.getElementById("miId").addEventListener("click", function, false);
+
+- title: is Object
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      content !== null && typeof content === 'object'
+
+- title: is String
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      typeof content === 'string'
+
+- title: is Array
+  path: JSES6snip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      Array.isArray(obj)
+
+- title: docs (web)
+  path: JSES6snip
+  type: "object"
+  params:
+    codeclass: 'javascript'
+    openUrl: https://github.com/mbeaudru/modern-js-cheatsheet
+
+- title: full api (web)
+  path: JSES6snip
+  type: "object"
+  params:
+    codeclass: 'javascript'
+    openUrl: http://overapi.com/javascript

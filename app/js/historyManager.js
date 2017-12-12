@@ -1,46 +1,73 @@
 'use strict';
+
 const Moment = require('moment');
 const _ = require('lodash');
 const auxjs = require('../auxfs.js');
 const Immutable = require('immutable');
-const removeDiacritics = require('lodash').deburr;
+// const removeDiacritics = require('lodash').deburr;
+const removeDiacritics = require('diacritics').remove;
 const Logger = require('../js/logger.js');
 const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
 const getTime = sharedData.realClock.getTime;
 
-var historyItems = Immutable.OrderedMap();
-var historyItemsKeys = Immutable.OrderedMap();
-var historyNeedSave = false;
+let historyItems = Immutable.OrderedMap();
+let historyItemsKeys = Immutable.OrderedMap();
+let historyNeedSave = false;
+
+function remove(ruleHistory) {
+    let id = _.get(ruleHistory, 'rule.id') || _.get(ruleHistory, 'id') || ruleHistory;
+
+    let checkItem = historyItems.get(id);
+    if (checkItem) {
+        historyItems = historyItems.delete(id);
+        try {
+            purge(true);
+        } catch (e) {
+            Logger.warn('[History] purge error', e);
+        }
+    }
+}
 
 function push(ruleHistory) {
-    if (!ruleHistory.rule.addInHistory || !keys === null) {
-        Logger.warn('[History] No historyManager');
+    if (!ruleHistory || !ruleHistory.rule || ruleHistory.keys === null || ruleHistory.path === null) {
+        Logger.info('[History] obj is null');
         return;
     }
 
-    var keys = removeDiacritics(ruleHistory.keys.toLowerCase());
-    var id = ruleHistory.rule.id;
-    var date = getTime();
+    if (!ruleHistory.rule.addInHistory) {
+        Logger.info('[History] No rule.addInHistory');
+        return;
+    }
 
-    var maxCant = Config.get('here_are_dragons.maxKeysInHistory');
+    if (ruleHistory.path && ruleHistory.path.ephemeral) {
+        Logger.info('[History] No addInHistory: path.ephemeral ');
+        return;
+    }
+
+    let keys = removeDiacritics(ruleHistory.keys.toLowerCase());
+
+    let id = ruleHistory.rule.id;
+    let date = getTime();
+
+    let maxCant = Config.get('here_are_dragons.maxKeysInHistory');
     if (keys.length > maxCant) {
         keys = _.take(keys, maxCant).join('');
     }
 
     //MAKE ITEMS
-    var historyItem = {};
+    let historyItem = {};
     historyItem.date = date;
     historyItem._points = 1;
 
     //MAKE ITEMS-KEY
-    var historyItemK = {};
+    let historyItemK = {};
     historyItemK.id = id;
     historyItemK.date = date;
     historyItemK._points_current_key = 1;
 
-    //[HYSTORY by ID]
-    var checkItem = historyItems.get(id);
+    //[HISTORY by ID]
+    let checkItem = historyItems.get(id);
     if (checkItem) {
         checkItem._points++;
         checkItem.date = date;
@@ -49,10 +76,10 @@ function push(ruleHistory) {
         historyItems = historyItems.set(id, historyItem);
     }
 
-    //[HYSTORY by Keys
+    //[HISTORY by Keys
     if (keys.length) {
-        var keysArr = historyItemsKeys.get(keys);
-        var checkItemK = null;
+        let keysArr = historyItemsKeys.get(keys);
+        let checkItemK = null;
 
         if (keysArr) {
             checkItemK = _.filter(keysArr, {
@@ -64,8 +91,8 @@ function push(ruleHistory) {
             checkItemK[0]._points_current_key++;
             checkItemK[0].date = date;
         } else {
-            var arrayKeys = [];
-            var arrayKeysTmp = historyItemsKeys.get(keys);
+            let arrayKeys = [];
+            let arrayKeysTmp = historyItemsKeys.get(keys);
             if (_.isArray(arrayKeysTmp)) {
                 arrayKeys = arrayKeysTmp;
             }
@@ -76,9 +103,9 @@ function push(ruleHistory) {
 
     //PURGE
     try {
-        depure();
+        purge();
     } catch (e) {
-        Logger.warn('[History] depure error', e);
+        Logger.warn('[History] purge error', e);
     }
 
     //MAke Big History
@@ -92,15 +119,18 @@ function push(ruleHistory) {
     historyNeedSave = true;
 }
 
-function depure() {
+function purge(force = false) {
     let historyItems_max = Math.round(Config.get('here_are_dragons.maxItemsInHistory') || 320);
 
-    if (historyItems.size > historyItems_max * 1.25) {
-        Logger.info('[History] depure', 'historyItems.size', historyItems.size);
+    if (historyItems.size > historyItems_max * 1.25 || force) {
+        Logger.info('[History] purge', 'historyItems.size', historyItems.size);
 
         //FILTER historyItems
         historyItems = historyItems.sortBy(r => -r.date).slice(0, Math.abs(historyItems_max * 1.1));
-        historyItems = historyItems.sortBy(r => -r.date).sortBy(r => -r._points).slice(0, historyItems_max);
+        historyItems = historyItems
+            .sortBy(r => -r.date)
+            .sortBy(r => -r._points)
+            .slice(0, historyItems_max);
 
         //FILTER historyItemsKeys
         let historyItemsKeysNew = Immutable.OrderedMap();
@@ -117,57 +147,53 @@ function depure() {
     }
 }
 
-function saveHistory() {
-    //KTODO: depurador
+const saveHistory = _.throttle(
+    () => {
+        if (!historyNeedSave) {
+            return;
+        }
 
-    if (!historyNeedSave) {
-        return;
-    }
+        if (!sharedData.dataManager) {
+            return;
+        }
 
-    if ((!historyItems.size && !historyItemsKeys.size) || !sharedData.dataManager) {
-        return;
-    }
+        let obj2save = {
+            historyItems: historyItems.toJS(),
+            historyItemsKeys: historyItemsKeys.toJS()
+        };
 
-    var obj2save = {
-        historyItems: historyItems.toJS(),
-        historyItemsKeys: historyItemsKeys.toJS()
-    };
+        // Logger.info(auxjs.cloneDeep(obj2save), "<<<<<<<<<<<");
+        let resp = sharedData.dataManager.saveHistory(obj2save);
 
-    // Logger.info(auxjs.cloneDeep(obj2save), "<<<<<<<<<<<");
-    var resp = sharedData.dataManager.saveHistory(obj2save);
-
-    if (!resp) {
-        Logger.error('[History] Fail saveHistory:', resp);
-    } else {
-        Logger.info('[History] Saved ok:', resp);
-        historyNeedSave = false;
-    }
-}
+        if (!resp) {
+            Logger.error('[History] Fail saveHistory:', resp);
+        } else {
+            Logger.info('[History] Saved ok:', resp);
+            historyNeedSave = false;
+        }
+    },
+    80,
+    { trailing: false }
+);
 
 function loadHistory() {
-    if (historyItems.size || historyItemsKeys.size) {
+    if (historyItems === null || !historyItemsKeys === null) {
         return;
     }
-    var load = null;
+
+    let historyItemsTmp;
+    let historyItemsKeysTmp;
 
     if (sharedData.dataManager.dataLoaded.history) {
-        var load = true;
-        var historyItemsTmp = sharedData.dataManager.dataLoaded.history.historyItems;
-        var historyItemsKeysTmp = sharedData.dataManager.dataLoaded.history.historyItemsKeys;
+        historyItemsTmp = sharedData.dataManager.dataLoaded.history.historyItems;
+        historyItemsKeysTmp = sharedData.dataManager.dataLoaded.history.historyItemsKeys;
     } else {
-        var load = false;
-        Logger.warn('[History] LoadHistory error: no history');
+        Logger.warn('[History] LoadHistory warn: no history');
     }
 
-    if (load) {
-        historyItems = Immutable.OrderedMap(historyItemsTmp);
-        historyItemsKeys = Immutable.OrderedMap(historyItemsKeysTmp);
-
-        if (!true) {
-            /*dev*/ //PRINT HISTORY
-            Logger.info(auxjs.cloneDeep(historyItemsTmp));
-            Logger.info(auxjs.cloneDeep(historyItemsKeysTmp));
-        }
+    if (historyItemsTmp) {
+        historyItems = Immutable.OrderedMap(_.cloneDeep(historyItemsTmp));
+        historyItemsKeys = Immutable.OrderedMap(_.cloneDeep(historyItemsKeysTmp));
 
         Logger.info('[History] Items length: ', historyItems.size);
         Logger.info('[History] ItemsKeys length: ', historyItemsKeys.size);
@@ -177,10 +203,13 @@ function loadHistory() {
 //Save events
 sharedData.idleTime.getIdleEvent().on('idle', saveHistory);
 sharedData.app_window_and_systray.windowEvent.on('QUIT', saveHistory);
+sharedData.app_window_and_systray.windowEvent.on('REFRESH_WIN', saveHistory);
 
 //Public
 module.exports.loadHistory = loadHistory;
+module.exports.save = saveHistory;
 module.exports.push = push;
+module.exports.remove = remove;
 module.exports.historyItems = () => {
     return historyItems;
 };

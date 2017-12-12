@@ -1,0 +1,125 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_test_snipetts
+enabled: true
+rules:
+
+- title: DEV snippetss
+  type: 'object'
+  params:
+    codeclass: 'javascript'
+    changePath:
+      path: Devsnip
+
+- title: 1s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      1__
+
+- title: 2s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      2__
+
+- title: 3s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      3__
+
+- title: 4s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      4__
+
+- title: 5s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      5__
+
+- title: 6s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      6__
+
+- title: 7s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      7__
+
+- title: 8s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      8__
+
+- title: 9s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      9__
+
+- title: 10s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      10__
+
+- title: 11s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      11__
+
+- title: 12s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      12__
+
+- title: 13s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      13__
+
+- title: 14s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      14__
+
+- title: 15s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      15__
+
+- title: 16s
+  path: Devsnip
+  params:
+    codeclass: 'javascript'
+    snippet: |-
+      16__

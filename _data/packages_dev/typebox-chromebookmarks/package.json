@@ -1,0 +1,30 @@
+{
+  "name": "typebox-chromebookmarks",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "typebox package: chromebookmarks",
+  "engines": {
+    "typebox": ">=0.48.0 <2.0.0"
+  },
+  "keywords": [
+    "typebox",
+    "bookmarks",
+    "launcher",
+    "package"
+  ],
+  "plataforms": [
+    "darwin",
+    "freebsd",
+    "linux",
+    "sunos",
+    "win32"
+  ],
+  "author": {
+    "name": "karacas",
+    "email": "alejandroe@gmail.com"
+  },
+  "dependencies": {
+    "browser-bookmarks": "^0.3.0"
+  }
+}

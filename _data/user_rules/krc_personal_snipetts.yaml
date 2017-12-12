@@ -1,0 +1,54 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_personal_snipetts
+enabled: true
+icon: mdi-account-edit palette-Orange-A700 text
+rules:
+
+# SIMPLE TEXTS
+- title: Alejandro Emparan
+- title: Gracias.
+- title: Saludos
+- title: Abrazo
+- title: Cualquier cosa me avisás.
+- title: Zuviría 658
+- title: alejandroe@gmail.com
+
+- title: length
+- title: width
+- title: height
+- title: right
+- title: left
+
+- title: firma
+  viewer: false
+  params:
+    string: |-
+      Alejandro Emparan
+      Proyectiva S.A.
+      http://www.proyectiva.com
+
+- title: cp zuviria 1424
+  viewer: false
+  params:
+    string: |-
+      1424
+
+- title: cp mendoza 1169
+  viewer: false
+  params:
+    string: |-
+      1169
+
+- title: Lorem ipsum
+  viewer: false
+  params:
+    string: |-
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+- title: string
+  viewer: false
+  params:
+    string: |-
+      'str1'

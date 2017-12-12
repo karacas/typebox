@@ -1,0 +1,109 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_jquery_snipetts
+enabled: true
+icon: mdi-currency-usd palette-Blue-A100 text
+rules:
+
+- title: jQuery snippets
+  type: 'object'
+  params:
+    changePath:
+      path: JQUERYsnip
+
+- title: version
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      console.log(window.jQuery.fn.jquery)
+
+- title: select empty div
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $.expr[':'].blank = function(obj) {
+          return !$.trim($(obj).text()).length;
+      };
+      $('.thumbnails:blank').addClass('selected');
+
+- title: $('')
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $('')
+
+- title: document ready
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $(document).ready(function() {});
+
+- title: element is visible
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $(element).is(":visible");
+
+- title: element is visible select
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $('element:visible')
+
+- title: loading script
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $.getScript("my_lovely_script.js", function() {
+          //
+      });
+
+- title: window load
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $(window).load(function() {});
+
+- title: hash change
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $(document).ready(function() {
+          $(window).on('hashchange', hashChange);
+          hashChange();
+      });
+      function hashChange() {
+          var lastHash = location.hash.replace('#', '');
+      }
+
+- title: body width
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $("body").width()
+
+- title: livequery
+  path: JQUERYsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      $('.some').livequery(function() {
+          $(this);
+      });
+
+- title: docs (web)
+  path: JQUERYsnip
+  type: "object"
+  params:
+    openUrl: https://api.jquery.com/

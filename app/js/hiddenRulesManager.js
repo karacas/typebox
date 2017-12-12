@@ -8,19 +8,20 @@ const Config = require('../js/config.js');
 const sharedData = require('../js/sharedData.js');
 const favManager = require('../js/favManager.js');
 const getTime = sharedData.realClock.getTime;
+const resetScore = require('../js/historyManager.js').remove;
 
-var hiddenItems = Immutable.OrderedMap();
-var hiddenNeedSave = false;
+let hiddenItems = Immutable.OrderedMap();
+let hiddenNeedSave = false;
 
-var icon = {
+const icon = {
     type: 'iconFont',
     iconClass: 'mdi-eye-outline-off palette-Amber-A200 text'
 };
 
-var path = {
+const path = {
     path: 'HIDDEN_RULES_PATH',
     avoidCache: true,
-    avoidHystory: true,
+    avoidHistory: true,
     icon: icon
 };
 
@@ -42,88 +43,131 @@ function push($hiddenItem) {
             hiddenItems = hiddenItems.delete(id);
         }
 
+        resetScore(id);
+
         hiddenItem.component = null;
+        hiddenItem.hidden_permit = false;
         hiddenItem.fav_permit = false;
+        hiddenItem.favorite = false;
         hiddenItem.last_permit = false;
+        hiddenItem.new_permit = false;
         hiddenItem.params.original_hidden_id = hiddenItem.id;
         hiddenItem.params.original_hidden_path = hiddenItem.path;
         hiddenItem.params.hiddentDate = getTime();
 
-        hiddenItems = hiddenItems.set(id, hiddenItem).sortBy(r => -r.params.hiddentDate).slice(0, Config.get('here_are_dragons.maxHiddenRules'));
+        hiddenItems = hiddenItems
+            .set(id, hiddenItem)
+            .sortBy(r => -r.params.hiddentDate)
+            .slice(0, Config.get('here_are_dragons.maxHiddenRules'));
         hiddenNeedSave = true;
     }
 }
 
 function remove(hiddenItem) {
-    let id = _.result(hiddenItem, 'params.original_hidden_id');
+    let id = _.get(hiddenItem, 'params.original_hidden_id');
     if (id && hiddenItems.get(id)) {
         hiddenItems = hiddenItems.delete(id);
+        resetScore(id);
         hiddenNeedSave = true;
     }
 
     id = hiddenItem.id;
     if (id && hiddenItems.get(id)) {
         hiddenItems = hiddenItems.delete(id);
+        resetScore(id);
         hiddenNeedSave = true;
     }
 }
 
-function saveHiddenRules() {
-    if (!hiddenNeedSave) {
-        return;
-    }
+const saveHiddenRules = _.throttle(
+    () => {
+        if (!hiddenNeedSave) {
+            return;
+        }
 
-    if (!sharedData.dataManager) {
-        return;
-    }
+        if (!sharedData.dataManager) {
+            return;
+        }
 
-    var obj2save = {
-        hiddenItems: hiddenItems.toJS()
-    };
+        let obj2save = {
+            hiddenItems: hiddenItems.toJS()
+        };
 
-    var resp = sharedData.dataManager.saveHiddenRules(obj2save);
+        let resp = sharedData.dataManager.saveHiddenRules(obj2save);
 
-    if (!resp) {
-        Logger.error('[HiddenRules] Fail saveHiddenRules:', resp);
-    } else {
-        Logger.info('[HiddenRules] saveHiddenRules Saved ok:', resp);
-        hiddenNeedSave = false;
-    }
-}
+        if (!resp) {
+            Logger.error('[HiddenRules] Fail saveHiddenRules:', resp);
+        } else {
+            Logger.info('[HiddenRules] saveHiddenRules Saved ok:', resp);
+            hiddenNeedSave = false;
+        }
+    },
+    80,
+    { trailing: false }
+);
 
 function loadHiddenRules() {
-    if (hiddenItems.size) {
+    if (hiddenItems === null) {
         return;
     }
-    var load = null;
+    let hiddenItemsTmp = null;
 
     if (sharedData.dataManager.dataLoaded.hiddenRules) {
-        var load = true;
-        var hiddenItemsTmp = sharedData.dataManager.dataLoaded.hiddenRules.hiddenItems;
+        hiddenItemsTmp = sharedData.dataManager.dataLoaded.hiddenRules.hiddenItems;
     } else {
-        var load = false;
         Logger.warn('[HiddenRules] load: no hidden file');
     }
 
-    if (load) {
-        hiddenItems = Immutable.OrderedMap(hiddenItemsTmp);
+    if (hiddenItemsTmp) {
+        hiddenItems = Immutable.OrderedMap(_.cloneDeep(hiddenItemsTmp));
         Logger.info('[HiddenRules] hiddenItems length: ', hiddenItems.size);
+    }
+}
+
+function toggle(hiddenItem) {
+    let id = hiddenItem.id;
+
+    if (id && hiddenItems.get(id)) {
+        hiddenItems = hiddenItems.delete(id);
+        hiddenNeedSave = true;
+    }
+
+    id = _.get(hiddenItem, 'params.original_hidden_id');
+    if (id && hiddenItems.get(id)) {
+        hiddenItems = hiddenItems.delete(id);
+        hiddenNeedSave = true;
+        return;
+    }
+
+    if (hiddenItem.hidden_permit === true) {
+        push(hiddenItem);
+        hiddenNeedSave = true;
+        return;
     }
 }
 
 //Save events
 sharedData.idleTime.getIdleEvent().on('idle', saveHiddenRules);
 sharedData.app_window_and_systray.windowEvent.on('QUIT', saveHiddenRules);
+sharedData.app_window_and_systray.windowEvent.on('REFRESH_WIN', saveHiddenRules);
 
 //Public
 module.exports.push = push;
 module.exports.remove = remove;
+module.exports.toggle = toggle;
+module.exports.save = saveHiddenRules;
 module.exports.loadHiddenRules = loadHiddenRules;
+module.exports.gethiddenItemsIm = () => {
+    return hiddenItems;
+};
 module.exports.gethiddenItems = () => {
-    return hiddenItems.toArray();
+    return hiddenItems.toSet().toArray();
 };
 module.exports.gethiddenItemsPath = path => {
-    return hiddenItems.filter(v => v.params.original_hidden_path === path).toArray();
+    return hiddenItems
+        .filter(v => v.params.original_hidden_path === path)
+        .toSet()
+        .toArray();
 };
 module.exports.isHide = id => {
     return Boolean(hiddenItems.get(id));

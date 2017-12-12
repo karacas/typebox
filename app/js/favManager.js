@@ -1,6 +1,5 @@
 'use strict';
 const _ = require('lodash');
-const auxjs = require('../auxfs.js');
 const Immutable = require('immutable');
 const Moment = require('moment');
 const Logger = require('../js/logger.js');
@@ -9,27 +8,28 @@ const createRule = require('../js/rule.js').getNewRule;
 const sharedData = require('../js/sharedData.js');
 const getTime = sharedData.realClock.getTime;
 
-var favItems = Immutable.OrderedMap();
-var favNeedSave = false;
+let favItems = Immutable.OrderedMap();
+let favNeedSave = false;
 
-var icon = {
+const icon = {
     type: 'iconFont',
     iconClass: 'mdi-star palette-Amber-A200 text'
 };
 
-var path = {
+const path = {
     path: 'FAVS_PATH',
+    name: 'favorites',
     avoidCache: true,
-    avoidHystory: true,
+    avoidHistory: true,
     icon: icon
 };
 
-function push(rulefavObj) {
-    let rulefav = _.cloneDeep(rulefavObj);
+function push($rulefavObj) {
+    let rulefav = _.cloneDeep($rulefavObj);
 
-    if (rulefav.generateStaticRule) rulefav = createRule(rulefav.generateStaticRule(rulefav));
+    if (rulefav.generateStaticRule) rulefav = createRule(rulefav.generateStaticRule($rulefavObj));
 
-    var id = rulefav.id;
+    let id = rulefav.id;
 
     if (id && rulefav.fav_permit) {
         if (!_.includes(rulefav.type, 'object')) {
@@ -40,13 +40,16 @@ function push(rulefavObj) {
             favItems = favItems.delete(id);
         }
 
-        rulefav.favorite = true;
         rulefav.hidden_permit = false;
+        rulefav.new_permit = false;
         rulefav.params.original_fav_id = id;
         rulefav.params.original_fav_path = rulefav.path;
         rulefav.params.lastDate = getTime();
 
-        favItems = favItems.set(id, rulefav).sortBy(r => -r.params.lastDate).slice(0, Config.get('here_are_dragons.maxFavsRules'));
+        favItems = favItems
+            .set(id, rulefav)
+            .sortBy(r => -r.params.lastDate)
+            .slice(0, Config.get('here_are_dragons.maxFavsRules'));
         favNeedSave = true;
     }
 }
@@ -61,7 +64,7 @@ function toggle(rulefav) {
         favNeedSave = true;
     }
 
-    id = _.result(rulefav, 'params.original_fav_id');
+    id = _.get(rulefav, 'params.original_fav_id');
     if (id && favItems.get(id) && !deleted) {
         favItems = favItems.delete(id);
         deleted = true;
@@ -74,45 +77,43 @@ function toggle(rulefav) {
     }
 }
 
-function savefav() {
-    if (!favNeedSave) {
-        return;
-    }
+const savefav = _.throttle(
+    () => {
+        if (!favNeedSave) return;
 
-    if (!sharedData.dataManager) {
-        return;
-    }
+        if (!sharedData.dataManager) return;
 
-    var obj2save = {
-        favItems: favItems.toJS()
-    };
+        let obj2save = {
+            favItems: favItems.toJS()
+        };
 
-    var resp = sharedData.dataManager.savefav(obj2save);
+        let resp = sharedData.dataManager.savefav(obj2save);
 
-    if (!resp) {
-        Logger.error('[Favs] Fail savefav:', resp);
-    } else {
-        Logger.info('[Favs] fav Saved ok:', resp);
-        favNeedSave = false;
-    }
-}
+        if (!resp) {
+            Logger.error('[Favs] Fail savefav:', resp);
+        } else {
+            Logger.info('[Favs] fav Saved ok:', resp);
+            favNeedSave = false;
+        }
+    },
+    80,
+    { trailing: false }
+);
 
 function loadfav() {
-    if (favItems.size) {
+    if (favItems === null) {
         return;
     }
-    var load = null;
+    let favItemsTmp = null;
 
     if (sharedData.dataManager.dataLoaded.fav) {
-        var load = true;
-        var favItemsTmp = sharedData.dataManager.dataLoaded.fav.favItems;
+        favItemsTmp = sharedData.dataManager.dataLoaded.fav.favItems;
     } else {
-        var load = false;
         Logger.warn('[Favs] Loadfav: no fav');
     }
 
-    if (load) {
-        favItems = Immutable.OrderedMap(favItemsTmp);
+    if (favItemsTmp) {
+        favItems = Immutable.OrderedMap(_.cloneDeep(favItemsTmp));
         Logger.info('[Favs] favItems length: ', favItems.size);
     }
 }
@@ -120,13 +121,18 @@ function loadfav() {
 //Save events
 sharedData.idleTime.getIdleEvent().on('idle', savefav);
 sharedData.app_window_and_systray.windowEvent.on('QUIT', savefav);
+sharedData.app_window_and_systray.windowEvent.on('REFRESH_WIN', savefav);
 
 //Public
 module.exports.push = push;
 module.exports.toggle = toggle;
 module.exports.loadfav = loadfav;
+module.exports.save = savefav;
+module.exports.getFavItemsIm = () => {
+    return favItems;
+};
 module.exports.getFavItems = () => {
-    return favItems.toArray();
+    return favItems.toSet().toArray();
 };
 module.exports.ifFav = id => {
     return Boolean(favItems.get(id) && favItems.get(id).fav_permit);
@@ -136,4 +142,10 @@ module.exports.getIcon = () => {
 };
 module.exports.getPath = () => {
     return path;
+};
+module.exports.getFolderFavsPath = () => {
+    let fpath = _.cloneDeep(path);
+    fpath.name = 'Favorite folders';
+    fpath.path = 'FAVS_DRIVE';
+    return fpath;
 };

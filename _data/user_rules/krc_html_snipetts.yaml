@@ -1,0 +1,300 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_html_snipetts
+enabled: true
+icon: mdi-language-html5 palette-Red-A200 text
+rules:
+
+
+- title: html snippets
+  type: 'object'
+  params:
+    changePath:
+      path: HTMLsnip
+
+- title: basic html structure
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <!DOCTYPE html>
+      <html class="no-js">
+          <head>
+              <meta charset="utf-8">
+              <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+              <title>title</title>
+          </head>
+          <body>
+              content of website
+          </body>
+      </html>
+
+- title: img
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <img src="url" alt="">
+
+- title: a href
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <a href="url"> link text </a>
+
+- title: nbsp
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      &nbsp;
+
+- title: css tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <link rel="stylesheet" href="css/main.css">
+
+- title: script javascript tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <script src="js/all.js" type="text/javascript"></script>
+
+- title: script javascript tag full
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <script type="text/javascript">
+      $(document).ready(function() {});
+      </script>
+
+- title: viewport scale
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+- title: fav icon
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <link rel="SHORTCUT ICON" href="fav_icon.png"/>
+
+- title: gmaps script import
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <script src="http://maps.googleapis.com/maps/api/js?key=KEY" type="text/javascript" ></script>
+
+- title: roboto font import
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700,800' rel='stylesheet' type='text/css'>
+
+- title: cache param php
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      ?c=<?=$cacheVer?>
+
+- title: cache param
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      ?c=100
+
+- title: php include
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <?php include("_inc.php");?>
+
+- title: php if block
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <?php if ($produccion): ?>
+          <span></span>
+      <?php endif ?>
+
+- title: head full tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <head>
+          <meta charset="utf-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+          <title>title</title>
+      </head>
+
+- title: boostrap container row col
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <div class="container">
+          <div class="row">
+              <div class="col-md-12">
+              </div>
+          </div>
+      </div>
+
+- title: style attribute
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+       style=""
+
+- title: select input (form)
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <select>
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+      </select>
+
+- title: button (form)
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <button type="button">Click Me!</button>
+
+- title: center tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <center>center</center>
+
+- title: table tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <table>
+          <tr>
+              <th>January</th>
+              <th>February</th>
+          </tr>
+          <tr>
+              <td>28</td>
+              <td>31</td>
+          </tr>
+      </table>
+
+- title: form tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <form action="/action_page.php" method="get">
+          <input type="submit" value="Submit">
+      </form>
+
+- title: iframe tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <iframe src="https://www.w3schools.com"></iframe>
+
+- title: fontawesome tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <i class="fa fa-home"></i>
+
+- title: fontawesome import
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+- title: ul li tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <ul>
+          <li>Coffee</li>
+          <li>Tea</li>
+          <li>Milk</li>
+      </ul>
+
+- title: video tag
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <video autoplay loop poster="poster.jpg">
+          <source src="video/video.mp4" type="video/mp4" />
+      </video>
+
+- title: boostrap simple form
+  path: HTMLsnip
+  params:
+    codeclass: 'html'
+    string: |-
+      <form>
+          <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputFile">File input</label>
+              <input type="file" id="exampleInputFile">
+              <p class="help-block">Example block-level help text here.</p>
+          </div>
+          <div class="checkbox">
+              <label>
+                  <input type="checkbox"> Check me out
+              </label>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+
+- title: docs (web)
+  path: HTMLsnip
+  type: "object"
+  params:
+    openUrl: https://www.w3schools.com/tags/default.asp
+
+- title: boostrap cheat sheet (web)
+  path: HTMLsnip
+  type: "object"
+  params:
+    openUrl: https://cheatsheet.kursbootstrap.pl/
+
+- title: fontawesome cheat sheet (web)
+  path: HTMLsnip
+  type: "object"
+  params:
+    openUrl: https://fontawesome.bootstrapcheatsheets.com/

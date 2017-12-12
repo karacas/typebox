@@ -1,0 +1,21 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_web_snipetts
+enabled: true
+icon: mdi-web palette-Teal-A700 text
+rules:
+
+# WEBS
+- title: stackoverflow (web)
+  type: "object"
+  viewer: false
+  params:
+    openUrl: https://stackoverflow.com/questions
+
+- title: console cloud api google (web)
+  type: "object"
+  viewer: false
+  params:
+    openUrl: https://console.cloud.google.com/apis
+

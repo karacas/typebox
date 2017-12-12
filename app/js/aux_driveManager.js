@@ -22,17 +22,23 @@ const child_process = require('child_process');
 const globby = require('globby');
 const app2png = require('app2png');
 
-let cacheFilesImmitable = Immutable.OrderedMap();
-var icons = Config.get('icons');
+let cacheFilesImmutable = Immutable.Map();
+const icons = Config.get('icons');
 
-function getFileInfo(pathname) {
+function checkIfNeedUnpopWin() {
+    if (Config.get('here_are_dragons.gotoRootOnExec')) {
+        ListViewStore.storeActions.backRootRulesPath();
+        sharedData.app_window_and_systray.unpopWin();
+    }
+}
+
+function getFileInfo($pathname) {
     return new Promise((resolve, reject) => {
-        pathname = path.normalize(pathname);
-
+        let pathname = path.normalize($pathname);
         let isFile = fs.isFileSync(pathname);
 
-        if (cacheFilesImmitable.size && cacheFilesImmitable.size > 0) {
-            let cacheFile = cacheFilesImmitable.get(pathname);
+        if (cacheFilesImmutable.size && cacheFilesImmutable.size > 0) {
+            let cacheFile = cacheFilesImmutable.get(pathname);
             if (cacheFile && cacheFile.params.originalData && cacheFile.icon && cacheFile.icon.iconData) {
                 let dataTmp = cacheFile.params.originalData;
                 if (icons) dataTmp.iconUrl = cacheFile.icon.iconData;
@@ -43,11 +49,9 @@ function getFileInfo(pathname) {
 
         let isDir = !isFile;
         let isEmptyDir = isDir && fs.listSync(pathname).length == 0;
-        let icon = null;
-        let data = {};
 
-        data = {
-            icon: icon,
+        let data = {
+            icon: null,
             iconType: 'null',
             path: pathname,
             isFile: isFile,
@@ -75,9 +79,13 @@ function getFileInfo(pathname) {
             resolve(data);
         } else {
             auxGetFileIcon(pathname, ico => {
-                if (ico) {
+                if (ico && ico.dataUrl) {
                     data.iconType = 'dataURL';
-                    data.iconUrl = ico;
+                    data.iconUrl = ico.dataUrl;
+                }
+                if (ico && ico.type && ico.iconClass) {
+                    data.iconType = ico.type;
+                    data.iconClass = ico.iconClass;
                 }
                 resolve(data);
             });
@@ -90,12 +98,16 @@ function auxGetMacApptoDataUrl(file) {
         let tmpPng = path.normalize(Config.get('here_are_dragons.paths.tmp') + '/' + path.basename(file).replace('.app', '.png'));
         try {
             let dataImg = null;
+
             app2png
                 .convert(file, tmpPng)
                 .then(() => {
                     try {
                         //KTODO: En macs no retina usar 32x32
-                        dataImg = nativeImage.createFromPath(tmpPng).resize({ width: 64, height: 64 }).toDataURL();
+                        dataImg = nativeImage
+                            .createFromPath(tmpPng)
+                            .resize({ width: 64, height: 64 })
+                            .toDataURL();
                     } catch (e) {}
                     if (dataImg) {
                         resolve(dataImg);
@@ -126,12 +138,33 @@ function auxGetFileIcon(file, resolve) {
     }
 
     //KTODO: LAS EXTENCIONES CONOCIADAS USAR UN FONTICON
+    let ext = path.extname(file).toLowerCase();
+    if (ext === '.dll' || ext === '.bin' || ext === '.nls') {
+        resolve();
+        return;
+    }
+    if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.nef' || ext === '.gif') {
+        resolve({
+            type: 'iconFont',
+            iconClass: 'mdi-file-image small_ico text'
+        });
+        return;
+    }
+    if (ext === '.js' || ext === '.jsx' || ext === '.json') {
+        resolve({
+            type: 'iconFont',
+            iconClass: 'mdi-language-javascript palette-Amber-A200 text small_ico'
+        });
+        return;
+    }
 
     //MAC APP ICON
     if (/^darwin/.test(process.platform) && file.includes('.app')) {
-        auxGetMacApptoDataUrl(file).then(ico => resolve(ico)).catch(e => {
-            resolve();
-        });
+        auxGetMacApptoDataUrl(file)
+            .then(ico => resolve({ dataUrl: ico }))
+            .catch(e => {
+                resolve();
+            });
         return;
     }
 
@@ -139,8 +172,10 @@ function auxGetFileIcon(file, resolve) {
 
     try {
         app.getFileIcon(getLinkIconPath(file), { size: 'normal' }, function(err, res) {
-            if (res && res.getSize && res.getSize().width && res.toDataURL().length > 25) {
-                resolve(res.toDataURL());
+            //KTODO: thread promise
+            if (res && res.getSize && res.getSize().width) {
+                resolve({ dataUrl: res.toDataURL() });
+                return;
             } else {
                 resolve();
             }
@@ -208,7 +243,7 @@ function checkIsExec(file) {
             }
         } catch (e) {}
         //KTODO: Ver .lnk especiales
-        // var ws = require('windows-shortcuts');
+        // let ws = require('windows-shortcuts');
         //ws.query("c:\\Users\\karacas\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\People - Shortcut.lnk", console.log);
     }
 
@@ -227,14 +262,18 @@ function checkIsExec(file) {
 }
 
 function getMutipleFiles(arr) {
-    let cacheFiles = _.result(sharedData.dataManager, 'dataLoaded.launcherCache') || [];
-    cacheFilesImmitable = Immutable.OrderedMap(
-        cacheFiles.map(el => {
-            return [_.result(el, 'params.originalData.path'), el];
-        })
-    );
+    if (Config.get('here_are_dragons.launcherCache')) {
+        let cacheFiles = _.get(sharedData.dataManager, 'dataLoaded.launcherCache') || [];
+        cacheFilesImmutable = Immutable.Map(
+            cacheFiles.map(el => {
+                return [_.get(el, 'params.originalData.path'), el];
+            })
+        );
+    }
     return new Promise((resolve, reject) => {
-        Promise.all(arr.filter(fileExsit).map(getFileInfo)).then(values => resolve(values)).catch(values => resolve(values));
+        Promise.all(arr.filter(fileExsit).map(getFileInfo))
+            .then(values => resolve(values))
+            .catch(values => resolve(values));
     });
 }
 
@@ -272,24 +311,45 @@ function pathToArray(pathname) {
 
 function getPathRules(pathname) {
     if (pathname == '/' && /^win/.test(process.platform)) {
-        let drives = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('').filter(item => existDriveWin(item)).map(item => item + ':/');
+        let drives = 'abcdefghijklmnopqrstuvwxyz'
+            .toUpperCase()
+            .split('')
+            .filter(item => existDriveWin(item))
+            .map(item => item + ':/');
         if (drives.length) {
             return getMutipleFiles(drives);
         }
     }
 
     return new Promise((resolve, reject) => {
-        pathToArray(pathname).then(arr => getMutipleFiles(arr)).then(resolve).catch(reject);
+        pathToArray(pathname)
+            .then(arr => getMutipleFiles(arr))
+            .then(resolve)
+            .catch(reject);
     });
 }
 
 //KTODO: ver de hacer un open file with SU
 function openFile(item, forceSU = false, useOverride = true) {
-    let pathItem = _.result(item, 'rule.params.drive_path') || item;
+    let pathItem = _.get(item, 'rule.params.drive_path') || _.get(item, 'params.drive_path') || item;
 
     Logger.info('[OpenFile]', pathItem);
 
     if (!pathItem) return;
+
+    //IF URL
+    if (isUrl(pathItem)) {
+        Logger.info('[OpenFile], isUrl:', pathItem);
+        aux_webManager.openUrl(pathItem);
+        return;
+    }
+
+    //IF NOT EXIST
+    if (!fileExsit(pathItem)) {
+        sharedData.toaster.notify('Error, file does not exist: ' + pathItem);
+        Logger.error('Error, file does not exist: ' + pathItem);
+        return;
+    }
 
     //IS EXEC
     if (checkIsExec(pathItem)) {
@@ -309,9 +369,11 @@ function openFile(item, forceSU = false, useOverride = true) {
             }
 
             child_process.exec(pathItem.replace(/%./g, ''), (error, stdout) => {
-                if (!error && Config.get('here_are_dragons.gotoRootOnExec')) {
-                    ListViewStore.storeActions.backRootRulesPath();
-                    sharedData.app_window_and_systray.unpopWin();
+                if (!error) {
+                    checkIfNeedUnpopWin();
+                } else {
+                    sharedData.toaster.notify('Error opening ' + pathItem);
+                    Logger.error(error, 'Error opening ' + pathItem);
                 }
             });
             return;
@@ -319,29 +381,19 @@ function openFile(item, forceSU = false, useOverride = true) {
 
         //WIN-MAC
         if (shell.openItem(pathItem)) {
-            //KTODO: Hacer una función global
-            if (Config.get('here_are_dragons.gotoRootOnExec')) {
-                ListViewStore.storeActions.backRootRulesPath();
-                sharedData.app_window_and_systray.unpopWin();
-            }
+            checkIfNeedUnpopWin();
             return;
         }
 
-        opn(pathItem).then(() => {
-            //KTODO: Hacer una función global
-            if (Config.get('here_are_dragons.gotoRootOnExec')) {
-                ListViewStore.storeActions.backRootRulesPath();
-                sharedData.app_window_and_systray.unpopWin();
-            }
-        });
+        opn(pathItem)
+            .then(r => {
+                checkIfNeedUnpopWin();
+            })
+            .catch(error => {
+                sharedData.toaster.notify('Error opening ' + pathItem);
+                Logger.error(error, 'Error opening ' + pathItem);
+            });
 
-        return;
-    }
-
-    //IF URL
-    if (isUrl(pathItem)) {
-        Logger.info('[OpenFile], isUrl:', pathItem);
-        aux_webManager.openUrl(pathItem);
         return;
     }
 
@@ -349,7 +401,6 @@ function openFile(item, forceSU = false, useOverride = true) {
     let defaultApp = null;
     let extension = fileExtension(pathItem);
     let defApps = Config.get('overwriteDefaultFileAssociations');
-
     if (useOverride && extension && extension.length && defApps && defApps.length) {
         defApps.forEach(app => {
             app.extensions.forEach(ext => {
@@ -364,19 +415,29 @@ function openFile(item, forceSU = false, useOverride = true) {
     try {
         if (defaultApp) {
             opn(pathItem, { app: defaultApp }).then(() => {
-                //KTODO: Hacer una función global
-                if (Config.get('here_are_dragons.gotoRootOnExec')) {
-                    ListViewStore.storeActions.backRootRulesPath();
-                    sharedData.app_window_and_systray.unpopWin();
-                }
+                checkIfNeedUnpopWin();
             });
         } else if (shell.openItem(pathItem)) {
-            //KTODO: Hacer una función global
-            if (Config.get('here_are_dragons.gotoRootOnExec')) {
-                ListViewStore.storeActions.backRootRulesPath();
-                sharedData.app_window_and_systray.unpopWin();
-            }
+            checkIfNeedUnpopWin();
         }
+    } catch (e) {
+        sharedData.toaster.notify('Error opening ' + pathItem);
+        Logger.error(error, 'Error opening ' + pathItem);
+    }
+}
+
+function execCommand(item, forceSU = false) {
+    let cmd = _.get(item, 'rule.params.command');
+    if (!cmd) return;
+    try {
+        child_process.exec(cmd, (error, stdout, stderr) => {
+            if (error && !String(error).includes('.cpl') && !String(error).includes('control')) {
+                console.log(error, stdout, stderr);
+                Logger.error(error);
+                return;
+            }
+            checkIfNeedUnpopWin();
+        });
     } catch (e) {
         Logger.error(e);
     }
@@ -384,30 +445,64 @@ function openFile(item, forceSU = false, useOverride = true) {
 
 //KTODO: ver de hacer un open file with SU
 function openTerminal(item, forceSU = false) {
-    let pathItem = _.result(item, 'rule.params.drive_path');
+    let pathItem = _.get(item, 'rule.params.drive_path') || _.get(item, 'params.drive_path') || item;
+
     if (!pathItem) return;
-    try {
-        //KTODO: MAX/LNX
-        if (/^win/.test(process.platform)) {
-            let cmd = Config.get('defaultTerminalApp') || ['cmd', '-\/K'];
-            let params = 'cd ' + pathItem.replace(/\//g, '\\').toLowerCase();
+
+    let cmd;
+    let params;
+
+    let isDir = _.get(item, 'rule.params.isDir') || _.get(item, 'params.isDir');
+    if (!isDir && !_.isString(item)) {
+        pathItem = path.parse(pathItem).dir;
+    }
+
+    //KTODO: LNX
+
+    if (/^darwin/.test(process.platform)) {
+        try {
+            cmd = Config.get('defaultTerminalApp') || 'Terminal';
+            params = pathItem;
+            Logger.log('[openTerminal]', cmd, params);
             opn(params, { app: cmd }).then(() => {
-                //KTODO: Hacer una función global
-                if (Config.get('here_are_dragons.gotoRootOnExec')) {
-                    ListViewStore.storeActions.backRootRulesPath();
-                    sharedData.app_window_and_systray.unpopWin();
-                }
+                checkIfNeedUnpopWin();
             });
+        } catch (e) {
+            Logger.error(e);
         }
-    } catch (e) {
-        Logger.error(e);
+    }
+
+    if (/^win/.test(process.platform)) {
+        try {
+            cmd = Config.get('defaultTerminalApp') || ['cmd', '-/K']; //['PowerShell', '-noexit', '-command'];
+
+            let slashD = '';
+            if (cmd[0] === 'cmd') slashD = '/d ';
+
+            params =
+                'cd ' +
+                slashD +
+                pathItem
+                    .replace(/\//g, '\\')
+                    .replace(/\\$/, '')
+                    .toLowerCase();
+
+            Logger.log('[openTerminal]', cmd, params);
+
+            opn(params, { app: cmd }).then(() => {
+                checkIfNeedUnpopWin();
+            });
+        } catch (e) {
+            Logger.error(e);
+        }
     }
 }
 
 function walkPaths(arr, params) {
     return new Promise((resolve, reject) => {
-        //KTODO: VER DE SEPARARLO EN VARIOS, ASI SE CONSUME TODO
-        return globby(arr, params.options).then(values => resolve(_.uniq(_.flatten(values)))).catch(values => resolve(_.uniq(_.flatten(values))));
+        return globby(arr, params.options)
+            .then(values => resolve(_.uniq(_.flatten(values))))
+            .catch(values => resolve(_.uniq(_.flatten(values))));
     });
 }
 
@@ -420,12 +515,10 @@ function pathsReplaceEnvVar(p) {
 }
 
 function deleteCaches() {
-    //KTODO: Hacer directo
     sharedData.dataManager.deleteCaches();
 }
 
 function deleteUserData() {
-    //KTODO: Hacer directo
     sharedData.dataManager.deleteUserData();
 }
 
@@ -435,6 +528,7 @@ module.exports.openFile = openFile;
 module.exports.pathToArray = pathToArray;
 module.exports.walkPaths = walkPaths;
 module.exports.checkIsExec = checkIsExec;
+module.exports.execCommand = execCommand;
 module.exports.fileExsit = fileExsit;
 module.exports.openTerminal = openTerminal;
 module.exports.pathsReplaceEnvVar = pathsReplaceEnvVar;

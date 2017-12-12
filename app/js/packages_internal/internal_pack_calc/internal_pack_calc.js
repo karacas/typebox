@@ -2,79 +2,172 @@
 
 const _ = require('electron').remote.require('lodash');
 const mathjs = require('mathjs');
+const HistoryManager = require('../../historyManager.js');
+const LastRulesManagerPush = require('../../lastRulesManager.js').push;
+const createRule = require('../../rule.js').getNewRule;
 
-var generateStaticRule = rule => {
+module.exports = context => {
+    let lastCalcRule = null;
+    let putedHistory = false;
     return {
-        title: rule.title,
-        icon: rule.icon,
-        path: rule.path,
-        params: rule.params,
-        type: ['string']
-    };
-};
+        init() {
+            const CALC_PLUGIN_PATH = this.name;
 
-module.exports = {
-    init() {
-        this.app.on('changeQuery', txt => {
-            var rulesPath = this.app.getPath().path;
-
-            var calcIcon = {
-                type: 'iconSvg',
-                iconData: "<svg xmlns='http://www.w3.org/2000/svg' version='1' viewBox='0 0 48 48'><path fill='#616161' d='M40 16H8v24c0 2.2 1.8 4 4 4h24c2.2 0 4-1.8 4-4V16z'/><path fill='#424242' d='M36 4H12C9.8 4 8 5.8 8 8v9h32V8c0-2.2-1.8-4-4-4z'/><path fill='#9CCC65' d='M36 14H12c-.6 0-1-.4-1-1V8c0-.6.4-1 1-1h24c.6 0 1 .4 1 1v5c0 .6-.4 1-1 1z'/><path fill='#33691E' d='M33 10h2v2h-2zm-4 0h2v2h-2z'/><path fill='#FF5252' d='M36 23h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1z'/><path fill='#E0E0E0' d='M15 23h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm-14 6h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm-14 6h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm-14 6h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm7 0h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1z'/><path fill='#BDBDBD' d='M36 29h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm0 6h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1zm0 6h-3c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v2c0 .6-.4 1-1 1z'/></svg>"
+            const CALC_ICON = {
+                type: 'iconFont',
+                iconClass: 'mdi-calculator text'
             };
 
-            if (txt.length > 2 && (rulesPath === '/' || rulesPath === this.name)) {
-                let exp = null;
-                try {
-                    exp = mathjs.eval(txt);
-                    if (String(exp).includes('function')) {
+            const CALC_PATH = {
+                path: CALC_PLUGIN_PATH,
+                icon: CALC_ICON,
+                name: 'calc',
+                keepQueryValue: true,
+                ephemeral: true
+            };
+
+            let generateStaticRule = rule => {
+                return {
+                    title: rule.title,
+                    icon: rule.icon,
+                    path: rule.path,
+                    addInHistory: false,
+                    params: rule.params,
+                    order: context.getTime(),
+                    type: ['calc', 'string']
+                };
+            };
+
+            let saveLastExp = () => {
+                if (lastCalcRule !== null) {
+                    try {
+                        lastCalcRule = createRule(generateStaticRule(lastCalcRule));
+                        if (lastCalcRule) {
+                            LastRulesManagerPush(lastCalcRule);
+                        }
+                    } catch (e) {}
+                    lastCalcRule = null;
+                }
+            };
+
+            let putHistory = (force = false) => {
+                if (force) putedHistory = false;
+                if (putedHistory) return;
+                context.addRules(
+                    context.getlastItemsPath(CALC_PLUGIN_PATH).map($last => {
+                        return Object.assign({}, $last, {
+                            title: '[ History ] ' + $last.title,
+                            persistFuzzy: true,
+                            addInHistory: false,
+                            specialScoreMult: 0,
+                            generateStaticRule: null,
+                            fav_permit: false,
+                            path: CALC_PLUGIN_PATH
+                        });
+                    })
+                );
+                putedHistory = true;
+            };
+
+            let deleteRules = () => {
+                context.deleteRules();
+                putedHistory = false;
+            };
+
+            context.on('changeQuery', txt => {
+                let RULES_PATH = context.getPath().path;
+
+                if (RULES_PATH === CALC_PLUGIN_PATH) {
+                    context.setResult('');
+                    if (txt === '') {
+                        context.setPath('/');
+                        return;
+                    }
+                }
+
+                if (txt === '=' && RULES_PATH === '/') {
+                    context.setPath(CALC_PATH);
+                    RULES_PATH = CALC_PLUGIN_PATH;
+                }
+
+                if (txt.length >= 3 && (RULES_PATH === '/' || RULES_PATH === CALC_PLUGIN_PATH)) {
+                    let exp = null;
+
+                    let txtToExp = txt;
+
+                    if (txtToExp[0] === '=') txtToExp = txtToExp.substring(1);
+
+                    try {
+                        exp = mathjs.eval(txtToExp);
+                    } catch (e) {}
+
+                    if (
+                        String(exp).includes('undefined') ||
+                        txtToExp.slice(0, 4) === 'func' ||
+                        txtToExp.slice(0, 3) === 'drop' ||
+                        txtToExp.slice(0, 3) === 'exp' ||
+                        String(exp).length > 120 ||
+                        String(exp).includes('throw') ||
+                        String(exp).includes('return')
+                    ) {
                         exp = null;
                     }
-                } catch (e) {}
 
-                if (exp !== null && exp !== Number(txt)) {
-                    this.app.setRules([
-                        {
-                            title: txt + ' = ' + exp,
+                    if (exp !== null && String(exp) !== String(txtToExp)) {
+                        lastCalcRule = {
+                            title: txtToExp + ' = ' + exp,
                             addInHistory: false,
                             hidden_permit: false,
                             persistFuzzy: true,
-                            path: this.name,
-                            icon: calcIcon,
+                            posFixed: 1,
+                            path: CALC_PLUGIN_PATH,
+                            icon: CALC_ICON,
                             generateStaticRule: generateStaticRule,
+                            type: ['calc', 'string'],
                             params: {
                                 string: String(exp)
                             }
-                        }
-                    ]);
-                    //Hystory Rules
-                    this.app.addRules(
-                        this.app.getlastItemsPath(this.name).map($last => {
-                            let last = _.clone($last);
-                            last.title = '[ Hystory ] ' + last.title;
-                            last.persistFuzzy = true;
-                            last.addInHistory = false;
-                            last.fav_permit = false;
-                            last.favorite = false;
-                            last.path = this.name;
-                            return last;
-                        })
-                    );
-                    this.app.setPath({
-                        path: this.name,
-                        icon: calcIcon,
-                        name: 'calc',
-                        keepQueryValue: true
-                    });
-                } else {
-                    this.app.deleteRules();
-                }
-            }
+                        };
 
-            if (!txt.length && rulesPath === this.name) {
-                this.app.deleteRules();
-                this.app.setPath('/');
-            }
-        });
-    }
+                        context.setRules([lastCalcRule]);
+                        putHistory(true);
+
+                        context.setResult(' = ' + exp);
+                        if (RULES_PATH !== CALC_PLUGIN_PATH) {
+                            context.setPath(CALC_PATH);
+                        }
+                    }
+                }
+
+                if (RULES_PATH === CALC_PLUGIN_PATH) {
+                    putHistory();
+                }
+            });
+
+            context.on('changePath', path => {
+                if (path === '/') {
+                    deleteRules();
+                }
+                if (path !== CALC_PLUGIN_PATH) {
+                    saveLastExp();
+                }
+            });
+        },
+        defineTypeExecutors() {
+            return [
+                {
+                    title: 'calc',
+                    id: 'calc',
+                    type: 'calc',
+                    enabled: obj => {
+                        return false;
+                    },
+                    exectFunc: obj => {
+                        context.writeString(obj.rule.params.string || obj.rule.title);
+                        return false;
+                    }
+                }
+            ];
+        }
+    };
 };

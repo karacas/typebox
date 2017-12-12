@@ -1,0 +1,211 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_stylus_snipetts
+enabled: true
+icon: mdi-language-css3 palette-Blue-A300 text
+rules:
+
+
+
+- title: css/stylus snippets
+  type: 'object'
+  params:
+    codeclass: 'css'
+    changePath:
+      path: STYLsnip
+
+- title: literal css calc with stylus variable
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      $arrowsize = 5px;
+      left "calc(50% - %s)" % $arrowsize;
+
+- title: wildcards in classes (*)
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      div[class^="tocolor-"], div[class*=" tocolor-"] {
+          color: red;
+      }
+
+- title: hyphenation
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      text-align: justify;
+      -webkit-hyphens: auto;
+      -moz-hyphens: auto;
+      hyphens: auto;
+
+- title: transform translate3d
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      transform: translate3d(0, 0, 0);
+      /*Ver: http://tympanus.net/codrops/2013/05/07/a-collection-of-page-transitions/*/
+      - title: transform 3d
+
+- title: import nib
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      @import "nib"
+
+- title: transition
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      transition: all 1s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+
+- title: :not
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      div:not(.test)
+
+- title: :after
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      &:after{
+          content " ";
+          display block;
+      }
+
+- title: box-shadow
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+
+- title: user-select
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      user-select: none;
+
+- title: calc (css)
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      calc(100vw * 1);
+
+- title: letter-spacing
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      letter-spacing: -0.5px;
+
+- title: media querys
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      @media (max-width: 480px) // hasta
+      @media (min-width: 480px) // desde
+
+- title: medias krc
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      $hasta_phon
+      $hasta_tabl
+      $hasta_tabl
+      $hasta_full
+      $desde_phon
+      $desde_tabl
+      $desde_tabl
+      $desde_full
+
+- title: keyframes animation
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      @keyframes spin {
+          0%   {transform: rotate(0deg)}
+          100% {transform: rotate(360deg)}
+      }
+      .spinner{
+          animation: spin 0.5s infinite;
+      }
+
+- title: transform translate
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      transform: translate(-100%, 0);
+
+- title: transform translateX
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      transform: translateX(-100%);
+
+- title: transform scale
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      transform: scale(1);
+
+- title: input :not type
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      input:not([type=checkbox]):not([type=radio]) {}
+
+- title: :not first-child / last-child
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      .el:not(:first-child):not(:last-child) {}
+
+- title: :first-child
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      .el:first-child
+
+- title: input only type
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      input[type='checkbox'] , input[type='radio'] {}
+
+- title: transition delay
+  path: STYLsnip
+  params:
+    codeclass: 'css'
+    string: |-
+      transition-delay: 1s;
+
+- title: docs (web)
+  path: STYLsnip
+  type: "object"
+  params:
+    codeclass: 'css'
+    openUrl: http://stylus-lang.com/try.html

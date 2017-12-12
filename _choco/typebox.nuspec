@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+	<metadata>
+		<id>typebox</id>
+		<version>0.50.38</version>
+		<title>typebox</title>
+		<authors>karacas</authors>
+		<owners>karacas</owners>
+		<licenseUrl>https://raw.githubusercontent.com/karacas/typebox/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/karacas/typebox</projectUrl>
+		<packageSourceUrl>https://github.com/karacas/typebox</packageSourceUrl>
+		<releaseNotes>https://github.com/karacas/typebox/releases</releaseNotes>
+		<iconUrl>https://raw.githubusercontent.com/karacas/typebox/master/app/assets/icons/color_256.ico</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<summary>Universal and Open Source keystroke launcher</summary>
+		<description>Universal and Open Source keystroke launcher</description>
+		<copyright>Copyright © 2017 karacas</copyright>
+		<tags>windows electron launcher keystroke</tags>
+	</metadata>
+	<files>
+		<file src="tools\**" target="tools" />
+	</files>
+</package>

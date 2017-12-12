@@ -1,4 +1,5 @@
-body {
+body,
+body.typebox {
 /*Colors*/
   --scale: 1;
   --backColor: #293039;
@@ -19,6 +20,7 @@ body {
   --iconSize: calc(32px);
   --iconSizeSmall: calc(24px);
   --propRulesView: 45%;
+  --propRulesViewMax: 480px;
 /*Opacity*/
   --lowOpacity: 0.25;
   --medOpacity: 0.5;
@@ -32,8 +34,24 @@ body {
   --mainSearchFontSize: calc(28px * var(--scale));
   --ruleNameFontSize: calc(15px * var(--scale));
   --smallFontSize: calc(11px * var(--scale));
+  --codeFontSize: calc(13px * var(--scale));
+  --codeBigFontSize: calc(14px * var(--scale));
 /**/
   --minWidth: 400px;
+}
+body.big {
+  --scale: 1.15 !important;
+  --padding: 20px;
+  --searchBoxHeight: 94px;
+  --itemHeight: 62px;
+  --statusBarHeight: 32px;
+}
+body.small {
+  --scale: 0.85 !important;
+  --padding: 15px;
+  --searchBoxHeight: 70px;
+  --itemHeight: 46px;
+  --statusBarHeight: 24px;
 }
 body.atom {
   --backColor: #282c34;
@@ -59,19 +77,59 @@ body.cream {
   --hiOpacity: 0.9;
   --iframeBlendMode: multiply;
 }
-body.big {
-  --scale: 1.15 !important;
-  --padding: 20px;
-  --searchBoxHeight: 94px;
-  --itemHeight: 62px;
-  --statusBarHeight: 32px;
+body.monokai {
+  --backColor: #373831;
+  --backDarkColor: #373831;
+  --backLightColor: #4d4e43;
+  --accentColor: #e8dc6c;
+  --cursorColor: #c8c8c8;
+  --textLowColor: #c8c8c8;
+  --textHighColor: #fff;
 }
-body.small {
-  --scale: 0.85 !important;
-  --padding: 15px;
-  --searchBoxHeight: 70px;
-  --itemHeight: 46px;
-  --statusBarHeight: 24px;
+body.citylights {
+  --backColor: #252d35;
+  --backDarkColor: #252d35;
+  --backLightColor: #2a3038;
+  --accentColor: #4383eb;
+  --cursorColor: #cbd1e1;
+  --textLowColor: #cbd1e1;
+  --textHighColor: #fff;
+}
+body.material {
+  --backColor: #263238;
+  --backDarkColor: #263238;
+  --backLightColor: #344a4e;
+  --accentColor: #89ddff;
+  --cursorColor: #eff;
+  --textLowColor: #eff;
+  --textHighColor: #fff;
+}
+body.adobe {
+  --backColor: #424242;
+  --backDarkColor: #424242;
+  --backLightColor: #535353;
+  --accentColor: #46a0f5;
+  --cursorColor: #ddd;
+  --textLowColor: #ddd;
+  --textHighColor: #fff;
+}
+body.macri-gato {
+  --backColor: #f9dc00;
+  --backDarkColor: #f9dc00;
+  --backLightColor: #e8cd00;
+  --accentColor: #fff;
+  --cursorColor: #000;
+  --textLowColor: #404040;
+  --textHighColor: #000;
+}
+body.vscode {
+  --backColor: #1e1e1e;
+  --backDarkColor: #1e1e1e;
+  --backLightColor: #252526;
+  --accentColor: #007acc;
+  --cursorColor: #acacac;
+  --textLowColor: #ccc;
+  --textHighColor: #fff;
 }
 @font-face {
   font-family: "Roboto-Light";
@@ -91,6 +149,7 @@ html body {
   padding: 0;
   font-family: var(--mainFont);
   font-weight: var(--mainFontWeight);
+  zoom: 1 !important;
 }
 #content {
   margin: 0;
@@ -119,7 +178,6 @@ body,
   text-align: right;
   -webkit-user-select: none;
   -webkit-app-region: drag;
-  cursor: pointer;
   z-index: 5;
 }
 #boxContentWrapper {
@@ -133,14 +191,16 @@ body,
   display: inline-block;
 }
 .animate-disappear {
-  animation: disappear 1s linear;
+  animation: disappear 0.75s linear;
 }
 .no-animate-disappear {
   -webkit-opacity: 1;
 }
 .canDisapppear:not(.no-animate-disappear),
+pointer-events:not(.no-animate-disappear),
 .scrollTrackEl:not(.no-animate-disappear),
 .canDisapppear.animate-disappear,
+pointer-events.animate-disappear,
 .scrollTrackEl.animate-disappear {
   -webkit-opacity: 0;
 }
@@ -239,19 +299,24 @@ body,
   padding: 0;
   margin: 0;
   position: relative;
+  user-select: none;
 }
 #mainSearchWrapper {
   width: auto;
   padding: 0 var(--padding);
   height: var(--searchBoxHeight);
   position: relative;
+  overflow: hidden;
 }
 #mainSearchWrapper .pathIndicator .pathName {
   font-family: var(--mainFont);
   font-size: var(--smallFontSize);
   letter-spacing: 0.25px;
 }
-#mainSearch {
+#mainSearch,
+#mainSearchCopy,
+#searchResult,
+#searchResultWrapp {
   outline: none;
   background: none;
   border: none;
@@ -268,6 +333,28 @@ body,
   transform: translate(0, -50%);
   font-weight: var(--mainFontWeight);
 }
+#searchResultWrapp {
+  top: 50%;
+}
+#mainSearchCopy {
+  -webkit-opacity: 0;
+}
+#mainSearchCopy,
+#searchResult {
+  line-height: var(--searchBoxHeight);
+  transform: translate(0, 0);
+  top: initial;
+  left: initial;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.1px;
+  width: auto;
+  pointer-events: none;
+  user-select: none;
+}
+#searchResult {
+  margin-left: 5px;
+}
 .mainSearchIcon {
   position: absolute;
   right: var(--padding);
@@ -282,9 +369,12 @@ body,
   overflow-y: hidden;
 }
 .ruleListCelda,
+.ruleContext {
+  position: relative;
+}
+.ruleListCelda,
 .ruleContext,
 .pathIndicator {
-  position: relative;
   cursor: pointer;
   overflow: hidden;
   margin: 0;
@@ -302,6 +392,24 @@ body,
   margin: 0;
   line-height: var(--itemHeight);
   height: var(--itemHeight);
+}
+.ruleListCelda span.ruleNameAndDesc.newRule:after,
+.ruleContext span.ruleNameAndDesc.newRule:after,
+.pathIndicator span.ruleNameAndDesc.newRule:after {
+  content: "new!";
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: 2px;
+  right: 58px;
+  line-height: 1.2;
+  padding: 2px 5px;
+  border-radius: 2px;
+  text-align: center;
+  pointer-events: none;
+  font-size: var(--smallFontSize);
+  transform: translate(0%, -50%);
+  drop-shadow: 0 1px 0 rgba(0,0,0,0.25);
 }
 .ruleListCelda span.ruleName,
 .ruleContext span.ruleName,
@@ -333,7 +441,7 @@ body,
 .ruleContext .ruleInfo,
 .pathIndicator .ruleInfo {
   position: absolute;
-  top: 0;
+  top: 2px;
   width: auto;
   right: calc(var(--padding) + var(--iconSize) * 1.85);
   letter-spacing: 0.25px;
@@ -369,8 +477,8 @@ body,
 }
 .pathIndicator .pathName {
   position: absolute;
-  top: -6px;
-  margin-left: 1px;
+  top: -10px;
+  margin-left: 2px;
   line-height: calc(var(--searchBoxHeight) * 0.75);
   font-size: calc(var(--ruleNameFontSize) * 1.5);
   width: auto;
@@ -392,7 +500,7 @@ body,
 }
 .ruleListCelda.highLight,
 .ruleListCelda.highLight .ruleInfo {
-  transition: all 0 cubic-bezier(0.19, 1, 0.22, 1);
+  transition: none;
 }
 #status-bar {
   display: block;
@@ -424,6 +532,7 @@ body,
   overflow: hidden;
   -webkit-opacity: 0;
 }
+pointer-events,
 .scrollTrackEl {
   position: absolute;
   width: 2px;
@@ -432,7 +541,7 @@ body,
   right: 0;
   margin: 4px;
   border-radius: 0;
-  transition: all calc(0.15s) cubic-bezier(0.19, 1, 0.22, 1);
+  transition: transform calc(0.1s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1), -webkit-opacity calc(0.45s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
 }
 .animsEnabled .ruleListCelda,
 .animsEnabled .ruleListCelda .ruleInfo {
@@ -455,11 +564,16 @@ body {
 #mainSearch {
   color: var(--cursorColor);
 }
+#mainSearchCopy,
+#searchResult {
+  color: var(--textHighColor);
+  color: var(--accentColor);
+}
 .contextTitle {
   color: var(--textHighColor);
 }
 .pathIndicator .pathName {
-  color: var(--textLowColor);
+  color: var(--textHighColor);
   -webkit-opacity: var(--hiOpacity);
 }
 #mainSearchWrapper,
@@ -468,16 +582,21 @@ body {
 }
 .ruleListCelda .ruleInfo {
   color: var(--backColor);
+  -webkit-opacity: 0.1;
 }
-.ruleListCelda .ruleInfo.show {
+.ruleListCelda .ruleInfo.showRuleScore {
   color: var(--textLowColor);
-  opacity: 0.5;
+  -webkit-opacity: 0.6;
 }
-.ruleListCelda .ruleIconContext {
+.ruleListCelda .ruleIconContext i {
   color: var(--textLowColor);
   -webkit-opacity: var(--medOpacity);
 }
-.ruleListCelda .ruleIconContext:hover {
+.ruleListCelda .ruleIconContext i.mdi-star {
+  -webkit-opacity: var(--hiOpacity);
+  color: var(--accentColor);
+}
+.ruleListCelda .ruleIconContext i:hover {
   -webkit-opacity: 1;
 }
 span.ruleName,
@@ -494,6 +613,11 @@ span.ruleName,
 .colorDefault svg path {
   fill: var(--accentColor);
 }
+span.ruleNameAndDesc.newRule:after {
+  color: var(--backColor);
+  background-color: var(--accentColor);
+  -webkit-opacity: 1;
+}
 .ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight {
   background-color: var(--backLightColor);
 }
@@ -502,6 +626,10 @@ span.ruleName,
 }
 .ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight .ruleDescription {
   -webkit-opacity: var(--hiOpacity);
+}
+.ruleList:not(.mouseActivated_NO) .ruleListCelda.highLight .newRule:after {
+  color: var(--textHighColor);
+  background-color: var(--accentColor);
 }
 .ruleList.mouseActivated_NO .ruleListCelda:hover {
   background-color: var(--backLightColor);
@@ -554,15 +682,55 @@ span.ruleName,
 .ruleViewer ol {
   color: var(--textLowColor);
 }
-.ruleViewer pre {
+.ruleViewer pre:not(.noBack) {
   background-color: var(--backLightColor);
 }
+.ruleViewer pre:not(.noBack).noBack {
+  background-color: transparent;
+}
+.ruleViewer pre {
+  font-size: var(--codeFontSize);
+}
+.ruleViewer pre.big {
+  font-size: var(--codeBigFontSize);
+}
+.ruleViewer pre > span,
 .ruleViewer code,
 .ruleViewer code[class] {
-  background-color: var(--backLightColor);
+  font-family: 'Roboto Mono', Consolas, Monaco, monospace;
+  font-weight: var(--mainFontWeight);
+  white-space: normal;
+  font-size: var(--codeFontSize);
+  line-height: 1.6;
+}
+.ruleViewer pre > span.noBack,
+.ruleViewer code.noBack,
+.ruleViewer code[class].noBack,
+pre.noBack .ruleViewer pre > span,
+pre.noBack .ruleViewer code,
+pre.noBack .ruleViewer code[class] {
+  background-color: transparent;
+}
+.ruleViewer pre > span.big,
+.ruleViewer code.big,
+.ruleViewer code[class].big,
+.big .ruleViewer pre > span,
+.big .ruleViewer code,
+.big .ruleViewer code[class] {
+  font-size: var(--codeBigFontSize);
+}
+.ruleViewer .extraMargin {
+  padding-left: var(--padding);
+  padding-right: var(--padding);
+}
+.ruleViewer .word-wrap {
+  word-wrap: break-word;
 }
 .ruleViewer blockquote {
   border-left: 2px var(--accentColor) solid;
+  padding-left: 8px;
+  margin-left: 20px;
+  margin-bottom: 2em;
 }
 .ruleViewer hr {
   border-top-color: var(--hrTagColor);
@@ -574,17 +742,6 @@ span.ruleName,
 .ruleViewer .ruleViewerWrapp {
   color: var(--textHighColor);
 }
-.ruleViewer .ruleViewerWrapp::-webkit-scrollbar,
-.ruleViewer iframe::-webkit-scrollbar,
-.ruleViewer webview::-webkit-scrollbar {
-  background-color: transparent;
-}
-.ruleViewer .ruleViewerWrapp::-webkit-scrollbar-thumb,
-.ruleViewer iframe::-webkit-scrollbar-thumb,
-.ruleViewer webview::-webkit-scrollbar-thumb {
-  border-right: solid 2px var(--accentColor);
-  background: transparent;
-}
 .ruleViewer Loading:after {
   background-color: var(--accentColor);
 }
@@ -593,6 +750,38 @@ span.ruleName,
 }
 .ruleViewer buttonsviewer a:before {
   color: var(--backColor);
+}
+.ruleViewer code.preWhiteSpace {
+  white-space: pre;
+}
+.ruleViewerWrapp::-webkit-scrollbar,
+scrollExtend::-webkit-scrollbar,
+iframe::-webkit-scrollbar,
+webview::-webkit-scrollbar,
+.ruleViewer .hljs::-webkit-scrollbar {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+.ruleViewerWrapp::-webkit-scrollbar-thumb,
+scrollExtend::-webkit-scrollbar-thumb,
+iframe::-webkit-scrollbar-thumb,
+webview::-webkit-scrollbar-thumb,
+.ruleViewer .hljs::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+.ruleViewerWrapp::-webkit-scrollbar-thumb:vertical,
+scrollExtend::-webkit-scrollbar-thumb:vertical,
+iframe::-webkit-scrollbar-thumb:vertical,
+webview::-webkit-scrollbar-thumb:vertical,
+.ruleViewer .hljs::-webkit-scrollbar-thumb:vertical {
+  border-right: solid 2px var(--accentColor);
+}
+.ruleViewerWrapp::-webkit-scrollbar-thumb:horizontal,
+scrollExtend::-webkit-scrollbar-thumb:horizontal,
+iframe::-webkit-scrollbar-thumb:horizontal,
+webview::-webkit-scrollbar-thumb:horizontal,
+.ruleViewer .hljs::-webkit-scrollbar-thumb:horizontal {
+  border-bottom: solid 2px var(--accentColor);
 }
 #status-bar {
   color: var(--textLowColor);
@@ -613,30 +802,32 @@ span.ruleName,
   width: 100%;
   display: block;
   z-index: 4;
-  transition: all calc(0.25s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+  max-width: 100%;
+  transition: width calc(0.1s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1), max-width calc(0.1s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: 0.2s;
 }
 .boxContentWrapperList .ruleViewer {
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
-  overflow-x: hidden;
+  width: calc(100% - var(--propRulesView));
+  min-width: calc(100% - var(--propRulesViewMax));
   display: block;
   z-index: 1;
-  transition: all calc(0.25s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
-/*KTODO: Disable via JS Settings*/
   mix-blend-mode: var(--iframeBlendMode);
+  user-select: initial;
+}
+.boxContentWrapperList .ruleViewer.noBlend {
+  mix-blend-mode: initial;
 }
 .boxContentWrapperList.withViewer .listadoRules {
   width: var(--propRulesView);
-  transition-delay: 0.32s;
-}
-.boxContentWrapperList.withViewer .ruleViewer {
-  width: calc(100% - var(--propRulesView));
+  max-width: var(--propRulesViewMax);
+  transition: width calc(0.2s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1), max-width calc(0.2s * var(--animSpeedFactor)) cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: 0.4s;
 }
 .ruleViewer {
   height: 100%;
-  overflow-y: hidden;
 }
 .ruleViewer h1,
 .ruleViewer h2,
@@ -687,27 +878,17 @@ span.ruleName,
 }
 .ruleViewer iframe.withTrans,
 .ruleViewer webview.withTrans {
-  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: none;
 }
 .ruleViewer .ruleViewerWrapp {
-  font-size: 14px;
+  font-size: var(--ruleNameFontSize);
   line-height: 1.4;
+  letter-spacing: 0;
   width: calc(100% - (var(--padding) * 2));
   height: calc(100% - (var(--padding) * 0.5));
-  padding: 0 var(--padding);
-  padding-right: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.ruleViewer .ruleViewerWrapp::-webkit-scrollbar,
-.ruleViewer iframe::-webkit-scrollbar,
-.ruleViewer webview::-webkit-scrollbar {
-  width: 10px;
-}
-.ruleViewer .ruleViewerWrapp::-webkit-scrollbar-thumb,
-.ruleViewer iframe::-webkit-scrollbar-thumb,
-.ruleViewer webview::-webkit-scrollbar-thumb {
-  height: 36px !important;
+  padding: 0;
+  margin: 0 var(--padding);
+  overflow: auto;
 }
 .ruleViewer Loading {
   position: relative;
@@ -753,7 +934,8 @@ span.ruleName,
 }
 .ruleViewer .frameInLoad iframe,
 .ruleViewer .frameInLoad webview,
-.ruleViewer .frameInLoad buttonsViewer {
+.ruleViewer .frameInLoad buttonsviewer,
+.ruleViewer .frameInLoad .webview {
   -webkit-opacity: 0;
 }
 .ruleViewer .frameInLoad Loading {
@@ -765,73 +947,293 @@ span.ruleName,
   display: none;
 }
 .ruleViewer .frameLoaded iframe,
-.ruleViewer .frameLoaded webview {
+.ruleViewer .frameLoaded webview,
+.ruleViewer .frameLoaded buttonsViewer,
+.ruleViewer .frameLoaded .webview {
   -webkit-opacity: 1;
 }
-.markdownView,
-.markdownView td {
+.hideObj {
+  visibility: hidden;
+}
+.markdownViewm,
+.webview,
+.markdownViewm td,
+.webview td {
   font-size: 14px;
 }
-.markdownView {
+.markdownViewm,
+.webview {
   max-width: 100%;
   margin: 0;
   padding: 0;
 }
-.markdownView,
-.markdownView * {
+.markdownViewm,
+.webview,
+.markdownViewm *,
+.webview * {
   line-height: 1.6;
 }
-.markdownView tt,
-.markdownView code,
-.markdownView pre {
+.markdownViewm tt,
+.webview tt,
+.markdownViewm code,
+.webview code,
+.markdownViewm pre,
+.webview pre {
   font-family: 'Roboto Mono', Consolas, Monaco, monospace;
 }
-.markdownView h1 {
-  font-size: 2.2em;
+.markdownViewm h1,
+.webview h1 {
+  font-size: 1.8em;
   padding-bottom: 0.3em;
   line-height: 1.25;
 }
-.markdownView h1:first-child {
+.markdownViewm h1:first-child,
+.webview h1:first-child {
   margin-top: 0;
   padding-top: 0;
 }
-.markdownView h2 {
-  font-size: 1.7em;
+.markdownViewm h2,
+.webview h2 {
+  font-size: 1.6em;
   padding-bottom: 0.3em;
   line-height: 1.25;
 }
-.markdownView h3,
-.markdownView h4 {
+.markdownViewm h3,
+.webview h3,
+.markdownViewm h4,
+.webview h4 {
   font-size: 1.4em;
   line-height: 1.25;
 }
-.markdownView h5,
-.markdownView h6 {
+.markdownViewm h5,
+.webview h5,
+.markdownViewm h6,
+.webview h6 {
   font-size: 1.2em;
   line-height: 1.25;
 }
-.markdownView pre,
-.markdownView img {
+.markdownViewm pre,
+.webview pre,
+.markdownViewm img,
+.webview img {
   max-width: 100%;
 }
-.markdownView pre {
+.markdownViewm pre,
+.webview pre {
   border-radius: 4px;
-  overflow-x: auto;
+  margin-top: 1.5em;
+  margin-bottom: 3.5em;
 }
-.markdownView pre code {
+.markdownViewm pre code,
+.webview pre code {
   display: block;
   padding: 0.5em;
 }
-.markdownView code {
-  font-size: 90%;
+.markdownViewm code,
+.webview code {
   border: none;
 }
-.markdownView code[class] {
+.markdownViewm code[class],
+.webview code[class] {
   border: none;
 }
-.markdownView blockquote {
+.markdownViewm blockquote,
+.webview blockquote {
   margin: 0;
-  padding-left: 1em;
+  padding-left: 8px;
+  margin-left: 20px;
+}
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a,
+pre a,
+code a {
+  text-decoration: none !important;
+}
+h1 .improve-docs,
+h2 .improve-docs,
+h3 .improve-docs,
+h4 .improve-docs,
+h5 .improve-docs,
+h6 .improve-docs,
+pre .improve-docs,
+code .improve-docs {
+  display: none !important;
+}
+._attribution,
+._attribution-p {
+  font-size: 0.85em;
+  -webkit-opacity: 0.7;
+  margin-top: 4em;
+}
+body.isDark .ruleViewer .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #abb2bf;
+  background: #282c34;
+}
+body.isDark .ruleViewer .hljs-comment,
+body.isDark .ruleViewer .hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+body.isDark .ruleViewer .hljs-doctag,
+body.isDark .ruleViewer .hljs-keyword,
+body.isDark .ruleViewer .hljs-formula {
+  color: #c678dd;
+}
+body.isDark .ruleViewer .hljs-section,
+body.isDark .ruleViewer .hljs-name,
+body.isDark .ruleViewer .hljs-selector-tag,
+body.isDark .ruleViewer .hljs-deletion,
+body.isDark .ruleViewer .hljs-subst {
+  color: #e06c75;
+}
+body.isDark .ruleViewer .hljs-literal {
+  color: #56b6c2;
+}
+body.isDark .ruleViewer .hljs-string,
+body.isDark .ruleViewer .hljs-regexp,
+body.isDark .ruleViewer .hljs-addition,
+body.isDark .ruleViewer .hljs-attribute,
+body.isDark .ruleViewer .hljs-meta-string {
+  color: #98c379;
+}
+body.isDark .ruleViewer .hljs-built_in,
+body.isDark .ruleViewer .hljs-class .hljs-title {
+  color: #e6c07b;
+}
+body.isDark .ruleViewer .hljs-attr,
+body.isDark .ruleViewer .hljs-variable,
+body.isDark .ruleViewer .hljs-template-variable,
+body.isDark .ruleViewer .hljs-type,
+body.isDark .ruleViewer .hljs-selector-class,
+body.isDark .ruleViewer .hljs-selector-attr,
+body.isDark .ruleViewer .hljs-selector-pseudo,
+body.isDark .ruleViewer .hljs-number {
+  color: #d19a66;
+}
+body.isDark .ruleViewer .hljs-symbol,
+body.isDark .ruleViewer .hljs-bullet,
+body.isDark .ruleViewer .hljs-link,
+body.isDark .ruleViewer .hljs-meta,
+body.isDark .ruleViewer .hljs-selector-id,
+body.isDark .ruleViewer .hljs-title {
+  color: #61aeee;
+}
+body.isDark .ruleViewer .hljs-emphasis {
+  font-style: italic;
+}
+body.isDark .ruleViewer .hljs-strong {
+  font-weight: bold;
+}
+body.isDark .ruleViewer .hljs-link {
+  text-decoration: underline;
+}
+body.isLight .ruleViewer .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #383a42;
+  background: #fafafa;
+}
+body.isLight .ruleViewer .hljs-comment,
+body.isLight .ruleViewer .hljs-quote {
+  color: #a0a1a7;
+  font-style: italic;
+}
+body.isLight .ruleViewer .hljs-doctag,
+body.isLight .ruleViewer .hljs-keyword,
+body.isLight .ruleViewer .hljs-formula {
+  color: #a626a4;
+}
+body.isLight .ruleViewer .hljs-section,
+body.isLight .ruleViewer .hljs-name,
+body.isLight .ruleViewer .hljs-selector-tag,
+body.isLight .ruleViewer .hljs-deletion,
+body.isLight .ruleViewer .hljs-subst {
+  color: #e45649;
+}
+body.isLight .ruleViewer .hljs-literal {
+  color: #0184bb;
+}
+body.isLight .ruleViewer .hljs-string,
+body.isLight .ruleViewer .hljs-regexp,
+body.isLight .ruleViewer .hljs-addition,
+body.isLight .ruleViewer .hljs-attribute,
+body.isLight .ruleViewer .hljs-meta-string {
+  color: #50a14f;
+}
+body.isLight .ruleViewer .hljs-built_in,
+body.isLight .ruleViewer .hljs-class .hljs-title {
+  color: #c18401;
+}
+body.isLight .ruleViewer .hljs-attr,
+body.isLight .ruleViewer .hljs-variable,
+body.isLight .ruleViewer .hljs-template-variable,
+body.isLight .ruleViewer .hljs-type,
+body.isLight .ruleViewer .hljs-selector-class,
+body.isLight .ruleViewer .hljs-selector-attr,
+body.isLight .ruleViewer .hljs-selector-pseudo,
+body.isLight .ruleViewer .hljs-number {
+  color: #986801;
+}
+body.isLight .ruleViewer .hljs-symbol,
+body.isLight .ruleViewer .hljs-bullet,
+body.isLight .ruleViewer .hljs-link,
+body.isLight .ruleViewer .hljs-meta,
+body.isLight .ruleViewer .hljs-selector-id,
+body.isLight .ruleViewer .hljs-title {
+  color: #4078f2;
+}
+body.isLight .ruleViewer .hljs-emphasis {
+  font-style: italic;
+}
+body.isLight .ruleViewer .hljs-strong {
+  font-weight: bold;
+}
+body.isLight .ruleViewer .hljs-link {
+  text-decoration: underline;
+}
+.ruleViewer.hljs:not(.untouched),
+.ruleViewer .hljs:not(.untouched) {
+  background: none !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+}
+.ruleViewer .hljs:not(.untouched) {
+  padding: 0;
+}
+.ruleViewer pre:not(.untouched) {
+  margin: 0;
+}
+body.isDark .ruleViewer .hljs:not(.untouched) {
+  color: var(--textLowColor);
+}
+body.isLight .ruleViewer .hljs:not(.untouched) {
+  color: var(--textLowColor);
+}
+body.isLight .ruleViewer pre:not(.noBack),
+body.isLight .ruleViewer .hljs:not(.noBack),
+body.isLight .ruleViewer code:not(.noBack) {
+  background-color: var(--backLightColor);
+}
+.ruleViewer h1:first-child,
+.ruleViewer h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.ruleViewer h2 code,
+.ruleViewer h2 pre {
+  font-size: 1em;
+}
+.ruleViewer h3 code,
+.ruleViewer h3 pre {
+  font-size: 1em;
 }
 @-moz-keyframes spin {
   0% {

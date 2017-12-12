@@ -1,0 +1,37 @@
+{
+  "name": "devRules",
+  "enabled": true,
+  "rules": [{
+    "title": "Test Hidden Text",
+    "searchField": "Hidden Text XXX",
+  }, {
+    "title": "Change to Path1",
+    "type": "null",
+    "params": {
+      "changePath": {
+        "path": "level_test_dev_1"
+      }
+    }
+  }, {
+    "title": "Change to Path2",
+    "path": "level_test_dev_1",
+    "type": "null",
+    "params": {
+      "changePath": {
+        "path": "level_test_dev_2"
+      }
+    }
+  }, {
+    "title": "Change to Path3",
+    "path": "level_test_dev_2",
+    "type": "null",
+    "params": {
+      "changePath": {
+        "path": "level_test_dev_3"
+      }
+    }
+  }, {
+    "title": "Path3 Ok",
+    "path": "level_test_dev_3",
+  }]
+}

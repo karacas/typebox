@@ -1,0 +1,43 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_git_snipetts
+enabled: true
+icon: mdi-git palette-Red-A200 text
+rules:
+
+
+- title: git snippets
+  type: 'object'
+  params:
+    changePath:
+      path: GITsnip
+
+- title: new branch
+  path: GITsnip
+  params:
+    string: |-
+      http://stackoverflow.com/questions/1519006/how-do-you-create-a-remote-git-branch
+      git checkout -b your_branch
+      git push -u origin your_branch
+
+- title: new tag
+  path: GITsnip
+  params:
+    string: |-
+      git tag 0.1.0
+      git push origin --tags
+      http://plugins.jquery.com/docs/publish/
+
+- title: reset
+  path: GITsnip
+  params:
+    string: |-
+      git fetch --all
+      git reset --hard origin/master
+
+- title: docs (web)
+  path: GITsnip
+  type: "object"
+  params:
+    openUrl: https://git-scm.com/docs

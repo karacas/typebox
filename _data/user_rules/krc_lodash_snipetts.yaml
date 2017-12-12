@@ -1,0 +1,129 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_lodash_snipetts
+enabled: true
+icon: feather-minus palette-Light-Blue-A200 text
+rules:
+
+- title: lodash snippets
+  type: 'object'
+  params:
+    changePath:
+      path: LODASHsnip
+
+- title: result
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      var res = _.result(obj, 'obj.id');
+
+- title: throttle
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      var _func = _.throttle(func, 100, { trailing: false });
+
+- title: debounce
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      var _func = _.debounce(func, 100);
+
+- title: assign merge defaults
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _.assign       ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "bb" }
+      _.merge        ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "bb" }
+      _.defaults     ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "a"  }
+      _.defaultsDeep ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "a"  }
+
+- title: assign merge defaults
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _.forEach(arr, function(el) {
+          console.log(el);
+      });
+
+- title: deburr (diacritics / acentos)
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _.deburr(str)
+
+- title: chain
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _([1, 2, 3])
+          .reduce((total, n) => total + n)
+          .map(n => n * n)
+          .value();
+
+- title: isEmpty
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _.isEmpty(obj)
+
+- title: ifSome...
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _.isArray()
+      _.isBoolean()
+      _.isDate()
+      _.isElement()
+      _.isEmpty()
+      _.isFinite()
+      _.isFunction()
+      _.isInteger()
+      _.isNaN()
+      _.isNull()
+      _.isNumber()
+      _.isObject()
+      _.isString()
+      _.isUndefined()
+
+- title: string func
+  path: LODASHsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      _.camelCase(str)
+      _.capitalize(str)
+      _.deburr(str)
+      _.endsWith(str)
+      _.escape(str)
+      _.kebabCase(str)
+      _.lowerFirst(str)
+      _.replace(str)
+      _.snakeCase(str)
+      _.startCase(str)
+      _.startsWith(str)
+      _.unescape(str)
+      _.upperCase(str)
+      _.upperFirst(str)
+
+- title: docs (web)
+  path: LODASHsnip
+  type: "object"
+  params:
+    openUrl: https://lodash.com/docs/
+
+- title: cheat sheet (web)
+  path: LODASHsnip
+  type: "object"
+  params:
+    openUrl: https://devhints.io/lodash

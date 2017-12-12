@@ -1,0 +1,22 @@
+{
+  "name": "typebox-rae-dev",
+  "version": "0.0.8",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "typebox package: rae package",
+  "engines": {
+    "typebox": ">=0.56.66 <2.0.0"
+  },
+  "keywords": [
+    "typebox",
+    "launcher",
+    "package"
+  ],
+  "plataforms": [
+    "darwin", "freebsd", "linux", "sunos", "win32"
+  ],
+  "author": {
+    "name": "karacas",
+    "email": "alejandroe@gmail.com"
+  }
+}

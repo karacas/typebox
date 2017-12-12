@@ -1,7 +1,11 @@
 {
     "mainShortcut": "Control+Alt+Space",
+    "mainShortcutAndFav": "shift+alt+space",
     "animations": false,
     "notifications": false,
+    "fixedTypeBoxOptions": true,
+    "toolTips": true,
+    "gotoRootAfterAction": false,
     "ignoreThesePackages": [
         "fs_paths",
         "fs-icons"
@@ -35,6 +39,7 @@
     ],
     "width": 960,
     "maxItemsVisible": 8,
+    "visibleInTaskBar": false,
     "theme": {
         "name": "default",
         "subTheme": "",
@@ -48,92 +53,227 @@
                 "keys": [
                     "esc"
                 ],
-                "action": "ESCAPE"
+                "action": "ESCAPE",
+                "level": "main"
             },
             {
                 "keys": [
                     "enter",
                     "tab"
                 ],
-                "action": "ENTER"
+                "action": "ENTER",
+                "level": "main"
             },
             {
                 "keys": [
                     "backspace"
                 ],
-                "action": "BACKESCPACE"
-            },
-            {
-                "keys": [
-                    "shift+backspace",
-                    "ctrl+backspace"
-                ],
-                "action": "GOTO_ROOT"
+                "action": "BACKESCPACE",
+                "level": "main"
             },
             {
                 "keys": [
                     "mod+enter"
                 ],
-                "action": "CONTEXT_MENU"
+                "action": "CONTEXT_MENU",
+                "level": "main"
             },
             {
                 "keys": [
-                    "shift+esc"
+                    "shift+esc",
+                    "mod+alt+left",
+                    "mod+esc"
                 ],
-                "action": "CLOSE_WIN"
+                "action": "CLOSE_WIN",
+                "level": "main"
             },
             {
                 "keys": [
                     "mod+c",
                     "mod+shift+c"
                 ],
-                "action": "COPY_STRING"
+                "action": "COPY_STRING",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+alt+shift+c"
+                ],
+                "action": "DEV_COPY_RULE",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+v"
+                ],
+                "action": "PASTE_TO_SEARCH",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "alt+left",
+                    "mod+backspace",
+                    "shift+backspace"
+                ],
+                "action": "GOTO_ROOT",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "alt+right"
+                ],
+                "action": "RESET_SIZE",
+                "level": "main"
             },
             {
                 "keys": [
                     "alt+down"
                 ],
-                "action": "HISTORY"
+                "action": "HISTORY",
+                "level": "main"
             },
             {
                 "keys": [
-                    "mod+shift+f"
+                    "alt+up"
                 ],
-                "action": "FAVS"
+                "action": "FAVS",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+left"
+                ],
+                "action": "GO_BACK_HIST",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+d"
+                ],
+                "action": "FOLDER_FAVS",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+del"
+                ],
+                "action": "RESET_SCORE",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+t"
+                ],
+                "action": "OPEN_IN_TERMINAL",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "mod+shift+h"
+                ],
+                "action": "TOGGLE_HIDDEN",
+                "level": "main"
             },
             {
                 "keys": [
                     "mod+f"
                 ],
-                "action": "TOGGLE_FAVORITE"
+                "action": "TOGGLE_FAVORITE",
+                "level": "main"
+            },
+            {
+                "keys": [
+                    "shift+down"
+                ],
+                "action": "SCROLL_DOWN_WEBVIEW",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "shift+up"
+                ],
+                "action": "SCROLL_UP_WEBVIEW",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "shift+left"
+                ],
+                "action": "SCROLL_LEFT_WEBVIEW",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "shift+right"
+                ],
+                "action": "SCROLL_RIGHT_WEBVIEW",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "mod+shift+j"
+                ],
+                "action": "OPEN_DEV_TOOLS",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "mod+shift+s"
+                ],
+                "action": "SAVE_ALL_DATA",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "mod+shift+q"
+                ],
+                "action": "QUIT_APP",
+                "level": "null"
+            },
+            {
+                "keys": [
+                    "mod+shift+t"
+                ],
+                "action": "TOGGLE_SCORE",
+                "level": "null"
             }
         ],
         "themeDefaultSubThemes": [
             "default",
+            "typebox",
             "atom",
             "cream",
             "big",
-            "small"
+            "small",
+            "monokai",
+            "citylights",
+            "material",
+            "adobe",
+            "macri-gato",
+            "vscode"
         ],
         "os": "Windows_NT",
         "idleTime": 1000,
-        "idleTimeHeavy": 900000,
+        "updateAllPackagesInterval": 21600000,
+        "dateFormat": "DD-MM-YY, hh:mm",
         "disableKeysOnSearchBox": [
             "up",
             "down",
             "pageup",
             "pagedown",
             "home",
-            "end"
+            "end",
+            "mod+alt+shift+c"
         ],
         "verboseTimes": true,
         "notificationsErrors": true,
         "setKeyboardDelay": 15,
         "setDefaultDelay": 5,
         "initOffsetY": -100,
-        "delayBeforeQuit": 1000,
+        "delayBeforeQuit": 960,
         "delay2show": 0,
         "minY": 100,
+        "doubleClickTime": 360,
         "chromiumConsole": false,
         "chromiumConsoleOptions": {
             "mode": "detach"
@@ -141,33 +281,44 @@
         "systray": true,
         "startOpen": false,
         "initEmpty": false,
-        "deleteSearchOnFire": true,
-        "unpopAfterCopy": true,
-        "printRulePoints": false,
-        "gotoRootOnShow": false,
+        "launcherCache": true,
+        "deleteSearchOnFire": false,
         "gotoRootOnExec": true,
+        "unpopAfterCopy": true,
+        "showRuleScore": false,
+        "rulesViewer": true,
         "debounceTime_actionsKeys": 24,
-        "debounceTime_searchKeys": 80,
-        "debounceTime_viewer": 420,
+        "debounceTime_searchKeys": 64,
+        "debounceTime_viewer": 258,
         "throttleTime_moveList": 0,
-        "debounceTime_resize_win": 240,
+        "debounceTime_resize_win": 128,
+        "throttleTime_pop_unpop": 128,
         "loadPackages": true,
         "loadPackagesDev": true,
         "deletePackages": false,
         "installPackages": false,
         "reloadOnPackagesSteeingChange": true,
+        "packagesTryNewVersionOnNoValid": true,
         "historyBackups": true,
+        "markNewRules": true,
+        "markNewRulesMaxItemsInPathToAvoid": 10000,
+        "markNewRulesTimeToSetPathOld": 10000,
+        "markNewRulesTimeOld": 3600000,
         "maxKeysInHistory": 10,
-        "maxItemsInHistory": 320,
+        "maxItemsInHistory": 720,
         "favBackups": true,
         "lastBackups": true,
         "launcherCacheBackups": false,
-        "maxFavsRules": 320,
-        "maxLastRules": 320,
-        "maxHiddenRules": 320,
+        "maxFavsRules": 640,
+        "maxLastRules": 520,
+        "maxLastRules_ephemeral": 60,
+        "maxHiddenRules": 520,
         "checkPackagesSyntax": true,
         "delayToRemoveLoader": 560,
+        "packagesRepo": "https://registry.npmjs.org/{{packname}}",
         "setAndSaveSettings_enabled": true,
+        "tray_console": true,
+        "tray_reload": true,
         "internal_packages": [
             "internal_pack_internal",
             "internal_pack_last_rules",
@@ -182,7 +333,7 @@
         "debug": {
             "testPackage": "internal_pack_test",
             "no_executeAction": false,
-            "printRulePoints": true,
+            "showRuleScore": true,
             "makeDummyRules": 0,
             "noUnpopWin": false
         },
@@ -198,6 +349,7 @@
             "rootDataStored": "d:/DEV/usbwebserver/htdocs/typebox/_data/",
             "packages": "d:/DEV/usbwebserver/htdocs/typebox/_data/packages/",
             "packages_dev": "d:/DEV/usbwebserver/htdocs/typebox/_data/packages_dev/",
+            "packages_updates": "d:/DEV/usbwebserver/htdocs/typebox/_data/packages_tmp_updates/",
             "caches": "d:/DEV/usbwebserver/htdocs/typebox/_data/caches/",
             "tmp": "d:/DEV/usbwebserver/htdocs/typebox/_data/tmp/",
             "rules": "d:/DEV/usbwebserver/htdocs/typebox/_data/rules/",
@@ -205,6 +357,7 @@
             "user_rules": "d:/DEV/usbwebserver/htdocs/typebox/_data/user_rules/",
             "historypath": "_test/_data/history/",
             "favpath": "_test/_data/favorites/",
+            "newspath": "d:/DEV/usbwebserver/htdocs/typebox/_data/news/",
             "lastpath": "d:/DEV/usbwebserver/htdocs/typebox/_data/lastrules/",
             "logpath": "_test/_data/log/",
             "hidden_path": "d:/DEV/usbwebserver/htdocs/typebox/_data/hidden/",
@@ -214,8 +367,10 @@
             "logfile": "log_der2.log",
             "historyfile": "history_der2",
             "favfile": "favorites_der2",
+            "newsfile": "news_der2",
             "lastfile": "lastrules_der2",
-            "launcherCachefile": "launcher_der2"
+            "launcherCachefile": "launcher_der2",
+            "userHome": "C:/Users/der2"
         },
         "language": {
             "changeSettings": "Refresh settings 1"
@@ -244,17 +399,17 @@
             "show": false,
             "minWidth": 580,
             "minHeight": 90,
+            "transparent": false,
             "width": 960
         },
         "report": {
-            "appName": "Electron",
+            "appName": "typebox",
             "__dirNameRoot": "d:/DEV/usbwebserver/htdocs/typebox/",
-            "__user_settings": "_test/_data/user/user_settings.json",
             "__dirnameRootApp": "d:\\DEV\\usbwebserver\\htdocs\\typebox\\node_modules\\electron\\dist\\resources\\default_app.asar",
-            "version": "1.6.11",
-            "version_electron": "1.6.11",
-            "version_chrome": "56.0.2924.87",
-            "version_node": "7.4.0"
+            "version": "0.58.14",
+            "version_electron": "1.7.9",
+            "version_chrome": "58.0.3029.110",
+            "version_node": "7.9.0"
         },
         "argv": {
             "_": [
@@ -283,8 +438,8 @@
             "enableLogging": true,
             "ignore-certificate-errors": true,
             "ignoreCertificateErrors": true,
-            "load-component-extension": "d:\\TEMP\\TempLocal2\\scoped_dir14072_18860\\internal",
-            "loadComponentExtension": "d:\\TEMP\\TempLocal2\\scoped_dir14072_18860\\internal",
+            "load-component-extension": "d:\\TEMP\\TempLocal2\\scoped_dir16388_14009\\internal",
+            "loadComponentExtension": "d:\\TEMP\\TempLocal2\\scoped_dir16388_14009\\internal",
             "log-level": 0,
             "logLevel": 0,
             "metrics-recording-only": true,
@@ -293,16 +448,16 @@
             "firstRun": false,
             "password-store": "basic",
             "passwordStore": "basic",
-            "remote-debugging-port": 12053,
-            "remoteDebuggingPort": 12053,
+            "remote-debugging-port": 12308,
+            "remoteDebuggingPort": 12308,
             "safebrowsing-disable-auto-update": true,
             "safebrowsingDisableAutoUpdate": true,
             "test-type": "webdriver",
             "testType": "webdriver",
             "use-mock-keychain": true,
             "useMockKeychain": true,
-            "user-data-dir": "d:\\TEMP\\TempLocal2\\scoped_dir14072_3046",
-            "userDataDir": "d:\\TEMP\\TempLocal2\\scoped_dir14072_3046",
+            "user-data-dir": "d:\\TEMP\\TempLocal2\\scoped_dir16388_14171",
+            "userDataDir": "d:\\TEMP\\TempLocal2\\scoped_dir16388_14171",
             "$0": "node_modules\\electron\\dist\\electron.exe"
         }
     },

@@ -1,0 +1,13 @@
+{
+	"name": "typebox-theme-test-dev",
+	"version": "0.0.1",
+	"theme": "ui",
+	"subThemes": [
+		"redAccent"
+	],
+	"overwriteBaseTheme": false,
+	"main": "index.css",
+	"engines": {
+		"typebox": ">=0.46.0 <2.0.0"
+	}
+}

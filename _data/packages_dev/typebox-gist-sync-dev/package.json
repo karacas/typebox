@@ -1,0 +1,11 @@
+{
+  "name": "typebox-gist-sync-dev",
+  "version": "0.0.6",
+  "main": "index.js",
+  "engines": {
+    "typebox": ">=0.59.2 <2.0.0"
+  },
+  "dependencies": {
+    "github-api": "^3.0.0"
+  }
+}

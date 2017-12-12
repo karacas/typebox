@@ -1,0 +1,117 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_moment_snipetts
+enabled: true
+icon: mdi-timer palette-Teal-A700 text
+rules:
+
+- title: moment snippets
+  type: 'object'
+  params:
+    changePath:
+      path: MOMENTsnip
+
+- title: new moment
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      Moment(new Date());
+
+- title: valueof (unix timestamp)
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().valueOf()
+
+- title: toDate
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().toDate();
+
+- title: toISOString
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().toISOString();
+
+- title: toObject
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().toObject();
+
+- title: toString
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().toString();
+
+- title: set time format
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment("12-12-1995", "DD-MM-YYYY");
+
+- title: get time format
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().format("DD-MM-YYYY")
+
+- title: get time format med
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().format('dddd DD [de] MMMM [de] YYYY')
+
+- title: add days
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment(new Date()).add(90, 'days')
+
+- title: is today
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment(date).isSame(new Date(), 'day')
+
+- title: get time format full
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
+
+- title: from now
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      moment().fromNow();
+
+- title: diff
+  path: MOMENTsnip
+  params:
+    codeclass: 'javascript'
+    string: |-
+      new moment(new Date()).diff(timeStartH)
+
+- title: docs (web)
+  path: MOMENTsnip
+  type: "object"
+  params:
+    openUrl: https://momentjs.com/docs/

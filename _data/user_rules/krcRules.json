@@ -1,0 +1,124 @@
+{
+  "name": "krcRules",
+  "enabled": false,
+  "rules": [
+    {
+      "title": "Test Interno Saludos",
+      "params": {
+        "string": "Saludos"
+      }
+    },
+    {
+      "title": "JS Snipetts",
+      "type": "JS object",
+      "params": {
+        "changePath": {
+          "path": "javaScript"
+        }
+      }
+    }, {
+      "title": "immutable Snipetts",
+      "type": "JS object",
+      "params": {
+        "changePath": {
+          "path": "immutable"
+        }
+      }
+    }, {
+      "title": "console.log",
+      "path": "javaScript",
+      "params": {
+        "string": "console.log('')"
+      }
+    }, {
+      "title": "console.info",
+      "path": "javaScript",
+      "params": {
+        "string": "console.info('')"
+      }
+    }, {
+      "title": "$('')",
+      "params": {
+        "string": "$('')"
+      }
+    }, {
+      "title": "var emiter = new EventEmitter()",
+      "path": "javaScript",
+    }, {
+      "title": "emiter.emit('onEmiter', emiterObj);",
+      "type": ["plain_code", "string"],
+      "path": "javaScript",
+    }, {
+      "title": "http://"
+    }, {
+      "title": "alejandroe@gmail.com"
+    }, {
+      "title": "Alejandro Emparan"
+    }, {
+      "title": "Gracias."
+    }, {
+      "title": "length"
+    }, {
+      "title": "Saludos"
+    }, {
+      "title": "Cualquier cosa me avisás."
+    }, {
+      "title": "Firma",
+      "params": {
+        "string": "Alejandro Emparan\r\nProyectiva S.A.\r\nhttp://www.proyectiva.com"
+      }
+    }, {
+      "title": "All UTF8 Characters",
+      "path": "javaScript",
+      "params": {
+        "string": "abcdefghijklmnopqrstuvwxyz @©®§?£$&_+-'\"(),./\\:;?!<>«»àáâçèêéûÈÉÊ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ*ÁáÉéÍíÓóÚúñÑüÜ¿?¡!àâçèêëïî—»«ÿûùœôäößÄÖ„“”°€£ ’.:\"()/|I[]l‘òËÏãõÃÕÁáÉéÍíÓóÚúñÑüÜ¿?¡! ÁáÉéÍíÓóÚúñÑüÜ¿?¡!àâçèêëïî—»«ÿûùœôäößÄÖ„“”°€£ ’.:\"()/|I[]l‘òËÏãõÃÕ%•º"
+      }
+    }, {
+      "title": "JS function",
+      "path": "javaScript",
+      "params": {
+        "string": "function test (){\r\n\r\n}"
+      }
+    }, {
+      "title": "Time (hh-mm-ss)",
+      "type": ["printdate"],
+      "params": {
+        "format": "HH-mm-ss"
+      }
+    }, {
+      "title": "FullTime (DD-MM-YY hh:mm)",
+      "type": ["printdate"],
+      "params": {
+        "format": "DD-MM-YY_HH-mm"
+      }
+    }, {
+      "title": "Caps Selected",
+      "type": ["caps"],
+      "params": {
+        "transform": "toUpperCase"
+      }
+    }, {
+      "title": "Immutable.sortBy(v => v.id)",
+      "path": "immutable",
+    }, {
+      "title": "Immutable.set(id, idStr)",
+      "path": "immutable",
+    }, {
+      "title": "//_________________________________________",
+      "path": "javaScript",
+    }, {
+      "title": "js for",
+      "path": "javaScript",
+      "params": {
+        "string": "for (var i = 0; i < arr.length; i++){\r\n   obj = arr[i]\r\n}"
+      }
+    }, {
+      "title": "Immutable.find(v => v.id === id)",
+      "path": "immutable",
+    }, {
+      "title": "fs = require('fs')",
+      "path": "javaScript",
+    }, {
+      "title": "new moment(new Date())"
+    }]
+}
