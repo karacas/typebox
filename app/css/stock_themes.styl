@@ -1,0 +1,1084 @@
+// ________________________
+// VARS
+// ________________________
+$monoKayCodeColors {
+	// --code-default: #f8f8f2;
+	// --code-comment: #75715e;
+	--code-tag: #f92672;
+	--code-keyword: #66d9ef;
+	--code-section: #fd5ff0;
+	--code-property: #66d9ef;
+	--code-string: #a6e22e;
+	--code-variable: #ae81ff;
+	--code-symbol: #e6db74;
+}
+
+$darkBrightCodeColors {
+	// --code-default: #eff0eb;
+	// --code-comment: #6c6c6c;
+	--code-tag: #f17b69;
+	--code-keyword: #ff6ac1;
+	--code-section: #e06c75;
+	--code-property: #57c7ff;
+	--code-string: #5af78e;
+	--code-variable: #c26aff;
+	--code-symbol: #9aedfe;
+}
+
+$terminalCodeColors {
+	// --code-default: #cacaca;
+	// --code-comment: #d6d6d6;
+	--code-tag: #c715b7;
+	--code-keyword: #0064f9;
+	--code-section: #c715b7;
+	--code-property: #00d3d3;
+	--code-string: #34ff00;
+	--code-variable: #e800ff;
+	--code-symbol: #eaec23;
+}
+
+$materialCodeColors {
+	--code-default: #b2ccd6;
+	// --code-comment: #777d89;
+	--code-tag: #ff5370; // red
+	--code-tag: #f07177; // red
+	--code-section: #ff5370; // pink
+	--code-keyword: #c792ea; // purple
+	--code-property: #89ddff; // cyan
+	--code-string: #c3e88d; // green
+	--code-variable: #ffcb6b; // orange
+	--code-symbol: #82aaff; // dark blue
+}
+
+$icebergCodeColors {
+	// --code-default: #c6c8d0;
+	// --code-comment: #6c7087;
+	--code-tag: #d57e7b; // red
+	--code-section: #d57e7b; // pink
+	--code-keyword: #9d94c3; // purple
+	--code-property: #92b7c0; // cyan
+	--code-string: #b6bd88; // green
+	--code-variable: #d9a67f; // orange
+	--code-symbol: #89a0c3; // dark blue
+}
+
+$spacegrayCodeColors {
+	// --code-default: #b3b8c3;
+	// --code-comment: #6a6e78;
+	--code-tag: #ca6768; // red
+	--code-section: #ca6768; // pink
+	--code-keyword: #a47b9d; // purple
+	--code-property: #86a7a5; // cyan
+	--code-string: #89a373; // green
+	--code-variable: #cfae73; // orange
+	--code-symbol: #7d8ea1; // dark blue
+}
+
+$forestCodeColors {
+	// --code-default: #adbac5;
+	// --code-comment: #6b7b89;
+	--code-tag: #d6797e; // red
+	--code-section: #d6797e; // pink
+	--code-keyword: #daccf0; // purple
+	--code-property: #bdd0e5; // cyan
+	--code-string: #a9dd9d; // green
+	--code-variable: #eed094; // orange
+	--code-symbol: #aecdef; // dark blue
+}
+
+$draculaCodeColors {
+	// --code-default: #f8f8f2;
+	// --code-comment: #6272a4;
+	--code-tag: #ff5555; // red
+	--code-section: #ff79c6; // pink
+	--code-keyword: #bd93f9; // purple
+	--code-property: #8be9fd; // cyan
+	--code-string: #50fa7b; // green
+	--code-variable: #ffb86c; // orange
+	--code-symbol: #f1fa8c; // dark blue
+}
+
+$nordCodeColors {
+	// --code-default: #edeff4;
+	// --code-comment: #6c7589;
+	--code-tag: #b3666b; // red
+	--code-section: #ae90ab; // pink
+	--code-keyword: #ae90ab; // purple
+	--code-property: #93bfce; // cyan
+	--code-string: #93ceb8; // green
+	--code-variable: #e6cb93; // orange
+	--code-symbol: #87a1be; // dark blue
+}
+
+$cupertinoXCodeColors {
+	// --code-default: #ffffff;
+	// --code-comment: #818c97;
+	--code-tag: #ef8776; // red
+	--code-section: #ee82b0; // pink
+	--code-keyword: #ac83e3; // purple
+	--code-property: #b5e9dd; // cyan
+	--code-string: #acd681; // green
+	--code-variable: #d9da8f; // orange
+	--code-symbol: #53b3cb; // dark blue
+}
+
+$cupertinoLightCodeColors {
+	// --code-default: #050d23;
+	// --code-comment: #63768a;
+	--code-tag: #d22f1e; // red
+	--code-section: #a72a9e; // red2
+	--code-keyword: #713aa9; // violet
+	--code-property: #3a7d89; // blue
+	--code-string: #2b5f6a; // green
+	--code-variable: #2b5f6a; // orange
+	--code-symbol: #2323d8; // dark blue
+}
+
+$snazzyCodeColors {
+	// --code-default: #eff0eb;
+	// --code-comment: #686868;
+	--code-tag: #ff5b52; // red
+	--code-section: #ff5b52; // red2
+	--code-keyword: #ff66c2; // violet
+	--code-property: #97edff; // blue
+	--code-string: #51f98a; // green
+	--code-variable: #f3fa98; // orange
+	--code-symbol: #51c6ff; // dark blue
+}
+
+// ________________________
+// PALETTES
+// ________________________
+body.defaultBlack {
+	--backColor: #15161c; // back
+	--backLightColor: #1d1e24; // bar color
+	// --accentColor: #4ec0a3; // HighLight /celeste
+	// --accentColor2: #ffcd39; // HighLight /amarillo
+	--darkColor: darken(#15161c, 5); // Dark // Dark
+	// --textLowColor: #909fad; // name color
+	// --textHighColor: #eeffff; // name color selected
+	// --caretColor: var(--textHighColor); // HighLight /celeste
+	--hrTagColor: rgba(255, 255, 255, 0.05); // hr separador
+	--buttonBackColor: var(--backColor);
+	--warnColor: #f28053;
+	--errorColor: #fd5051;
+	--validColor: #4ebe73;
+	--asertColor: #4ebe73;
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.defaultGray {
+	--backColor: #282c34; // back
+	--backLightColor: lighten(#282c34, 3); // bar color
+	// --accentColor: #4ec0a3; // HighLight /celeste
+	// --accentColor2: #ffcd39; // HighLight /amarillo
+	--darkColor: darken(#282c34, 5); // Dark
+	--hoverColor: var(--darkColor); // hover //Btns/combos
+	--textLowColor: #98a0a6; // name color
+	// --textHighColor: #eeffff; // name color selected
+	--mainSearchColor: var(--textHighColor);
+	--hrTagColor: rgba(#fff, 0.125); // hr separador
+	--caretColor: var(--accentColor);
+	--buttonBackColor: var(--backColor); // backLightColor // Button Back
+	--buttonFrontColor: #8ca1a7; // textLowColor// Button Front
+	/* ExraColors */
+	--warnColor: #d9b265;
+	--errorColor: #f78c6c;
+	--validColor: #4ec0a3;
+	--asertColor: #9fdc7c;
+	@extend $defaultCodeColors;
+	// @extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.monokai {
+	--backColor: #272822;
+	--backLightColor: #373831;
+	--accentColor: #e6db74;
+	--accentColor2: #fd971f;
+	--darkColor: darken(#272822, 4);
+	--hoverColor: var(--darkColor);
+	--textLowColor: #b2b0a6;
+	--textHighColor: #ece9e1;
+	--mainSearchColor: var(--textLowColor);
+	--hrTagColor: rgba(#fff, 0.125); // hr separador
+	--caretColor: var(--ece9e1);
+	--buttonBackColor: var(--backColor);
+	--buttonFrontColor: #75715e;
+	/* ExraColors */
+	--warnColor: #fd971f;
+	--errorColor: #f92672;
+	--validColor: #a6e22e;
+	--asertColor: #66d9ef;
+	--grayHighlight: #75715e;
+	@extend $monoKayCodeColors;
+
+	// --code-default: var(--textHighColor);
+	// --code-comment: var(--textLowColor);
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.cream {
+	--backColor: #f8f8f6;
+	--backLightColor: #eeedea;
+	--darkColor: #eeedea; // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #678fc3;
+	--accentColor2: #3d8be6;
+	--textLowColor: #918b8b;
+	--textHighColor: #222124;
+	--caretColor: var(--accentColor);
+	--lowOpacity: 0.5;
+	--medOpacity: 0.75;
+	--hiOpacity: 0.9;
+	--iframeBlendMode: darkColor;
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--textHighColor);
+	}
+}
+
+body.oldSchoolDisplay {
+	--backColor: #e7ede3;
+	--backLightColor: #d7dcd3;
+	--darkColor: #e0e7dd; // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #313131;
+	--accentColor2: #737671;
+	--textLowColor: #788a87;
+	--textHighColor: #313131;
+	--caretColor: var(--accentColor);
+	--iframeBlendMode: multiply;
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.soft {
+	--backColor: #f4f4fe;
+	--backLightColor: #e2e3f4;
+	--darkColor: #e8eaf3; // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #2aa3f2;
+	--accentColor2: #2a8bf2;
+	--textLowColor: #8d919a;
+	--textHighColor: #454d57;
+	--caretColor: var(--accentColor);
+	--hrTagColor: #e5e6ed;
+	--iframeBlendMode: multiply;
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.rabbits {
+	--backColor: #29272c; // back
+	--backLightColor: lighten(#29272c, 3); // bar color
+	--darkColor: darken(#29272c, 3); // Dark
+	--accentColor: #f17b69; // HighLight /celeste
+	--accentColor2: #f3634d; // HighLight /amarillo
+	--textLowColor: #a49aa1; // name color
+	--textHighColor: #f6ece8; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--hrTagColor: lighten(#29272c, 3); // hr separador
+	--buttonBackColor: var(--backColor);
+	// --code-default: darken(#f6ece8, 4);
+	@extend $defaultCodeColorsAlt;
+}
+
+body.blueberry {
+	--backColor: #282a36; // back
+	--backLightColor: lighten(#282a36, 3); // bar color
+	--darkColor: darken(#282a36, 3); // Dark
+	--accentColor: #e67d79; // HighLight /celeste
+	--accentColor2: #ea6d69; // HighLight /amarillo
+	--textLowColor: #8993a8; // name color
+	--textHighColor: #dde2ea; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--hrTagColor: lighten(#282a36, 3); // hr separador
+	--buttonBackColor: var(--backColor);
+	--warnColor: #fdbc3f;
+	--errorColor: #fc625d;
+	--validColor: #35cc4b;
+	--asertColor: #57c7ff;
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--textHighColor);
+	}
+}
+
+body.brick {
+	--backColor: #29272e;
+	--backLightColor: #35303a;
+	--darkColor: #1d1b20;
+	--accentColor: #ddc5a3;
+	--accentColor2: #ea5f64;
+	--caretColor: #c0cbcc;
+	--textLowColor: #aea7a2;
+	--textHighColor: #e8e1db;
+	--hrTagColor: #1d1b20;
+	// --code-default: darken(#ded2c8, 1);
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.snazzy {
+	--backColor: #282a36;
+	--backLightColor: #303240;
+	--darkColor: darken(#222430, 4);
+	--textLowColor: #a1a5b0;
+	--textHighColor: #eff0eb;
+	--caretColor: #eff0eb;
+	--hrTagColor: lighten(#282a36, 10);
+	--warnColor: #fdbc3f;
+	--errorColor: #fc625d;
+	--validColor: #35cc4b;
+	--asertColor: #57c7ff;
+	// @extend $snazzyCodeColors;
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.snazzyDark {
+	@extend body.snazzy;
+	--backColor: #1d1d27;
+	--backLightColor: #282a36;
+	--darkColor: darken(#1d1d27, 4);
+}
+
+body.darkUi {
+	--backColor: #121417; // back
+	--backLightColor: #16181d; // bar color
+	--darkColor: #21252b; // Dark
+	--accentColor: #9ea5b4; // HighLight /amarillo
+	--accentColor2: #568af2; // HighLight /celeste
+	--textLowColor: #9696a6; // name color
+	--textHighColor: #ffffff; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--hrTagColor: #292c31; // hr separador
+	--buttonBackColor: var(--backColor);
+	--warnColor: #fdbc3f;
+	--errorColor: #fc625d;
+	--validColor: #35cc4b;
+	--asertColor: #57c7ff;
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.darkPurple {
+	--backColor: #121217; // back
+	--backLightColor: #17171d; // bar color
+	--darkColor: #21252b; // Dark
+	--accentColor: #afa1df; // HighLight /amarillo
+	--accentColor2: #846cd2; // HighLight /celeste
+	--textLowColor: #797996; // name color
+	--textHighColor: #ffffff; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--buttonBackColor: var(--backColor);
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.darky {
+	--backColor: #1b1b1b; // back
+	--backLightColor: #1d1f21; // bar color
+	--darkColor: #1d1f21; // Dark
+	--accentColor: #8ea5b8; // HighLight /celeste
+	--accentColor2: #0084ff; // HighLight /amarillo
+	--textLowColor: #9c9faa; // name color
+	--textHighColor: #e8eeee; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--hrTagColor: #292c31; // hr separador
+	--buttonBackColor: var(--backColor);
+	--warnColor: #fdbc3f;
+	--errorColor: #fc625d;
+	--validColor: #35cc4b;
+	--asertColor: #57c7ff;
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.blues {
+	--backColor: #1b2239; // back
+	--backLightColor: #252d47; // bar color
+	--darkColor: darken(#191c3a, 3); // Dark // Dark
+	--accentColor: #648bff; // HighLight /celeste
+	--accentColor2: #0a8cff; // HighLight /amarillo
+	--textLowColor: #a8a9ba; // name color
+	--textHighColor: #e4e5ee; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--buttonBackColor: var(--backColor);
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.darkBlues {
+	--backColor: #25273e; // back
+	--backLightColor: #31314d; // bar color
+	--darkColor: darken(#202236, 4); // Dark // Dark
+	--accentColor: #8e92cd; // HighLight /celeste
+	--accentColor2: #6f99ff; // HighLight /amarillo
+	--textLowColor: #afb1d1; // name color
+	--textHighColor: #e7e6fa; // name color selected
+	--caretColor: var(--textHighColor); // HighLight /celeste
+	--buttonBackColor: var(--backColor);
+	@extend $defaultCodeColorsAlt;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.lightUi {
+	--backColor: #eaeaeb;
+	--backLightColor: #dbdbdc;
+	--darkColor: #eee;
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #e4564a;
+	--accentColor2: #828185;
+	--textLowColor: #727889;
+	--textHighColor: #26262f;
+	--caretColor: var(--textHighColor);
+	--iframeBlendMode: multiply;
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.grayscale {
+	@extend body.cream;
+	filter: grayscale(100%);
+}
+
+body.white {
+	--backColor: #f8f8f8;
+	--backLightColor: #eceaea;
+	--darkColor: lighten(#e3e3e7, 0); // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #393f4f;
+	--accentColor2: #ff6364;
+	--textLowColor: #7f7e8c;
+	--textHighColor: #191e31;
+	--caretColor: #191e31;
+	--iframeBlendMode: multiply;
+	--hrTagColor: #c5c6cb; // hr separador
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.cyan {
+	--backColor: #c1dae0;
+	--backLightColor: darken(#b3cbcd, 0);
+	--darkColor: darken(#b3cbcd, 6); // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #5b677d;
+	--accentColor2: #1c1f40;
+	--textLowColor: #5b677d;
+	--textHighColor: #1c1f40;
+	--caretColor: #1c1f40;
+	--iframeBlendMode: multiply;
+	--hrTagColor: #6f7c90; // hr separador
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.jupiter {
+	--backColor: #f4f1e4;
+	--backLightColor: darken(#eae2d3, 0);
+	--darkColor: darken(#eae2d3, 3); // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #d3536e;
+	--accentColor2: #63a4c1;
+	--textLowColor: #b4a495;
+	--textHighColor: #463533;
+	--caretColor: #463533;
+	--iframeBlendMode: multiply;
+	--hrTagColor: #d7cfb8; // hr separador
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.brown {
+	--backColor: #e5e4dd;
+	--backLightColor: darken(#e5e4dd, 3);
+	--darkColor: darken(#e5e4dd, 4); // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #2b2225;
+	--accentColor2: #2b2225;
+	--textLowColor: #a7a18c;
+	--textHighColor: #2b2225;
+	--caretColor: #2b2225;
+	--iframeBlendMode: multiply;
+	--hrTagColor: #a7a18c; // hr separador
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.primer {
+	--backColor: #f8f8f8;
+	--backLightColor: #e8e8e8;
+	--darkColor: #e8e8e8; // hover
+	--hoverColor: var(--darkColor); // hover
+	--accentColor: #2f609a;
+	--accentColor2: #4283c5;
+	--textLowColor: #999fa5;
+	--textHighColor: #404d5a;
+	--caretColor: var(--textHighColor);
+	--iframeBlendMode: multiply;
+	--hrTagColor: #d8d8d8; // hr separador
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.black {
+	--backColor: #111111; // back
+	--backLightColor: #1b1b1b; // bar color
+	--darkColor: lighten(#1b1b1b, 3); // hover
+	--accentColor: #73d5bc; // HighLight /celeste
+	--accentColor2: #73d5bc; // HighLight /celeste
+	--caretColor: #fefefe; // HighLight /celeste
+	--textLowColor: #989898; // name color
+	--textHighColor: #fefefe; // name color selected
+	--hrTagColor: lighten(#111111, 6); // hr separador
+}
+
+body.cupertino {
+	--backColor: #202020; // back
+	--backLightColor: #2a2a2a; // bar color
+	--darkColor: darken(#2a2a2a, 12);
+	--accentColor: #67b7da; // HighLight /celeste
+	--accentColor2: #409ed7; // HighLight /celeste
+	--caretColor: #ffffff; // HighLight /celeste
+	--textLowColor: #9f9fa0; // name color
+	--textHighColor: #ffffff; // name color selected
+	--hrTagColor: lighten(#000101, 6); // hr separador
+}
+
+body.cupertinoAlt {
+	--backColor: #2e2c2a; // back
+	--backLightColor: #393735; // bar color
+	--darkColor: darken(#393735, 0);
+	--accentColor: #469bd6; // HighLight /celeste
+	--accentColor2: #87cdf6; // HighLight /celeste
+	--textLowColor: #bebebe; // name color
+	--textHighColor: #ffffff; // name color selected
+	--hrTagColor: lighten(#42413f, 0); // hr separador
+	@extend $cupertinoXCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.cupertinoDark {
+	--backColor: #1d1d1d; // back
+	--backLightColor: #282828; // bar color
+	--darkColor: darken(#565656, 0);
+	--accentColor: #0779ff; // HighLight /celeste
+	--accentColor2: #469bd6; // HighLight /celeste
+	--textLowColor: #bebebe; // name color
+	--textHighColor: #ffffff; // name color selected
+	--hrTagColor: lighten(#333333, 0); // hr separador
+	@extend $cupertinoXCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.cupertinoX {
+	--backColor: #292a2f; // back
+	--backLightColor: lighten(#292a2f, 2); // bar color
+	--darkColor: darken(#1f2022, 0);
+	--accentColor: #469bd6; // HighLight /celeste
+	--accentColor2: #87cdf6; // HighLight /celeste
+	--textLowColor: #85869e; // name color
+	--textHighColor: #ffffff; // name color selected
+	--hrTagColor: lighten(#212224, 0); // hr separador
+	@extend $cupertinoXCodeColors;
+	// --code-default: var(--textHighColor);
+	// --code-comment: var(--textLowColor);
+}
+
+body.cupertinoLight {
+	--backColor: #f6f6f6; // back
+	--backLightColor: lighten(#cfcfcf, 0); // bar color
+	--darkColor: darken(#dddddd, 0);
+	--accentColor: #0075fd; // HighLight /celeste
+	--accentColor2: #3c98fc; // HighLight /celeste
+	--textLowColor: #848485; // name color
+	--textHighColor: #050306; // name color selected
+	--hrTagColor: lighten(#e7e7e7, 0); // hr separador
+	@extend $cupertinoLightCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+
+	#ruleViewer pre:not(.CodeMirror-line):not(.CodeMirror-placeholder):not(.noBack) {
+		&, pre, code {
+			background: #fff !important;
+		}
+	}
+}
+
+body.bluegray {
+	--backColor: #2d333e; // back
+	--backLightColor: lighten(#2d333e, 4); // bar color
+	--darkColor: darken(#2d333e, 3);
+	--accentColor: #83c3cf; // HighLight /celeste
+	--accentColor2: #53d5ee; // HighLight /celeste
+	--caretColor: #797d85; // HighLight /celeste
+	--textLowColor: #6f7a85; // name color
+	--textHighColor: #ebeced; // name color selected
+	--hrTagColor: #2d333e; // hr separador
+}
+
+body.lightGray {
+	--backColor: #323742; // back
+	--backLightColor: #3a404d; // bar color
+	--darkColor: darken(#323742, 3);
+	--accentColor: #d7dde8; // HighLight /celeste
+	--accentColor2: #b6bcc7; // HighLight /celeste
+	--caretColor: #797d85; // HighLight /celeste
+	--textLowColor: #808ca2; // name color
+	--textHighColor: #e7ebf1; // name color selected
+	--hrTagColor: lighten(#3a404d, 4); // hr separador
+	--darkColor: darken(#323742, 3); // Dark
+
+	i.main_ico {
+		// filter: grayscale(60%) hue-rotate(-50deg) !important;
+	}
+
+	#ruleviewer {
+		// filter: grayscale(40%) hue-rotate(-50deg) !important;
+	}
+}
+
+body.newblue {
+	--backColor: #202a35;
+	--backLightColor: #27333f;
+	--darkColor: darken(#202a35, 3);
+	--accentColor: #4ec0a3;
+	--accentColor2: #ffd740;
+	--caretColor: #c0cbcc;
+	--textLowColor: #8ca1a7;
+	--textHighColor: #fff;
+	--hrTagColor: #3b4c54;
+}
+
+body.atomo {
+	--backColor: #292c2f;
+	--backLightColor: #303337;
+	--darkColor: darken(#292c2f, 3);
+	--accentColor: #469ffe;
+	--accentColor2: #5293d8;
+	--textLowColor: #a0a3ac;
+	--textHighColor: #d9e1e1;
+	--caretColor: #d9e1e1;
+	--hrTagColor: lighten(#303337, 4);
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.citylights {
+	--backColor: #252d35;
+	--backLightColor: #323a46;
+	--darkColor: darken(#252d35, 3);
+	--accentColor: #6495e5;
+	--caretColor: #cbd1e1;
+	--textLowColor: #9499a8;
+	--textHighColor: #fff;
+	--caretColor: #fff;
+	--hrTagColor: lighten(#323a46, 4);
+}
+
+body.material {
+	--backColor: #263238;
+	--backLightColor: #2b3e44;
+	--backLightColor: #374248;
+	--darkColor: darken(#1c252a, 0);
+	--accentColor: #80cb98;
+	// --accentColor2: #80cbc4;
+	--accentColor2: #78b6b1;
+	--textLowColor: #93a1a8;
+	--textHighColor: #eeffff;
+	--caretColor: var(--textHighColor);
+	--hrTagColor: lighten(#344a4e, 4);
+	@extend $materialCodeColors;
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.materialAlt {
+	--backColor: #222d32;
+	--backLightColor: #29353b;
+	--darkColor: darken(#1e272c, 0);
+	--accentColor: #80cb98;
+	--accentColor2: #00bcd4;
+	--textLowColor: #a4aeb2;
+	--textHighColor: #cfd8d8;
+	--caretColor: var(--textHighColor);
+	--hrTagColor: lighten(#1e272c, 0);
+	@extend $materialCodeColors;
+
+	span.ruleNameAndDesc.newRule:after {
+		color: var(--darkColor);
+	}
+}
+
+body.photo {
+	--backColor: #282828;
+	--backLightColor: #383838;
+	--darkColor: darken(#282828, 3);
+	--accentColor: #46a0f5;
+	--caretColor: #dddddd;
+	--textLowColor: #939393;
+	--textHighColor: #ebebeb;
+	--hrTagColor: lighten(#383838, 4);
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.vscoding {
+	--backColor: #252526;
+	--backLightColor: #333333;
+	--darkColor: darken(#252526, 3);
+	--accentColor: #007acc;
+	--accentColor2: #007acc;
+	--caretColor: #adadad;
+	--textLowColor: #929199;
+	--textHighColor: #e1e0ea;
+	--hrTagColor: lighten(#333333, 4);
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.ambience {
+	--backColor: #211d1c;
+	--backLightColor: #373634;
+	--darkColor: #373634;
+	--accentColor: #fc8744;
+	--accentColor2: #ea5421;
+	--textLowColor: darken(#959285, 0);
+	--textHighColor: #f8f6f7;
+	--hrTagColor: #343233;
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.arc {
+	--backColor: #353945;
+	--backLightColor: #3f4551;
+	--darkColor: #30343f;
+	--accentColor: #5194e2;
+	--accentColor2: #5194e2;
+	--textLowColor: darken(#bcc0cc, 0);
+	--textHighColor: #f8f6f7;
+	--hrTagColor: #2a303c;
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.metrodark {
+	--backColor: #060606;
+	--backLightColor: #131313;
+	--darkColor: #1f1f1f;
+	--accentColor: #ffffff;
+	--accentColor2: #0073d1;
+	--caretColor: #ffffff;
+	--textLowColor: #8a8a8a;
+	--textHighColor: #ffffff;
+	--hrTagColor: #555555;
+	--radBorder: 0;
+	--mainBorderRadius: 0;
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+
+	#content:before {
+		opacity: 1 !important;
+		border-color: #434343 !important;
+	}
+}
+
+body.bauhaus {
+	--backColor: #060606;
+	--backLightColor: #131313;
+	--darkColor: #1f1f1f;
+	--accentColor: #ffffff;
+	--accentColor2: #ffffff;
+	--caretColor: #ffffff;
+	--textLowColor: #818181;
+	--textHighColor: #ffffff;
+	--hrTagColor: #555555;
+	--radBorder: 0;
+	--mainBorderRadius: 0;
+	--h1FontWeight: 600;
+	@extend $defaultCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+
+	#content:before {
+		border-color: #818181 !important;
+	}
+
+	#mainSearch, #mainSearchCopy, #searchResult {
+		font-weight: 600;
+	}
+
+	#listadoRules .ruleListCelda.highLight span.ruleName, .highLight .ruleName {
+		font-weight: 600 !important;
+	}
+}
+
+body.iceberg {
+	--backColor: #161820;
+	--backLightColor: #1e2131;
+	--darkColor: #0f1116;
+	--accentColor: #89a0c2;
+	--accentColor2: #92b7c0;
+	--textLowColor: #6c7087;
+	--textHighColor: #c6c8d0;
+	--hrTagColor: #25293e;
+	@extend $icebergCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.spacegray {
+	--backColor: #252525;
+	--backLightColor: #2d3032;
+	--darkColor: #171819;
+	--accentColor: #e4bf7d;
+	--accentColor2: #86a7a5;
+	--textLowColor: #7e8fa2;
+	--textHighColor: #aeb2be;
+	--hrTagColor: rgba(0, 0, 0, 0.1); // hr separador
+	@extend $spacegrayCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.forest {
+	--backColor: #3c4c55;
+	--backLightColor: #47565e;
+	--darkColor: darken(#3c4c55, 3);
+	--accentColor: #e6e5e2;
+	--accentColor2: #a9dd9d;
+	--textLowColor: #a2aeba;
+	--textHighColor: #e6e5e2;
+	--hrTagColor: rgba(0, 0, 0, 0.1); // hr separador
+	@extend $forestCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.dracula {
+	--backColor: #282a36;
+	--backLightColor: lighten(#282a36, 4);
+	--darkColor: darken(#282a36, 8);
+	--accentColor: #ceb6f0;
+	--accentColor2: #ae90d9;
+	--textLowColor: #898397;
+	--textHighColor: #dbe6ec;
+	--hrTagColor: rgba(0, 0, 0, 0.1); // hr separador
+	@extend $draculaCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.nord {
+	--backColor: #2f343f;
+	--backLightColor: lighten(#3c4250, 0);
+	--darkColor: darken(#21242c, 0);
+	--accentColor: #93bfce;
+	--accentColor2: #d9dee8;
+	--textLowColor: #8890a2;
+	--textHighColor: #edeff4;
+	--hrTagColor: rgba(255, 255, 255, 0.1); // hr separadorblue
+	@extend $nordCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.neuromancer {
+	--backColor: #000000;
+	--backLightColor: #1d1d1d;
+	--darkColor: lighten(#1d1d1d, 3);
+	--accentColor: #25bc24;
+	--accentColor2: #25bc24;
+	--caretColor: #cacaca;
+	--textLowColor: #858585;
+	--textHighColor: #e6e6e6;
+	--hrTagColor: lighten(#1d1d1d, 4);
+	--warnColor: #eaec23;
+	--errorColor: #ee0000;
+	--validColor: #31e722;
+	--asertColor: #0056d8;
+	@extend $terminalCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+}
+
+body.bluePrint {
+	--backColor: #052839;
+	--backLightColor: #0f334b;
+	--darkColor: darken(#0a2c3d, 8);
+	--accentColor: #7aceea;
+	--accentColor2: #52acca;
+	--textLowColor: #6e859e;
+	--textHighColor: #fff;
+	--hrTagColor: rgba(255, 255, 255, 0.1); // hr separador
+}
+
+body.statics {
+	--backColor: #252931;
+	--backLightColor: #2e333d;
+	--darkColor: darken(#252931, 4);
+	--textLowColor: #9da3b1;
+	--textHighColor: #ffffff;
+	--caretColor: #ffffff;
+	--accentColor: #f1377a;
+	--accentColor2: #21c46a;
+	--hrTagColor: lighten(#252931, 10);
+	// @extend $snazzyCodeColors;
+	@extend $defaultCodeColorsAlt;
+}
+
+body.staticsAlt {
+	--backColor: #181f29;
+	--backLightColor: #202731;
+	--darkColor: darken(#0d0e13, 0);
+	--textLowColor: #8f939f;
+	--textHighColor: #fbfbfb;
+	--caretColor: #fbfbfb;
+	--accentColor: #4bcbaa;
+	--accentColor2: #ff8b6a;
+	--hrTagColor: lighten(#353c46, 0);
+	// @extend $snazzyCodeColors;
+	@extend $defaultCodeColorsAlt;
+}
+
+body.active {
+	--backColor: #191d27;
+	--backLightColor: #21252f;
+	--darkColor: darken(#15181f, 2);
+	--textLowColor: #62636a;
+	--textHighColor: #e5e5e6;
+	--caretColor: #e5e5e6;
+	--accentColor: #1ac2ff;
+	--accentColor2: #0bbe35;
+	--hrTagColor: lighten(#2a2e37, 0);
+	// @extend $snazzyCodeColors;
+	@extend $defaultCodeColorsAlt;
+}
+
+body.experimental {
+	// --padding: calc(12px * var(--scale));
+	--backColor: linear-gradient(135deg, #3d486b 0%, #262f49 100%);
+	--backLightColor: linear-gradient(95deg, rgba(#a691f9, 0.2) 0%, #394d89 100%);
+	--backLightColor: linear-gradient(-100deg, rgba(#8e7dd2, 0.3) 0%, rgba(#394d89, 1) 100%);
+	--darkColor: darken(#232b43, 2); // Dark
+	--hoverColor: var(--darkColor); // hover //Btns/combos
+	--textLowColor: #9b9dc9; // name color
+	--textHighColor: #f9f5fa;
+	--mainSearchColor: var(--textHighColor);
+	--hrTagColor: rgba(#a691f9, 0.3); // hr separador
+	--caretColor: #f9f5fa;
+	--buttonBackColor: var(--backColor); // backLightColor // Button Back
+	--buttonFrontColor: #8ca1a7; // textLowColor// Button Front
+	--accentColor: #02c2e3;
+	--accentColor2: #a691f9;
+	--lowOpacity: 0.5;
+	--medOpacity: 0.75;
+	--hiOpacity: 0.9;
+	@extend $forestCodeColors;
+	--code-default: var(--textHighColor);
+	--code-comment: var(--textLowColor);
+
+	.ruleListCeldaWrapp {
+		padding: 0px 8px !important;
+	}
+
+	.ruleListCelda {
+		padding-left: 8px !important;
+		padding-right: 8px !important;
+
+		.main_ico {
+			MX_transition(calc(0.2s * var(--animSpeedFactor)));
+			transform: scale(0.85);
+		}
+
+		&.highLight {
+			border-radius: 6px;
+			box-shadow: 0px 6px 24px rgba(#000, 0.15), 0px 0px 36px rgba(#031140, 0.1) !important;
+			background: var(--backLightColor) !important;
+
+			.main_ico {
+				animation: popAlt calc(0.2s * var(--animSpeedFactor)) ease-out;
+				transform: scale(1);
+			}
+		}
+	}
+
+	#ruleViewerWrapp {
+		padding: 12px !important;
+		margin-left: 6px !important;
+		width: calc(100% - 48px) !important;
+		height: calc(100% - 24px) !important;
+		background: linear-gradient(20deg, rgba(#8e7dd2, 0.2) 0%, rgba(#2f3f6f, 0.4) 100%);
+		border: solid 1px rgba(#000, 0.15);
+		border-radius: 8px;
+	}
+
+	.markdownView pre:not(.CodeMirror-line):not(.noBack) code, .webview pre:not(.CodeMirror-line):not(.noBack) code, #ruleViewer pre:not(.CodeMirror-line):not(.noBack) code, #ruleViewer pre:not(.CodeMirror-line):not(.CodeMirror-placeholder):not(.noBack) {
+		background-color: #29324e !important;
+	}
+}
+
+body.experimental2 {
+	@extend body.experimental;
+	--backColor: linear-gradient(190deg, #323453 0%, #202238 100%);
+	--backLightColor: linear-gradient(-190deg, rgba(#2b2b4b, 1) 0%, rgba(#46477f, 1) 100%);
+	--darkColor: darken(#202235, 2); // Dark
+	--accentColor: #91b6ff;
+	--accentColor2: #6e98fe;
+	--textLowColor: #7e80b2;
+	--textHighColor: #a1bdff;
+	--hrTagColor: rgba(#91b6ff, 0.3); // hr separador
+
+	#ruleViewerWrapp {
+		background: linear-gradient(20deg, rgba(#2b2b4b, 1) 0%, rgba(#3a3b66, 0.8) 100%);
+	}
+
+	@extend $forestCodeColors;
+	--code-default: #ced0e0;
+	--code-comment: var(--textLowColor);
+}

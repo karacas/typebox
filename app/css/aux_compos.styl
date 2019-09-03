@@ -1,0 +1,677 @@
+.svgLineIcon {
+	svg {
+		position: absolute;
+		left: -2px;
+		top: -2px;
+		right: 0;
+		bottom: 0;
+		margin: 0;
+		padding: 0;
+		width: 17px !important;
+		height: 17px !important;
+		stroke: var(--accentColor);
+		stroke-width: 2;
+		background: transparent !important;
+		opacity: 1;
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+		fill: transparent !important;
+		color: transparent !important;
+
+		path {
+			opacity: 1;
+			fill: transparent !important;
+		}
+	}
+
+	&.hover svg {
+		position: absolute;
+		stroke-width: 1.5;
+		left: 8px;
+		stroke: #fff;
+	}
+
+	&.white svg {
+		stroke: #fff;
+	}
+
+	&.white.hover svg {
+		stroke: #fff;
+		opacity: 1 !important;
+	}
+}
+
+/* TOOLTIP */
+.MuiTooltip-popper {
+	margin-left: 6px;
+	margin-right: 6px;
+
+	.MuiTooltip-tooltip {
+		font-family: var(--mainFontSmall) !important;
+		font-size: var(--smallFontSize) !important;
+		font-weight: var(--smallFontWeight);
+		background-color: var(--darkColor) !important;
+		letter-spacing: 0 !important;
+		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1) !important;
+		border-radius: var(--radBorder);
+		color: var(--textHighColor) !important;
+	}
+}
+
+/* REACT SELECT */
+.TB-select {
+	outline: none !important;
+	min-width: 110px;
+	opacity: 1;
+	border: none !important;
+	user-select: none;
+	cursor: pointer;
+
+	.react-select__control {
+		background-color: transparent;
+		outline: none;
+		box-shadow: none;
+		border-color: transparent;
+		cursor: pointer;
+		border-radius: var(--radBorder);
+		min-height: 32px;
+		border: none !important;
+
+		.react-select__single-value {
+			font-weight: var(--smallFontWeight);
+			top: calc(50% + 0);
+			color: var(--textHighColor);
+			opacity: var(--medOpacity);
+		}
+
+		&:hover, &.react-select__control--is-focused {
+			background-color: var(--hoverColor);
+			opacity: 1;
+
+			.react-select__single-value {
+				color: var(--accentColor);
+				opacity: 1;
+			}
+
+			.react-select__value-container--has-value, .react-select__value-container--has-value div {
+				color: var(--textHighColor);
+				opacity: 1;
+			}
+		}
+	}
+
+	.react-select__input > input {
+		caret-color: var(--accentColor);
+	}
+
+	&.TB-select-mini {
+		font-size: var(--smallFontSize);
+		font-weight: var(--smallFontWeight);
+
+		.react-select__single-value {
+			font-size: var(--smallFontSize);
+			font-weight: var(--smallFontWeight);
+		}
+
+		.react-select__input > input {
+			font-size: var(--smallFontSize);
+			font-weight: var(--smallFontWeight);
+		}
+
+		.react-select__single-value {
+			font-size: var(--smallFontSize);
+		}
+
+		.react-select__menu {
+			padding-top: calc(var(--padding) * 0.5);
+			padding-bottom: calc(var(--padding) * 0.25);
+			font-size: var(--smallFontSize);
+			font-weight: var(--smallFontWeight);
+		}
+	}
+
+	.react-select__indicators {
+		.react-select__indicator-separator {
+			display: none;
+		}
+
+		.react-select__dropdown-indicator {
+			pointer-events: none;
+			padding: 4px;
+			padding-right: 8px;
+
+			svg {
+				color: var(--accentColor);
+			}
+		}
+
+		pointer-events: none;
+		max-height: 32px;
+		opacity: 0;
+		MX_transition(0.2s);
+	}
+
+	&.TB-select-top .react-select__indicators .react-select__dropdown-indicator svg {
+		transform: scale(-1);
+	}
+
+	&:hover, .react-select__control--is-focused {
+		.react-select__indicators {
+			opacity: 1;
+		}
+	}
+
+	.react-select__menu {
+		background: var(--darkColor);
+		border-radius: var(--radBorder) !important;
+		box-shadow: none;
+		border: none !important;
+		margin: 0;
+		padding: 0;
+		MX_transition(0.2s);
+	}
+
+	.react-select__menu-list {
+		@extend scrollExtend;
+		box-shadow: none;
+		border: none !important;
+		padding: 0;
+
+		&::-webkit-scrollbar, &::-webkit-scrollbar-track {
+			background: transparent !important;
+			width: 3px;
+		}
+
+		&::-webkit-scrollbar-thumb:vertical {
+			border-right: solid 2px var(--accentColor);
+
+			&:hover {
+				border-right: solid 2px var(--accentColor);
+			}
+		}
+
+		.react-select__option {
+			padding: 8px 10px !important;
+			height: 32px;
+			cursor: pointer;
+		}
+
+		.react-select__option--is-selected {
+			background-color: transparent;
+			color: var(--accentColor);
+			// border-bottom: solid 1px var(--backLightColor);
+		}
+
+		.react-select__option--is-focused {
+			background-color: var(--backLightColor);
+			background-color: transparent;
+			color: var(--textHighColor);
+			MX_transition(0.2s);
+		}
+	}
+
+	.react-select__control--menu-is-open .react-select__single-value {
+		opacity: 0.3 !important;
+	}
+
+	&.TB-select-withBack .react-select__control {
+		background-color: var(--darkColor);
+		opacity: 1;
+
+		.react-select__indicators {
+			opacity: 1;
+		}
+	}
+}
+
+.TB-input-text {
+	min-width: 120px;
+	border: none;
+	border-color: transparent;
+	letter-spacing: 0.25px;
+	font-size: var(--smallFontSize);
+	font-weight: var(--smallFontWeight);
+
+	&.TB-input-samll-font {
+		font-size: var(--smallFontSize);
+	}
+
+	background-color: var(--darkColor);
+	color: var(--textHighColor);
+	caret-color: var(--textHighColor) !important;
+	outline: none;
+	box-shadow: none;
+	border-radius: var(--radBorder) !important;
+	max-height: 32px;
+	line-height: 30px;
+	padding-left: calc(var(--padding) * 0.6);
+	padding-right: calc(var(--padding) * 0.6);
+	width: calc(100% - (1.2 * var(--padding)));
+	padding-top: 2px;
+	padding-bottom: 0;
+
+	&::placeholder {
+		color: var(--textLowColor);
+		opacity: var(--medOpacity);
+	}
+
+	&:focus {
+		animation: focusAnim calc(0.2s * var(--animSpeedFactor)) ease-in;
+	}
+}
+
+/* BUTTON */
+.TB-Button {
+	MX_transition(0.2s);
+	padding: 0 10px;
+	cursor: pointer;
+	text-align: center;
+	min-width: 16px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--radBorder);
+	opacity: var(--hiOpacity);
+	font-size: var(--smallFontSize);
+	font-weight: var(--smallFontWeight);
+	margin-left: 1px;
+	margin-right: 1px;
+	user-select: none;
+	color: var(--textHighColor);
+	opacity: var(--medOpacity);
+
+	.tb-icon:before, i:before {
+		font-size: 18px !important;
+	}
+
+	svg {
+		width: 18px;
+		height: auto;
+	}
+
+	&:not(.TB-Button-no-hover):focus, &:not(.TB-Button-no-hover):hover {
+		background-color: var(--hoverColor); /* 0.05 en light */
+		color: var(--textHighColor);
+		opacity: 1;
+	}
+
+	&.TB-Button-force-hover {
+		background-color: var(--hoverColor); /* 0.05 en light */
+	}
+
+	&.TB-Button-accent {
+		&, .tb-icon:before, i:before {
+			color: var(--accentColor);
+			opacity: 1 !important;
+		}
+	}
+
+	&.TB-Button-noLow {
+		&, .tb-icon:before, i:before {
+			color: var(--textHighColor);
+			opacity: var(--medOpacity);
+		}
+
+		&:hover, &:hover .tb-icon:before, &:hover i:before {
+			color: var(--textHighColor);
+			opacity: 1 !important;
+		}
+	}
+
+	&.TB-Button-accent-hover {
+		:hover, &:hover .tb-icon:before, &:hover i:before {
+			color: var(--accentColor);
+			opacity: 1 !important;
+		}
+	}
+
+	&.TB-Button-no-hover {
+		cursor: default;
+	}
+
+	&.TB-Button-no-backhover {
+		background: none !important;
+	}
+
+	&.TB-Button-disabled {
+		pointer-events: none !important;
+	}
+
+	&.TB-Button-left {
+		justify-content: left;
+	}
+
+	&.TB-Button-warn {
+		color: var(--warnColor) !important;
+		opacity: 1 !important;
+	}
+
+	&.TB-Button-error {
+		color: var(--errorColor) !important;
+		opacity: 1 !important;
+	}
+
+	&.TB-Button-valid {
+		color: var(--validColor) !important;
+		opacity: 1 !important;
+	}
+
+	&.TB-Button-asert {
+		color: var(--asertColor) !important;
+		opacity: 1 !important;
+
+		span:hover {
+			color: var(--textHighColor) !important;
+		}
+	}
+}
+
+/* OPTIONS COMPO */
+.TB-Options-box {
+	width: 100%;
+
+	#ruleViewerWrappSize.smallViewer & {
+		flex-wrap: wrap;
+	}
+}
+
+.TB-Option-celd {
+	width: 100%;
+	min-height: 32px;
+	margin-bottom: calc(var(--padding) * 1.15);
+	padding-bottom: calc(var(--padding) * 1.15);
+	border-bottom: solid 0.75px var(--hrTagColor);
+	max-width: 640px;
+
+	.TB-Option-celd-label {
+		line-height: 32px;
+		font-size: var(--smallFontSize);
+		font-weight: var(--smallFontWeight);
+		color: var(--textHighColor);
+		opacity: var(--hiOpacity);
+		max-width: calc(640px * 0.75);
+		width: 35%;
+		user-select: none;
+		// font-family: var(--mainFontMono);
+		font-smoothing: antialiased !important;
+	}
+
+	.TB-Option-celd-value {
+		width: 65%;
+	}
+}
+
+/* SWITCH */
+.TB-Switch {
+	$ssize = 8px;
+
+	.MuiSwitch-root {
+		width: $ssize * 4;
+		height: $ssize * 4;
+		padding: $ssize;
+		padding-left: 1px;
+		padding-right: 1px;
+	}
+
+	.MuiSwitch-switchBase {
+		padding: $ssize * 1;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.MuiSwitch-switchBase.Mui-checked {
+		// transform: translateX(100%);
+		opacity: 1;
+	}
+
+	.MuiIconButton-root:hover {
+		background: none !important;
+	}
+
+	.MuiSwitch-thumb {
+		width: $ssize * 2;
+		height: $ssize * 2;
+		background: var(--hrTagColor) !important;
+		opacity: 1 !important;
+		box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+	}
+
+	&:hover .MuiSwitch-thumb {
+		opacity: 1 !important;
+	}
+
+	.Mui-checked .MuiSwitch-thumb {
+		background: var(--accentColor) !important;
+		opacity: 1 !important;
+	}
+
+	&:hover .Mui-checked .MuiSwitch-thumb {
+		background: var(--accentColor2) !important;
+	}
+
+	.MuiSwitch-track {
+		border-radius: $ssize * 4;
+		opacity: 1 !important;
+		background: var(--darkColor) !important;
+		box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.3);
+
+		body.isLight & {
+			box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+		}
+	}
+}
+
+/* superSelect */
+.superSelectFieldMenu {
+	background: var(--darkColor) !important;
+	border-radius: var(--radBorder) !important;
+	box-shadow: none !important;
+	border: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	font-size: var(--smallFontSize) !important;
+	font-weight: var(--smallFontWeight) !important;
+
+	&, & > div, & > div > div {
+		transition: none !important;
+	}
+
+	& > div > div > div> div {
+		@extend scrollExtend;
+
+		> div {
+			color: var(--textLowColor) !important;
+			font-size: var(--smallFontSize) !important;
+			font-weight: var(--smallFontWeight) !important;
+		}
+
+		&::-webkit-scrollbar, &::-webkit-scrollbar-track {
+			background: transparent !important;
+		}
+	}
+
+	& > div > div > div:first-child {
+		margin-left: 12px !important;
+
+		// padding: 0 !important;
+		// line-height: 32px !important;
+		// height 32px !important;
+		// margin-top: 0px !important;
+		// margin-bottom: 0px !important;
+		& > div {
+			// top: 0 !important;
+			// padding-top: 0 !important;
+			// margin-top: 0px !important;
+			color: var(--textLowColor) !important;
+			font-size: var(--smallFontSize) !important;
+			font-weight: var(--smallFontWeight) !important;
+			opacity: var(--medOpacity);
+		}
+
+		input {
+			// top: 0 !important;
+			// height: 32px !important;
+			// padding-top: 0 !important;
+			// margin-top: -2px !important;
+			margin-left: 0 !important;
+			color: var(--textHighColor) !important;
+			font-size: var(--smallFontSize) !important;
+			font-weight: var(--smallFontWeight) !important;
+			caret-color: var(--accentColor);
+		}
+
+		hr {
+			display: none !important;
+		}
+	}
+
+	& > div > div > div> div> div> div > span > div > div {
+		// CELD
+		// background-color #ff0
+		padding: 0px 6px !important;
+		height: 32px !important;
+		line-height: 32px;
+		overflow: hidden;
+		cursor: pointer !important;
+		font-size: var(--smallFontSize) !important;
+		font-weight: var(--smallFontWeight) !important;
+		color: var(--textLowColor) !important;
+
+		// opacity: var(--medOpacity);
+		&:hover {
+			background-color: var(--hoverColor) !important;
+			color: var(--textHighColor) !important;
+			opacity: 1;
+		}
+	}
+}
+
+.superSelectField, .superSelectFieldMenu {
+	.labelIconWrapp {
+		max-height: 32px;
+		display: block;
+		overflow: hidden;
+	}
+
+	.optionIcon i, .labelIcon i {
+		color: var(--accentColor);
+		font-size: 20px;
+		margin-right: calc(var(--padding) * 0.5);
+		margin-left: calc(var(--padding) * 0.25);
+		vertical-align: middle;
+		float: left;
+		width: 20px;
+		text-align: center;
+	}
+
+	.optionIcon .null {
+		display: block !important;
+		min-width: 1px !important;
+		height: 20px;
+		width: 0px;
+		margin-right: 0;
+		margin-left: calc(var(--padding) * 0.25);
+		font-family: sans-serif;
+	}
+}
+
+// COLOR PICKER
+.popoverCoverForOutside {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.colorPickerMini {
+	.colorOpener {
+		width: 32px;
+		height: 18px;
+		border-radius: 2px;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 6px;
+		font-size: 11px !important;
+		text-align: center;
+		font-weight: 500;
+		user-select: none;
+		opacity: 0.9;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	.colorPickerWrapper {
+		&.noPoper {
+			position: absolute;
+			z-index: 1;
+		}
+
+		background: var(--darkColor) !important;
+		border-radius: var(--radBorder) !important;
+		padding: 12px 4px 0px 12px !important;
+
+		.twitter-picker {
+			background: transparent !important;
+			border: none !important;
+
+			div:nth-child(1n) {
+				// ARROW
+				border-color: transparent transparent var(--darkColor) !important;
+			}
+
+			div:nth-child(3n) {
+				padding: 0 !important;
+
+				span > div {
+					// celd
+					opacity: 0.9;
+					border-radius: 2px !important;
+					outline: none !important;
+					box-shadow: none !important;
+					cursor: pointer;
+
+					&:hover {
+						opacity: 1;
+					}
+				}
+
+				> div:nth-last-child(2) {
+					input {
+						width: calc(100% - 45px) !important;
+					}
+				}
+
+				> div:nth-last-child(2) input, > div:nth-last-child(3) {
+					margin-top: 1px;
+					font-family: var(--mainFontSmall);
+					background-color: var(--buttonBackColor) !important;
+					color: var(--buttonFrontColor) !important;
+					box-shadow: none !important;
+					font-weight: var(--mainFontWeightCode);
+					font-size: var(--codeFontSize);
+					font-family: var(--mainFontMono);
+				}
+
+				> div:nth-last-child(3) {
+					user-select: none;
+					border-radius: 2px 0 0 2px !important;
+				}
+
+				> div:nth-last-child(2) input {
+					border-radius: 0 2px 2px 0 !important;
+				}
+			}
+		}
+	}
+}
+
+.miniBottonBar {
+	display: -webkit-flex;
+	position: relative;
+	width: auto;
+	user-select: none;
+}

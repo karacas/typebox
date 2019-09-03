@@ -5,296 +5,482 @@ name: krc_html_snipetts
 enabled: true
 icon: mdi-language-html5 palette-Red-A200 text
 rules:
+   - title: html snippets
+     type: 'object'
+     expander: [htm, html]
+     params:
+        changePath:
+           path: HTMLsnip
 
+   - title: basic html structure
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <!DOCTYPE html>
+           <html class="no-js">
+               <head>
+                   <meta charset="utf-8">
+                   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+                   <meta name="viewport" content="width=device-width,initial-scale=1">
+                   <title>title</title>
+               </head>
+               <body>
+                   content of website
+               </body>
+           </html>
 
-- title: html snippets
-  type: 'object'
-  params:
-    changePath:
-      path: HTMLsnip
+   - title: img
+     path: HTMLsnip
+     expander: [img]
+     params:
+        codeclass: 'html'
+        string: |-
+           <img src="url" alt="">
 
-- title: basic html structure
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <!DOCTYPE html>
-      <html class="no-js">
-          <head>
-              <meta charset="utf-8">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-              <title>title</title>
-          </head>
-          <body>
-              content of website
-          </body>
-      </html>
+   - title: viewport tag
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <meta name="viewport" content="width=device-width,initial-scale=1">
 
-- title: img
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <img src="url" alt="">
+   - title: a href
+     path: HTMLsnip
+     expander: [href, ahref]
+     params:
+        codeclass: 'html'
+        string: |-
+           <a href="url"> link text </a>
 
-- title: a href
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <a href="url"> link text </a>
+   - title: nbsp
+     path: HTMLsnip
+     expander: [nsb, nsbp]
+     params:
+        codeclass: 'html'
+        string: |-
+           &nbsp;
 
-- title: nbsp
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      &nbsp;
+   - title: css tag
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link rel="stylesheet" href="css/main.css">
 
-- title: css tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <link rel="stylesheet" href="css/main.css">
+   - title: script javascript tag
+     expander: [script]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="js/all.js" type="text/javascript"></script>
 
-- title: script javascript tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <script src="js/all.js" type="text/javascript"></script>
+   - title: script javascript tag full
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script type="text/javascript">
+             $(document).ready(function() {});
+           </script>
 
-- title: script javascript tag full
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <script type="text/javascript">
-      $(document).ready(function() {});
-      </script>
+   - title: viewport scale
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-- title: viewport scale
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+   - title: fav icon
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link rel="SHORTCUT ICON" href="fav_icon.png"/>
 
-- title: fav icon
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <link rel="SHORTCUT ICON" href="fav_icon.png"/>
+   - title: gmaps script import
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="http://maps.googleapis.com/maps/api/js?key=KEY" type="text/javascript" ></script>
 
-- title: gmaps script import
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <script src="http://maps.googleapis.com/maps/api/js?key=KEY" type="text/javascript" ></script>
+   - title: roboto font import
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700,800' rel='stylesheet' type='text/css'>
 
-- title: roboto font import
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700,800' rel='stylesheet' type='text/css'>
+   - title: cache param php
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           ?c=<?=$cacheVer?>
 
-- title: cache param php
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      ?c=<?=$cacheVer?>
+   - title: cache param
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           ?c=100
 
-- title: cache param
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      ?c=100
+   - title: php include
+     expander: [incl]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <?php include("_inc.php");?>
 
-- title: php include
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <?php include("_inc.php");?>
+   - title: php if block
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <?php if ($produccion): ?>
+               <span></span>
+           <?php endif ?>
 
-- title: php if block
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <?php if ($produccion): ?>
-          <span></span>
-      <?php endif ?>
+   - title: head full tag
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <head>
+               <meta charset="utf-8">
+               <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+               <title>title</title>
+           </head>
 
-- title: head full tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <head>
-          <meta charset="utf-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-          <title>title</title>
-      </head>
+   - title: boostrap container row col
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div class="container">
+               <div class="row">
+                   <div class="col-md-12">
+                   </div>
+               </div>
+           </div>
 
-- title: boostrap container row col
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <div class="container">
-          <div class="row">
-              <div class="col-md-12">
-              </div>
-          </div>
-      </div>
+   - title: style attribute
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           style=""
 
-- title: style attribute
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-       style=""
+   - title: select input (form)
+     path: HTMLsnip
+     expander: [select]
+     params:
+        codeclass: 'html'
+        string: |-
+           <select>
+               <option value="volvo">Volvo</option>
+               <option value="saab">Saab</option>
+               <option value="mercedes">Mercedes</option>
+               <option value="audi">Audi</option>
+           </select>
 
-- title: select input (form)
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <select>
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-      </select>
+   - title: button (form)
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <button type="button">Click Me!</button>
 
-- title: button (form)
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <button type="button">Click Me!</button>
+   - title: meta description
+     expander: [meta]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <meta name="description" content="">
 
-- title: center tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <center>center</center>
+   - title: meta robots
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <meta name="robots" content="index, follow">
 
-- title: table tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <table>
-          <tr>
-              <th>January</th>
-              <th>February</th>
-          </tr>
-          <tr>
-              <td>28</td>
-              <td>31</td>
-          </tr>
-      </table>
+   - title: meta keywords
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <meta name="keywords" content="">
 
-- title: form tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <form action="/action_page.php" method="get">
-          <input type="submit" value="Submit">
-      </form>
+   - title: center tag
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <center>center</center>
 
-- title: iframe tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <iframe src="https://www.w3schools.com"></iframe>
+   - title: table tag
+     expander: [table]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <table>
+               <tr>
+                   <th>January</th>
+                   <th>February</th>
+               </tr>
+               <tr>
+                   <td>28</td>
+                   <td>31</td>
+               </tr>
+           </table>
 
-- title: fontawesome tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <i class="fa fa-home"></i>
+   - title: form tag
+     expander: [form]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <form action="/action_page.php" method="get">
+               <input type="submit" value="Submit">
+           </form>
 
-- title: fontawesome import
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+   - title: iframe tag
+     expander: [iframe]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <iframe src="https://www.w3schools.com"></iframe>
 
-- title: ul li tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <ul>
-          <li>Coffee</li>
-          <li>Tea</li>
-          <li>Milk</li>
-      </ul>
+   - title: fontawesome tag
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <i class="fa fa-home"></i>
 
-- title: video tag
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <video autoplay loop poster="poster.jpg">
-          <source src="video/video.mp4" type="video/mp4" />
-      </video>
+   - title: ul li tag
+     expander: [ul]
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <ul>
+               <li>Coffee</li>
+               <li>Tea</li>
+               <li>Milk</li>
+           </ul>
 
-- title: boostrap simple form
-  path: HTMLsnip
-  params:
-    codeclass: 'html'
-    string: |-
-      <form>
-          <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-          </div>
-          <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-          </div>
-          <div class="form-group">
-              <label for="exampleInputFile">File input</label>
-              <input type="file" id="exampleInputFile">
-              <p class="help-block">Example block-level help text here.</p>
-          </div>
-          <div class="checkbox">
-              <label>
-                  <input type="checkbox"> Check me out
-              </label>
-          </div>
-          <button type="submit" class="btn btn-default">Submit</button>
-      </form>
+   - title: video tag
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <video autoplay loop poster="poster.jpg">
+               <source src="video/video.mp4" type="video/mp4" />
+           </video>
 
-- title: docs (web)
-  path: HTMLsnip
-  type: "object"
-  params:
-    openUrl: https://www.w3schools.com/tags/default.asp
+   - title: wow
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           class="wow" data-wow-delay="1s" data-wow-duration="0.5s"
 
-- title: boostrap cheat sheet (web)
-  path: HTMLsnip
-  type: "object"
-  params:
-    openUrl: https://cheatsheet.kursbootstrap.pl/
+   - title: cdn vue
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
 
-- title: fontawesome cheat sheet (web)
-  path: HTMLsnip
-  type: "object"
-  params:
-    openUrl: https://fontawesome.bootstrapcheatsheets.com/
+   - title: cdn Material Icons
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+   - title: cdn roboto
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700" rel="stylesheet">
+
+   - title: cdn fontawesome
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.4.1/css/all.css" >
+
+   - title: cdn bootstrap
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+           <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" ></script>
+
+   - title: cdn jquery
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+   - title: cdn moment js
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+   - title: cdn lodash js
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+
+   - title: cdn angularjs
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+
+   - title: cdn sweetalert2
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.31.1/sweetalert2.min.css" rel="stylesheet" />
+           <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.31.1/sweetalert2.min.js"></script>
+
+   - title: cdn mui
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link href="//cdnjs.cloudflare.com/ajax/libs/muicss/0.9.41/css/mui.min.css" rel="stylesheet" type="text/css" />
+           <script src="//cdnjs.cloudflare.com/ajax/libs/muicss/0.9.41/js/mui.min.js"></script>
+
+   - title: cdn wow
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js" ></script>
+           <link href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" rel="stylesheet" />
+
+   - title: favicon
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <link rel="SHORTCUT ICON" href="favicon.ico"/>
+
+   - title: boostrap simple form
+     path: HTMLsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <form>
+               <div class="form-group">
+                   <label for="exampleInputEmail1">Email address</label>
+                   <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+               </div>
+               <div class="form-group">
+                   <label for="exampleInputPassword1">Password</label>
+                   <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+               </div>
+               <div class="form-group">
+                   <label for="exampleInputFile">File input</label>
+                   <input type="file" id="exampleInputFile">
+                   <p class="help-block">Example block-level help text here.</p>
+               </div>
+               <div class="checkbox">
+                   <label>
+                       <input type="checkbox"> Check me out
+                   </label>
+               </div>
+               <button type="submit" class="btn btn-default">Submit</button>
+           </form>
+
+   - title: docs (web)
+     path: HTMLsnip
+     type: 'object'
+     params:
+        openUrl: https://www.w3schools.com/tags/default.asp
+
+   - title: boostrap cheat sheet (web)
+     path: HTMLsnip
+     type: 'object'
+     params:
+        openUrl: https://cheatsheet.kursbootstrap.pl/
+
+   - title: fontawesome cheat sheet (web)
+     path: HTMLsnip
+     type: 'object'
+     params:
+        openUrl: https://fontawesome.bootstrapcheatsheets.com/
+
+   - title: Material icons cheat sheet (web)
+     path: HTMLsnip
+     type: 'object'
+     params:
+        openUrl: https://shanfan.github.io/material-icons-cheatsheet/
+
+   - title: fontawesome cheat sheet 2 (web)
+     path: HTMLsnip
+     type: 'object'
+     params:
+        openUrl: https://fontawesome.com/cheatsheet
+
+   - title: slick.js carousel initialize
+     path: HTMLsnip
+     params:
+        string: |-
+           $(".homeSlider").slick({
+             infinite: true,
+             arrows: true,
+             dots: true,
+             autoplay: true,
+             autoplaySpeed: 6000,
+             pauseOnHover: false,
+             easy: "easeOutBack",
+             cssEase: "cubic-bezier(0,0,0.2,1)",
+             speed: 900
+           });
+           /* http://kenwheeler.github.io/slick/ */
+
+   - title: slick.js carousel initialize
+     path: HTMLsnip
+     params:
+        string: |-
+           $(".fancyboxFoto").fancybox({
+             padding: 40,
+             fitToView: true,
+             width: "100%",
+             height: "100%",
+             helpers: {
+               overlay: {
+                 locked: false
+               }
+             }
+           });
+           /* http://fancyapps.com/fancybox/ */
+
+   - title: js pinta botonera
+     path: HTMLsnip
+     params:
+        string: |-
+           $('header nav li').eq(0).addClass('active')

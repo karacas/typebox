@@ -1,0 +1,1 @@
+node scripts.js autoGit %1 && git push

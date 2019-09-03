@@ -1,27 +1,16 @@
 {
-  "name": "typebox-devdocs",
-  "version": "0.0.1",
-  "main": "index.js",
-  "license": "MIT",
-  "description": "typebox package: devdocs",
-  "engines": {
-    "typebox": ">=0.48.0 <2.0.0"
-  },
-  "keywords": [
-    "typebox",
-    "devdocs",
-    "launcher",
-    "package"
-  ],
-  "plataforms": [
-    "darwin",
-    "freebsd",
-    "linux",
-    "sunos",
-    "win32"
-  ],
-  "author": {
-    "name": "karacas",
-    "email": "alejandroe@gmail.com"
-  }
+   "name": "typebox-devdocs",
+   "version": "0.0.2",
+   "main": "index.js",
+   "license": "MIT",
+   "description": "typebox package: devdocs",
+   "engines": {
+      "typebox": ">=0.48.0 <2.0.0"
+   },
+   "keywords": ["typebox", "devdocs", "launcher", "package"],
+   "plataforms": ["darwin", "freebsd", "linux", "sunos", "win32"],
+   "author": {
+      "name": "karacas",
+      "email": "alejandroe@gmail.com"
+   }
 }

@@ -1,0 +1,25 @@
+/*{
+    "defaultTheme": {
+        "name": "default",
+        "packagejson": {
+            "shortname": "default",
+            "themeDefaultSubThemes": [
+                "default",
+                "typebox",
+                "brown",
+                "atom",
+                "cream",
+                "monokai",
+                "citylights",
+                "newblue",
+                "material",
+                "adobe",
+                "vscode"
+            ],
+            "theme": "ui"
+        }
+    }
+}*/
+{
+
+}

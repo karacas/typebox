@@ -5,125 +5,442 @@ name: krc_lodash_snipetts
 enabled: true
 icon: feather-minus palette-Light-Blue-A200 text
 rules:
+   - title: lodash snippets
+     type: 'object'
+     params:
+        changePath:
+           path: LODASHsnip
 
-- title: lodash snippets
-  type: 'object'
-  params:
-    changePath:
-      path: LODASHsnip
+   - title: result
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var res = _.result(obj, 'obj.id');
 
-- title: result
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      var res = _.result(obj, 'obj.id');
+   - title: throttle
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var _func = _.throttle(func, 100, { trailing: false });
 
-- title: throttle
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      var _func = _.throttle(func, 100, { trailing: false });
+   - title: debounce
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var _func = _.debounce(func, 100);
 
-- title: debounce
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      var _func = _.debounce(func, 100);
+   - title: assign merge defaults
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.assign       ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "bb" }
+           _.merge        ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "bb" }
+           _.defaults     ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "a"  }
+           _.defaultsDeep ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "a"  }
 
-- title: assign merge defaults
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _.assign       ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "bb" }
-      _.merge        ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "bb" }
-      _.defaults     ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "a"  }
-      _.defaultsDeep ({}, { a: 'a' }, { a: 'bb' }) // >> { a: "a"  }
+   - title: defaults
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.defaults(src2, {age: 25}); // {age: 25}
 
-- title: assign merge defaults
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _.forEach(arr, function(el) {
-          console.log(el);
-      });
+   - title: forEach
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.forEach(arr, function(el) {
+               console.log(el);
+           });
 
-- title: deburr (diacritics / acentos)
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _.deburr(str)
+   - title: deburr (diacritics / acentos)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.deburr(str)
 
-- title: chain
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _([1, 2, 3])
-          .reduce((total, n) => total + n)
-          .map(n => n * n)
-          .value();
+   - title: chain
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _([1, 2, 3])
+               .reduce((total, n) => total + n)
+               .map(n => n * n)
+               .value();
 
-- title: isEmpty
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _.isEmpty(obj)
+   - title: isEmpty
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.isEmpty(obj)
 
-- title: ifSome...
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _.isArray()
-      _.isBoolean()
-      _.isDate()
-      _.isElement()
-      _.isEmpty()
-      _.isFinite()
-      _.isFunction()
-      _.isInteger()
-      _.isNaN()
-      _.isNull()
-      _.isNumber()
-      _.isObject()
-      _.isString()
-      _.isUndefined()
+   - title: uniqBy
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.uniqBy(resultviajes, 'id');
 
-- title: string func
-  path: LODASHsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      _.camelCase(str)
-      _.capitalize(str)
-      _.deburr(str)
-      _.endsWith(str)
-      _.escape(str)
-      _.kebabCase(str)
-      _.lowerFirst(str)
-      _.replace(str)
-      _.snakeCase(str)
-      _.startCase(str)
-      _.startsWith(str)
-      _.unescape(str)
-      _.upperCase(str)
-      _.upperFirst(str)
+   - title: flatMap
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.flatMap(viaje.tramos, (tramo, i, x) => {
+             return tramo;
+           });
 
-- title: docs (web)
-  path: LODASHsnip
-  type: "object"
-  params:
-    openUrl: https://lodash.com/docs/
+   - title: cloneDeep
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.cloneDeep(viajes)
 
-- title: cheat sheet (web)
-  path: LODASHsnip
-  type: "object"
-  params:
-    openUrl: https://devhints.io/lodash
+   - title: clone
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.clone(viajes)
+
+   - title: get
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.get(tramos, 'celular')
+
+   - title: Finding (devhints.io/lodash)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.filter(list, (n) => n % 2)    // → Array
+           _.find(list, (n) => n % 2)      // → item
+           _.findRight(list, ...)          // → item
+
+   - title: Iteration (devhints.io/lodash)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.forEach(list, (item, i) => ...)
+           _.forEachRight(list, ...)
+
+           _.map(list, ...)
+           _.every(users, (u) => u.active)  // → true|false (aka _.all)
+           _.any(users, ...)                // → true|false (aka _.some)
+
+   - title: Set/get (devhints.io/lodash)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.set(object, 'users[0].name', value)
+           _.get(object, 'users[0].name')
+           _.get(object, ['users', 0, 'name'])
+
+   - title: once function (devhints.io/lodash)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.once(fn)              // like _.before(fn, 1)
+
+   - title: Capitalization String (devhints.io/lodash)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.capitalize('hello world')   // → 'Hello world'
+           _.startCase('hello_world')    // → 'Hello World'
+           _.snakeCase('hello world')    // → 'hello_world'
+           _.kebabCase('hello world')    // → 'hello-world'
+           _.camelCase('hello world')    // → 'helloWorld'
+
+   - title: flattenDeep (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.flattenDeep([1, [2, [3, [4]], 5]]);
+           // => [1, 2, 3, 4, 5]
+
+   - title: take (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.take([1, 2, 3]);
+           // => [1]
+
+           _.take([1, 2, 3], 2);
+           // => [1, 2]
+
+           _.take([1, 2, 3], 5);
+           // => [1, 2, 3]
+
+           _.take([1, 2, 3], 0);
+           // => []
+
+   - title: every (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.every([true, 1, null, 'yes'], Boolean);
+           // => false
+
+           var users = [
+             { 'user': 'barney', 'age': 36, 'active': false },
+
+             { 'user': 'fred',   'age': 40, 'active': false }
+           ];
+
+           // The `_.matches` iteratee shorthand.
+           _.every(users, { 'user': 'barney', 'active': false });
+           // => false
+
+           // The `_.matchesProperty` iteratee shorthand.
+           _.every(users, ['active', false]);
+           // => true
+
+           // The `_.property` iteratee shorthand.
+           _.every(users, 'active');
+           // => false
+
+   - title: filter (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var users = [
+             { 'user': 'barney', 'age': 36, 'active': true },
+
+             { 'user': 'fred',   'age': 40, 'active': false }
+           ];
+
+           _.filter(users, function(o) { return !o.active; });
+           // => objects for ['fred']
+
+           // The `_.matches` iteratee shorthand.
+           _.filter(users, { 'age': 36, 'active': true });
+           // => objects for ['barney']
+
+           // The `_.matchesProperty` iteratee shorthand.
+           _.filter(users, ['active', false]);
+           // => objects for ['fred']
+
+           // The `_.property` iteratee shorthand.
+           _.filter(users, 'active');
+           // => objects for ['barney']
+
+   - title: find (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var users = [
+             { 'user': 'barney',  'age': 36, 'active': true },
+
+             { 'user': 'fred',    'age': 40, 'active': false },
+
+             { 'user': 'pebbles', 'age': 1,  'active': true }
+           ];
+
+           _.find(users, function(o) { return o.age < 40; });
+           // => object for 'barney'
+
+           // The `_.matches` iteratee shorthand.
+           _.find(users, { 'age': 1, 'active': true });
+           // => object for 'pebbles'
+
+           // The `_.matchesProperty` iteratee shorthand.
+           _.find(users, ['active', false]);
+           // => object for 'fred'
+
+           // The `_.property` iteratee shorthand.
+           _.find(users, 'active');
+           // => object for 'barney'
+
+   - title: includes (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.includes([1, 2, 3], 1);
+           // => true
+
+           _.includes([1, 2, 3], 1, 2);
+           // => false
+
+           _.includes({ 'a': 1, 'b': 2 }, 1);
+           // => true
+
+           _.includes('abcd', 'bc');
+           // => true
+
+   - title: map (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           function square(n) {
+             return n * n;
+           }
+
+           _.map([4, 8], square);
+           // => [16, 64]
+
+           _.map({ 'a': 4, 'b': 8 }, square);
+           // => [16, 64] (iteration order is not guaranteed)
+
+           var users = [
+             { 'user': 'barney' },
+
+             { 'user': 'fred' }
+           ];
+
+           // The `_.property` iteratee shorthand.
+           _.map(users, 'user');
+           // => ['barney', 'fred']
+
+   - title: reduce (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.reduce([1, 2], function(sum, n) {
+             return sum + n;
+           }, 0);
+           // => 3
+
+           _.reduce({ 'a': 1, 'b': 2, 'c': 1 }, function(result, value, key) {
+             (result[value] || (result[value] = [])).push(key);
+             return result;
+           }, {});
+           // => { '1': ['a', 'c'], '2': ['b'] } (iteration order is not guaranteed)
+
+   - title: reject (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var users = [
+             { 'user': 'barney', 'age': 36, 'active': false },
+
+             { 'user': 'fred',   'age': 40, 'active': true }
+           ];
+
+           _.reject(users, function(o) { return !o.active; });
+           // => objects for ['fred']
+
+           // The `_.matches` iteratee shorthand.
+           _.reject(users, { 'age': 40, 'active': true });
+           // => objects for ['barney']
+
+           // The `_.matchesProperty` iteratee shorthand.
+           _.reject(users, ['active', false]);
+           // => objects for ['fred']
+
+           // The `_.property` iteratee shorthand.
+           _.reject(users, 'active');
+           // => objects for ['barney']
+
+   - title: sample (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.sample([1, 2, 3, 4]);
+           // => 2
+
+   - title: sampleSize (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.sampleSize([1, 2, 3], 2);
+           // => [3, 1]
+
+           _.sampleSize([1, 2, 3], 4);
+           // => [2, 3, 1]
+
+   - title: shuffle (devdocs.io/lodash~4)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.shuffle([1, 2, 3, 4]);
+           // => [4, 1, 3, 2]
+
+   - title: difference / intersection / union (devhints.io/lodash)
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.uniq()
+           _.difference([ abc ], [ bc ])       // → [ a    ]
+           _.intersection([ abc ], [ bcd ])    // → [  bc  ]
+           _.union([ abc ], [ bcd ])           // → [ abcd ] (unique)
+
+   - title: ifSome...
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.isArray()
+           _.isBoolean()
+           _.isDate()
+           _.isElement()
+           _.isEmpty()
+           _.isFinite()
+           _.isFunction()
+           _.isInteger()
+           _.isNaN()
+           _.isNull()
+           _.isNumber()
+           _.isObject()
+           _.isString()
+           _.isUndefined()
+
+   - title: string func
+     path: LODASHsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           _.camelCase(str)
+           _.capitalize(str)
+           _.deburr(str)
+           _.endsWith(str)
+           _.escape(str)
+           _.kebabCase(str)
+           _.lowerFirst(str)
+           _.replace(str)
+           _.snakeCase(str)
+           _.startCase(str)
+           _.startsWith(str)
+           _.unescape(str)
+           _.upperCase(str)
+           _.upperFirst(str)
+
+   - title: docs (web)
+     path: LODASHsnip
+     type: 'object'
+     params:
+        openUrl: https://lodash.com/docs/
+
+   - title: cheat sheet (web)
+     path: LODASHsnip
+     type: 'object'
+     params:
+        openUrl: https://devhints.io/lodash

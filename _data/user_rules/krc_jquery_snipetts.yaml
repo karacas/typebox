@@ -5,105 +5,396 @@ name: krc_jquery_snipetts
 enabled: true
 icon: mdi-currency-usd palette-Blue-A100 text
 rules:
+   - title: jQuery snippets
+     type: 'object'
+     params:
+        changePath:
+           path: JQUERYsnip
 
-- title: jQuery snippets
-  type: 'object'
-  params:
-    changePath:
-      path: JQUERYsnip
+   - title: version
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           console.log(window.jQuery.fn.jquery)
 
-- title: version
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      console.log(window.jQuery.fn.jquery)
+   - title: select empty div
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $.expr[':'].blank = function(obj) {
+             return !$.trim($(obj).text()).length;
+           };
+           $('.thumbnails:blank').addClass('selected');
 
-- title: select empty div
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $.expr[':'].blank = function(obj) {
-          return !$.trim($(obj).text()).length;
-      };
-      $('.thumbnails:blank').addClass('selected');
+   - title: $('')
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $('')
 
-- title: $('')
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $('')
+   - title: document ready
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(document).ready(function() {});
 
-- title: document ready
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $(document).ready(function() {});
+   - title: element is visible
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(element).is(":visible");
 
-- title: element is visible
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $(element).is(":visible");
+   - title: element is visible selector
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $('element:visible')
 
-- title: element is visible select
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $('element:visible')
+   - title: loading script
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $.getScript("my_lovely_script.js", function() {
+             //
+           });
 
-- title: loading script
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $.getScript("my_lovely_script.js", function() {
-          //
-      });
+   - title: window load
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(window).load(function() {});
 
-- title: window load
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $(window).load(function() {});
+   - title: hash change
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(document).ready(function() {
+             $(window).on('hashchange', hashChange);
+             hashChange();
+           });
+           function hashChange() {
+             var lastHash = location.hash.replace('#', '');
+           }
 
-- title: hash change
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $(document).ready(function() {
-          $(window).on('hashchange', hashChange);
-          hashChange();
-      });
-      function hashChange() {
-          var lastHash = location.hash.replace('#', '');
-      }
+   - title: body width
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $("body").width()
 
-- title: body width
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $("body").width()
+   - title: livequery
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $('.some').livequery(function() {
+             $(this);
+           });
 
-- title: livequery
-  path: JQUERYsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      $('.some').livequery(function() {
-          $(this);
-      });
+   - title: mouseover
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(".subMenuCloser").on("mouseover", function() {
+             closeSubMenu();
+           });
 
-- title: docs (web)
-  path: JQUERYsnip
-  type: "object"
-  params:
-    openUrl: https://api.jquery.com/
+   - title: on click
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(".subMenuCloser").on("click", function() {
+             closeSubMenu();
+           });
+
+   - title: mouseenter / mouseleave
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(".subMenuCloser").on("mouseenter", function() {
+             closeSubMenu();
+           });
+           $("subheader").on("mouseleave", function() {
+             closeSubMenu();
+           });
+
+   - title: animate
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $("div").animate({
+             opacity: '0.5',
+             left: '200px',
+             height: '200px'
+           });
+
+   - title: each
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $(".demo").each(function() {              // parse each .demo element
+             document.write($(this).text() + "\n");  // output their text
+           });
+
+   - title: trigger
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $("a#mylink").trigger("click");
+
+   - title: All Traversing (siblings etc)
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $("#demo").parent();              // accessing direct parent
+           $("#demo").parents();            // all ancestors of the element
+           $("#demo").parentsUntil("#demo2");  // all ancestors between two - demo is inside demo2
+           $("#demo").children();            // all direct children
+           $("#demo").children(".first");      // all direct children having a specified class
+           $("#demo").find("span");          // all span elements inside #demo
+           $("#demo").find("*");            // all descendants
+           $("#demo").siblings("span");        // span siblings of #demo
+           $("#demo").next();                // the next sibling
+           $("#demo").nextAll();            // all next siblings
+           $("#demo").nextUntil("#demo2");     // siblings between two arguments
+           $("#demo").prev();                // the previous sibling
+           $("#demo").prevAll();            // all previous siblings
+           $("#demo").prevUntil("#demo2");     // previous siblings between two arguments
+
+   - title: All Selectors
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $("*")                  // all elements
+           $("p.demo")              // <p> elements with class="intro"
+           $("p:first")              // the first <p> element
+           $("p span")              // span, descendant of p
+           $("p > span")            // span, direct child of p
+           $("p + span")            // span immediately proceeded by a p
+           $("p ~ span")            // strong element proceeded by p
+           $("ul li:first")          // the first <li> element of the first <ul>
+           $("ul li:first-child")      // the first <li> element of every <ul>
+           $("ul li:nth-child(3)")     // third child
+           $("[href]")              // any element with an href attribute
+           $("a[target='_blank']")     // <a> elements with a target "_blank" attribute
+           $("a[target!='_blank']")    // <a> elements with a target attribute value other than "_blank"
+           $(":input")              // all form elements
+           $(":button")              // <button> and <input> elements of type="button"
+           $("tr:even")              // even <tr> elements
+           $("tr:odd")              // odd <tr> elements
+           $("span:parent")          // element which has child element
+           $("span:contains('demo')")  // element conaining the specified text
+
+   - title: All Manipulation
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           //DOM Insertion, Around
+           .wrap()
+           .wrapAll()
+           .wrapInner()
+
+           //DOM Insertion, Inside
+           .append()
+           .appendTo()
+           .html()
+           .prepend()
+           .prependTo()
+           .text()
+
+           //DOM Insertion, Outside
+           .after()
+           .before()
+           .insertAfter()
+           .insertBefore()
+
+           //DOM Removal
+           .detach()
+           .empty()
+           .remove()
+           .unwrap()
+
+           //DOM Replacement
+           .replaceAll()
+           .replaceWith()
+
+   - title: All Events
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           //Browser Events
+           .error()
+           .resize()
+           .scroll()
+
+           //Document Loading
+           .load()
+           .ready()
+           .unload()
+
+           //Event Handler Attachment
+           .bind()
+           .delegate()
+           .die()
+           .live()
+           .off()
+           .on()
+           .one()
+           .trigger()
+           .triggerHandler()
+           .unbind()
+           .undelegate()
+
+           //Form Events
+           .blur()
+           .change()
+           .focus()
+           .focusin()
+           .focusout()
+           .select()
+           .submit()
+
+           //Keyboard Events
+           .keydown()
+           .keypress()
+           .keyup()
+
+           //Mouse Events
+           .click()
+           .contextMenu()
+           .dblclick()
+           .hover()
+           .mousedown()
+           .mouseenter()
+           .mouseleave()
+           .mousemove()
+           .mouseout()
+           .mouseover()
+           .mouseup()
+           .toggle()
+
+           //Event Object
+           event.currentTarget
+           event.delegateTarget
+           event.data
+           event.isDefaultPrevented()
+           event.isImmediatePropagationStopped()
+           event.isPropagationStopped()
+           event.metaKey
+           event.namespace
+           event.pageX
+           event.pageY
+           event.preventDefault()
+           event.relatedTarget
+           event.result
+           event.stopImmediatePropagation()
+           event.stopPropagation()
+           event.target
+           event.timeStamp
+           event.type
+           event.which
+
+   - title: All Attributes / CSS
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           //Attributes
+           .attr()
+           .prop()
+           .removeAttr()
+           .removeProp()
+           .val()
+
+           //CSS
+           .addClass()
+           .css()
+           .hasClass()
+           .removeClass()
+           .toggleClass()
+
+           //Dimensions
+           .height()
+           .innerHeight()
+           .innerWidth()
+           .outerHeight()
+           .outerWidth()
+           .width()
+
+           //Offset
+           .offset()
+           .offsetParent()
+           .position()
+           .scrollLeft()
+           .scrollTop()
+
+           //Data
+           .data()
+           .hasData()
+           .removeData()
+
+   - title: contains
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $("span:contains('demo')")
+
+   - title: $.ajax
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $.ajax({
+             url: url,
+             success: function(result) {
+             }
+           });
+
+   - title: $.ajax Large
+     path: JQUERYsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           $.ajax({
+             type: 'GET',
+             url: window.__urlLog,
+             dataType: 'text',
+             data: {},
+             success: function(data) {
+                 try {
+                     var jsonTest = JSON5.parse(data);
+                 } catch (e) {
+                     errorData(e);
+                 }
+             },
+             error: function(e) {
+                 errorData(e);
+             }
+           });
+
+   - title: docs (web)
+     path: JQUERYsnip
+     type: 'object'
+     params:
+        openUrl: https://api.jquery.com/

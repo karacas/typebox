@@ -5,17 +5,52 @@ name: krc_web_snipetts
 enabled: true
 icon: mdi-web palette-Teal-A700 text
 rules:
+   # WEBS
+   - title: stackoverflow (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://stackoverflow.com/questions
 
-# WEBS
-- title: stackoverflow (web)
-  type: "object"
-  viewer: false
-  params:
-    openUrl: https://stackoverflow.com/questions
+   - title: console cloud api google (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://console.cloud.google.com/apis
 
-- title: console cloud api google (web)
-  type: "object"
-  viewer: false
-  params:
-    openUrl: https://console.cloud.google.com/apis
+   - title: twitter (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://twitter.com/
 
+   - title: radiocut (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://radiocut.fm
+
+   - title: radiocut (hack)
+     viewer: true
+     params:
+        codeclass: 'javascript'
+        snippet: |-
+           $("#modal_interruption").data("timeout", 50000000); $.cutapp.cutplayer.pause = $.cutapp.cutplayer.play;$.cutapp.cutplayer.stop = $.cutapp.cutplayer.play;
+
+   - title: prettier.io (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://prettier.io/playground/#N4Igxg9gdgLgprEAuEIA0IIAcYEtoDOyoAhgE5kQDuACuQkSiQG4S4Am6IARmSWAGs4MAMpZ+uKAHNkMMgFc4GABYwAtgBsA6stzwC4sHBEM9uZnoCeycASIZJBOGRg0+UtSWQAzEhqcYAFYEAB4AQnyCwiIkanAAMpJwPn4BIMEhIpJSGnAAivIQ8Cn+SiDiZE5kNtwk3JYa0FxYZJIwWhwwysgAjABsAAwYLRBOWnxYNi1wVczJGGRwAI7yuItuJB5eSL6lGE5quLIKZQTZuQVFyUhyihgwdR3sXcgAzPd8uBrZAMIQap4bFBoPMQPInAAVOqMW5wAC+cKAA
+
+   - title: metro951 (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://radiocut.fm/radiostation/metro951/listen/
+
+   - title: metro951 date (web)
+     type: 'object'
+     viewer: false
+     params:
+        openUrl: https://radiocut.fm/radiostation/metro951/listen/2018/12/14/17/00/00/

@@ -5,21 +5,20 @@ name: krc_mswinconsole_snipetts
 enabled: true
 icon: mdi-console palette-Deep-Purple-A100 text
 rules:
+   - title: ms window console
+     type: 'object'
+     params:
+        changePath:
+           path: WINCONSsnip
 
-- title: ms window console
-  type: 'object'
-  params:
-    changePath:
-      path: WINCONSsnip
+   - title: remove dir
+     path: WINCONSsnip
+     params:
+        string: |-
+           rmdir /s /q folder
 
-- title: remove dir
-  path: WINCONSsnip
-  params:
-    string: |-
-      rmdir /s /q folder
-
-- title: symbolic link
-  path: WINCONSsnip
-  params:
-    string: |-
-      mklink /D "c:\Users\karacas\AppData\Roaming\Sublime Text 2\Packages" "k:\portable\sublime\Data\Packages\"
+   - title: symbolic link
+     path: WINCONSsnip
+     params:
+        string: |-
+           mklink /D "c:\Users\karacas\AppData\Roaming\Sublime Text 2\Packages" "k:\portable\sublime\Data\Packages\"

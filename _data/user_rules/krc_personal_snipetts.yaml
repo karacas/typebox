@@ -5,50 +5,216 @@ name: krc_personal_snipetts
 enabled: true
 icon: mdi-account-edit palette-Orange-A700 text
 rules:
+   # SIMPLE TEXTS
 
-# SIMPLE TEXTS
-- title: Alejandro Emparan
-- title: Gracias.
-- title: Saludos
-- title: Abrazo
-- title: Cualquier cosa me avisás.
-- title: Zuviría 658
-- title: alejandroe@gmail.com
+   - title: Alejandro Emparan
+     expander: ae
 
-- title: length
-- title: width
-- title: height
-- title: right
-- title: left
+   - title: Gracias.
+     expander: gr
 
-- title: firma
-  viewer: false
-  params:
-    string: |-
-      Alejandro Emparan
-      Proyectiva S.A.
-      http://www.proyectiva.com
+   - title: Saludos
+     expander: sal
 
-- title: cp zuviria 1424
-  viewer: false
-  params:
-    string: |-
-      1424
+   - title: Abrazo
+     expander: ab
 
-- title: cp mendoza 1169
-  viewer: false
-  params:
-    string: |-
-      1169
+   - title: Cualquier cosa me avisás.
+     expander: av
 
-- title: Lorem ipsum
-  viewer: false
-  params:
-    string: |-
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+   - title: Zuviría 658
 
-- title: string
-  viewer: false
-  params:
-    string: |-
-      'str1'
+   - title: alejandroe@gmail.com
+     expander: '@@'
+
+   - title: alejandro@proyectiva.com
+
+   - title: length
+     expander: le
+
+   - title: width
+
+   - title: height
+
+   - title: right
+     expander: rig
+
+   - title: left
+
+   - title: Los moreños [ tel. 921-1298 ]
+
+   - title: firma
+     expander: firma
+     viewer: false
+     params:
+        string: |-
+           Alejandro Emparan
+           Proyectiva S.A.
+           http://www.proyectiva.com
+
+   - title: pry pass tito bitbucket
+     viewer: false
+     params:
+        string: |-
+           bitbucke2000!
+
+   - title: pry pass tito bitbucket2
+     viewer: false
+     params:
+        string: |-
+           proyectiv2015!
+
+   - title: pry pserver4
+     viewer: false
+     params:
+        string: |-
+           Pry,2016!
+
+   - title: chmod
+     viewer: false
+     params:
+        string: |-
+           chmod -R 777 .
+
+   - title: pry amazon ssh
+     viewer: false
+     params:
+        string: |-
+           54.233.238.194
+
+   - title: cp zuviria 1424
+     viewer: false
+     params:
+        string: |-
+           1424
+
+   - title: cp mendoza 1169
+     viewer: false
+     params:
+        string: |-
+           1169
+
+   - title: Lorem ipsum
+     expander: lorem
+     viewer: false
+     params:
+        string: |-
+           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+   - title: pngquant
+     expander: pngq
+     viewer: false
+     params:
+        string: |-
+           pngquant **/*.png --force --skip-if-larger --speed=1 --strip -v --ext .png
+
+   - title: console.log('[mark]',1)
+     expander: klm
+     viewer: false
+     params:
+        string: |-
+           console.log('[mark]',1)
+
+   - title: gitCli
+     viewer: false
+     params:
+        string: |-
+           (git add . -A || true) && (git commit -m "-auto" || true) && (git push || true)
+
+   - title: Test MD
+     expander: testmd
+     path: none
+     params:
+        codeclass: 'md'
+        snippet: |-
+           ``` js snip
+           let a = "anda"
+           ```
+
+           Esto es una prueba
+
+   - title: Test node_command 2
+     path: none
+     expander: 'rg:params'
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           'params: ' + context.params
+
+   - title: Generate ID
+     expander: id
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           'id:' + context.nanoid().slice(0, 10) + ' '
+
+   - title: Generate Comment BookMark
+     expander: bm
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           '//BOOKMARK ' + context.nanoid().slice(0, 10) + ' '
+
+   - title: Generate TODO
+     expander: kt
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           '//KTODO: id:' + context.nanoid().slice(0, 10) + ' '
+
+   - title: Generate Date
+     expander: th
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           context.dayjs().format('DD-MM-YY_HH-mm-ss')
+
+   - title: context toLowerCase
+     path: none
+     expander: [lc, tl]
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           context.params.toLowerCase()
+
+   - title: context toUpperCase
+     path: none
+     expander: [uc, tu]
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           context.params.toUpperCase()
+
+   - title: avi2srt
+     path: none
+     expander: [subs]
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           String(context.clipboard || '').replace(/\.[^/.]+$/, ".srt")
+
+   - title: temp
+     path: none
+     expander: [tmp]
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           String(context.env.KTMP || '')
+
+   - title: typebox
+     path: none
+     expander: [typeb, typebox]
+     type: jscommand
+     params:
+        codeclass: 'javascript'
+        command: |-
+           String(context.env.typebox || '')

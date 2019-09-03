@@ -1,0 +1,11 @@
+/*{
+    "urlq": "http://registry.npmjs.org/-/v1/search?text=keywords:{{keyword}}&size=100",
+    "urlOpen": "https://www.npmjs.com/package/{{pack}}",
+    "debounceSearchSecs": 60,
+    "sortBy": "order",
+    "command": "pm!",
+    "commandSearch": "sp!"
+}*/
+{
+
+}

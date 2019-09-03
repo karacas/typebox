@@ -5,197 +5,197 @@ name: krc_anges6_snipetts
 enabled: true
 icon: mdi-angular palette-Red-A700 text
 rules:
+   - title: Angular ES6 snippets
+     type: 'object'
+     params:
+        changePath:
+           path: AngularES6snip
 
-- title: Angular ES6 snippets
-  type: 'object'
-  params:
-    changePath:
-      path: AngularES6snip
+   - title: defer
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           var deferred = $q.defer();
+           deferred.resolve();
+           return deferred.promise;
 
-- title: defer
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      var deferred = $q.defer();
-      deferred.resolve();
-      return deferred.promise;
+   - title: injector
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           angular.injector(['ng']).get('$q');
+           //angular.element(document.body).injector().get('$q');
 
-- title: injector
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: angular.injector(['ng']).get('$q');
+   - title: assign (extend, config)
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           let new_obj = Object.assign({}, defualt, options)
 
-- title: assign (extend, config)
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      let new_obj = Object.assign({}, defualt, options)
+   - title: shuffle array
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           list.sort(() => {return Math.random() - 0.5 })
 
-- title: shuffle array
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      list.sort(() => {return Math.random() - 0.5 })
+   - title: import
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           import angular from 'angular';
+           import _ from 'lodash';
+           import moment from 'moment';
 
-- title: import
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      import angular from 'angular';
-      import _ from 'lodash';
-      import moment from 'moment';
+   - title: timeout
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: '$timeout(tmpFunc,0);'
 
-- title: timeout
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: "$timeout(tmpFunc,0);"
+   - title: controller
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           class tmpController {
+               constructor($q, $state) {
+                   'ngInject';
+                   this.test = 'test';
+               }
+           }
+           export default tmpController;
 
-- title: controller
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      class tmpController {
-          constructor($q, $state) {
-              'ngInject';
-              this.test = 'test';
-          }
-      }
-      export default tmpController;
+   - title: service
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           function tmpservice($timeout, $q) {
+               'ngInject';
+               let self = this;
+               return self;
+           }
+           export default { tmpservice };
 
-- title: service
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      function tmpservice($timeout, $q) {
-          'ngInject';
-          let self = this;
-          return self;
-      }
-      export default { tmpservice };
+   - title: extend
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: var obj = angular.extend({}, obj, config);
 
-- title: extend
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: var obj = angular.extend({}, obj, config);
+   - title: component
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           let tmpComponent = {
+               scope: true,
+               bindings: {
+                   model: '='
+               },
+               template:template:,
+               transclude: false,
+               controllerAs: '$this',
+               controller: function($scope, $timeout) {
+                   'ngInject';
+               }
+           };
+           export default tmpComponent;
 
-- title: component
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      let tmpComponent = {
-          scope: true,
-          bindings: {
-              model: '='
-          },
-          template:template:,
-          transclude: false,
-          controllerAs: '$this',
-          controller: function($scope, $timeout) {
-              'ngInject';
-          }
-      };
-      export default tmpComponent;
+   - title: component mini
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           let tmpComponent = {
+               controller: tmpController,
+               bindings: { tramo: '=', index: '=', deletetramo: '=' },
+               template: template
+           };
 
-- title: component mini
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      let tmpComponent = {
-          controller: tmpController,
-          bindings: { tramo: '=', index: '=', deletetramo: '=' },
-          template: template
-      };
+   - title: component complete
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           import angular from 'angular';
+           import uiRouter from 'angular-ui-router';
+           import template from './template.html';
 
-- title: component complete
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      import angular from 'angular';
-      import uiRouter from 'angular-ui-router';
-      import template from './template.html';
+           class tmpController {
+               constructor() {
+                   this.test = 'TEST';
+               }
+           }
 
-      class tmpController {
-          constructor() {
-              this.test = 'TEST';
-          }
-      }
+           let tmpModuleComponent = {
+               bindings: {},
+               template,
+               controller: tmpController
+           };
 
-      let tmpModuleComponent = {
-          bindings: {},
-          template,
-          controller: tmpController
-      };
+           let tmpModuleModule = angular
+               .module('tmpModule', [uiRouter])
+               .config(($stateProvider, $urlRouterProvider) => {
+                   'ngInject';
+                   $stateProvider.state('tmpModule', {
+                       url: '/tmpModule',
+                       component: 'tmpModule'
+                   });
+               })
+               .component('tmpModule', tmpModuleComponent).name;
 
-      let tmpModuleModule = angular
-          .module('tmpModule', [uiRouter])
-          .config(($stateProvider, $urlRouterProvider) => {
-              'ngInject';
-              $stateProvider.state('tmpModule', {
-                  url: '/tmpModule',
-                  component: 'tmpModule'
-              });
-          })
-          .component('tmpModule', tmpModuleComponent).name;
+           export default tmpModuleModule;
 
-      export default tmpModuleModule;
+   - title: module
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           let tmpModule = angular.module('tmpComponent', []).component('tmpComponent', tmpComponent).name;
+           export default tmpModule;
 
-- title: module
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      let tmpModule = angular.module('tmpComponent', []).component('tmpComponent', tmpComponent).name;
-      export default tmpModule;
+   - title: module router
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           import angular from 'angular';
+           import uiRouter from 'angular-ui-router';
 
-- title: module router
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      import angular from 'angular';
-      import uiRouter from 'angular-ui-router';
+           let tmpModule = angular
+               .module('tmpComponent', [uiRouter])
+               .config(($stateProvider, $urlRouterProvider) => {
+                   'ngInject';
+                   $stateProvider.state('tmpcomponent', {
+                       url: '/tmpcomponent/:tmpcomponentID',
+                       component: 'tmpcomponent'
+                   });
+               })
+               .component('tmpcomponent', tmpcomponent).name;
 
-      let tmpModule = angular
-          .module('tmpComponent', [uiRouter])
-          .config(($stateProvider, $urlRouterProvider) => {
-              'ngInject';
-              $stateProvider.state('tmpcomponent', {
-                  url: '/tmpcomponent/:tmpcomponentID',
-                  component: 'tmpcomponent'
-              });
-          })
-          .component('tmpcomponent', tmpcomponent).name;
+   - title: select (html)
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           <md-select name="type" ng-model="$ctrl.carga.tipo" ng-model-options="{trackBy: '$value.id'}" required>
+               <md-option ng-repeat="tipo in $ctrl.tipoconts" ng-value="tipo">{{tipo.nombre}}</md-option>
+           </md-select>
 
-- title: select (html)
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      <md-select name="type" ng-model="$ctrl.carga.tipo" ng-model-options="{trackBy: '$value.id'}" required>
-          <md-option ng-repeat="tipo in $ctrl.tipoconts" ng-value="tipo">{{tipo.nombre}}</md-option>
-      </md-select>
+   - title: ng-repeat (html)
+     path: AngularES6snip
+     params:
+        codeclass: 'javascript'
+        string: <span ng-repeat="obj in $ctrl.arr" >{{obj.name}}</span>
 
-- title: ng-repeat (html)
-  path: AngularES6snip
-  params:
-    codeclass: 'javascript'
-    string: <span ng-repeat="obj in $ctrl.arr" >{{obj.name}}</span>
-
-- title: cheat sheet (web)
-  path: AngularES6snip
-  type: "object"
-  params:
-    openUrl: https://www.cheatography.com/proloser/cheat-sheets/angularjs/
-
+   - title: cheat sheet (web)
+     path: AngularES6snip
+     type: 'object'
+     params:
+        openUrl: https://www.cheatography.com/proloser/cheat-sheets/angularjs/

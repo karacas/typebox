@@ -1,0 +1,1 @@
+cls && (npm run rebuild && out\make\squirrel.windows\x64\typebox_setup.exe  -- --startOpen=false && echo . & echo '[rebuild OK]') 2>&1 | tee _report/rebuild.log

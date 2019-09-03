@@ -1,0 +1,61 @@
+/*{
+    "mainShortcut": "CmdOrCtrl+alt+space",
+    "mainShortcutAndFav": "super+alt+up",
+    "animations": false,
+    "notifications": true,
+    "fixedTypeBoxOptions": true,
+    "toolTips": true,
+    "gotoRootAfterAction": false,
+    "ignoreThesePackages": [],
+    "ignoreTheseRules": [],
+    "packages": [],
+    "width": 960,
+    "maxItemsVisible": 8,
+    "visibleInTaskBar": false,
+    "autoupdateAllPackages": true,
+    "theme": {
+        "name": "default",
+        "subTheme": "",
+        "cssOverWrite": ""
+    },
+    "font": "default",
+    "icons": true,
+    "avoidResizeHeigth": false,
+    "tests": null,
+    "userkaracas": true
+}*/
+{
+    "notifications": false,
+    "ignoreThesePackages": [
+        "internal_pack_launcher",
+        "internal_pack_package_manager",
+        "internal_pack_paths",
+        "typebox-gist-sync-dev"
+    ],
+    "here_are_dragons": {
+        "deletePackages": false,
+        "installPackages": true,
+        "realClockEnabled": false,
+        "paths": {
+            "caches": "%typebox%/_data_fast/caches/",
+            "favpath": "%typebox%/_data_fast/favorites/",
+            "hidden_path": "%typebox%/_data_fast/hidden/",
+            "historypath": "%typebox%/_data_fast/history/",
+            "lastpath": "%typebox%/_data_fast/lastrules/",
+            "logpath": "%typebox%/_data_fast/log/",
+            "newspath": "%typebox%/_data_fast/news/",
+            "packages": "%typebox%/_data_fast/packages/",
+            "packages_dev": "%typebox%/_data_fast/packages_dev/",
+            "packages_updates": "%typebox%/_data_fast/packages_tmp_updates/",
+            "rootDataStored": "%typebox%/_data_fast/",
+            "rules": "%typebox%/_data_fast/rules/",
+            "tmp": "%typebox%/_data_fast/tmp/",
+            "user": "%typebox%/_data_fast/user/",
+            "user_rules": "%typebox%/_data_fast/user_rules/"
+        },
+        "showRuleScore": false
+    },
+    "theme": {
+        "subTheme": "default"
+    }
+}

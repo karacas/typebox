@@ -1,0 +1,19 @@
+/*{
+    "bindKeysOpen": [
+        "mod+o"
+    ],
+    "bindKeysEdit": [
+        "mod+e"
+    ],
+    "notes_prefix": "tb_note_",
+    "notes_prefix_datafile": "tb_data_",
+    "path_notes": "c:/typebox/_data_test/typebox_notes/",
+    "defaulticon": {
+        "type": "iconFont",
+        "iconClass": "mdi-cards palette-Amber-A200 text"
+    },
+    "editorOptions": {}
+}*/
+{
+
+}

@@ -1,0 +1,809 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: krc_vue_snipetts
+enabled: true
+icon: mdi-vuejs palette-Light-Green-A400 text
+
+rules:
+   - title: VUE snippets
+     type: 'object'
+     params:
+        changePath:
+           path: VUEsnip
+
+   - title: Lists / Repeat
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <li v-for="item in items" :key="item.id">
+             {{ item }}
+             {{ $index }}
+           </li>
+
+   - title: Expressions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div id="app">
+             <p>I have a {{ product }}</p>
+             <p>{{ product + 's' }}</p>
+             <p>{{ isWorking ? 'YES' : 'NO' }}</p>
+             <p>{{ product.getSalePrice() }}</p>
+           </div>
+
+   - title: href
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <a :href="url"></a>
+
+   - title: Class Expressions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div :class="{ active: isActive, 'text-danger': hasError }">
+
+   - title: Class Expressions Array
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div :class="[activeClass, errorClass]"></div>
+
+           <script>
+           data: {
+             activeClass: 'active',
+             errorClass: 'text-danger'
+           }
+           </script>
+
+           <!-- renders: -->
+           <div class="active text-danger"></div>
+
+   - title: Bind style
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div :style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+
+   - title: Event Modifiers
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <!-- the click event's propagation will be stopped -->
+           <a @click.stop="doThis"></a>
+
+           <!-- the submit event will no longer reload the page -->
+           <form :submit.prevent="onSubmit"></form>
+
+           <!-- modifiers can be chained -->
+           <a @click.stop.prevent="doThat"></a>
+
+           <!-- just the modifier -->
+           <form :submit.prevent></form>
+
+           <!-- use capture mode when adding the event listener -->
+           <!-- i.e. an event targeting an inner element is handled here before being handled by that element -->
+           <div @click.capture="doThis"></div>
+
+           <!-- only trigger handler if event.target is the element itself -->
+           <!-- i.e. not from a child element -->
+           <div @click.self="doThat"></div>
+
+           <a @click.once="doThis"></a>
+
+   - title: v-once
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <span v-once>This will never change: {{ msg }}</span>
+
+   - title: rawHtml
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <p>Using mustaches: {{ rawHtml }}</p>
+           <p>
+             Using v-html directive:
+             <span v-html="rawHtml"></span>
+           </p>
+
+   - title: Attributes interpolations
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div id="item-{{ id }}"></div>
+
+   - title: JavaScript Expressions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           {{ number + 1 }}
+           {{ ok ? 'YES' : 'NO' }}
+           {{ message.split('').reverse().join('') }}
+
+   - title: Filters Expressions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           {{ message | filterA | filterB }}
+           {{ message | filterA 'arg1' arg2 }}
+
+   - title: Shorthands
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           v-bind:href
+           :href
+
+           v-on:click
+           @click
+
+   - title: Styles Expressions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div :style="{ color: activeColor }">
+
+   - title: onScroll
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div :scroll.passive="onScroll"></div>
+
+   - title: v-model
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <input v-model="message" placeholder="edit me">
+           <p>Message is: {{ message }}</p>
+
+   - title: $emit event
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <button @click="$emit('enlarge-text')">
+             Enlarge text
+           </button>
+
+           <blog-post :enlarge-text="postFontSize += 0.1">
+           </blog-post>
+
+   - title: Props
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           props: ['title', 'likes', 'author'],
+
+   - title: Props Big
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           props: ['title', 'likes', 'author'],
+
+           props: {
+             title: String,
+             likes: Number,
+             isPublished: Boolean,
+             commentIds: Array,
+             author: Object
+           },
+
+           props: {
+               message: String,
+               product: Object,
+               email: {
+                   type: String,
+                   required: true,
+                   default: "none"
+                   validator: (value) => {}
+               }
+           },
+
+   - title: Prop Object
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <blog-post
+             v-bind:propobject="{
+                 name: 'Veronica',
+                 company: 'Veridian Dynamics'
+             }">
+           </blog-post>
+
+   - title: Single File Components
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <template>
+             <div>
+               <img :src="image" :alt="title" />
+               <h2>{{ title }}</h2>
+             </div>
+           </template>
+
+           <script>
+             export default {
+               name: 'movie-card',
+               props: {
+                 image: String,
+                 title: String
+               }
+             }
+           </script>
+
+           <style scoped>
+           h2 {
+             font-size: 18pt;
+           }
+           </style>
+
+   - title: Submit
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <form @submit.prevent="addProduct">
+
+   - title: Events
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <button @click='submit'>Go</button>
+
+   - title: Use Components
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           new Vue({
+             components: { app: App }
+           })
+
+   - title: Methods
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           methods: {
+             go(){}
+           },
+
+   - title: Data
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           data: () => ({
+             test: 'someData'
+           }),
+
+   - title: Component
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           module.exports = {
+             components: {
+               ProductComponent,
+             },
+             props: {
+               message: String,
+               product: Object
+             },
+             data: function() {
+               return {
+                 firstName: 'Vue',
+                 lastName: 'Mastery'
+               }
+             },
+             watch: {
+               firstName: function(value, oldValue) { }
+             },
+             methods: {
+               go(){}
+             },
+             template: '<span>{{ message }}</span>'
+           }
+
+   - title: On Click
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           <a @click="doSomething"></a>
+
+   - title: Lifecycle
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           beforeCreate(){},
+           created(){},
+           beforeMount(){},
+           mounted(){},
+           beforeDestroy(){},
+           destroyed(){},
+           beforeUpdate(){},
+           updated(){},
+           activated(){},
+           deactivated(){},
+
+   - title: Directive
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           directives: {
+             focus: {
+               // directive definition
+               inserted: function (el) {
+                 el.focus()
+               }
+             }
+           }
+
+           <input v-focus>
+
+   - title: Mixins
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           //mixin
+           const hi = {
+             mounted() {
+               console.log('hello from mixin!')
+             }
+           }
+
+           //vue instance or component
+           new Vue({
+             el: '#app',
+             mixins: [hi],
+             mounted() {
+               console.log('hello from Vue instance!')
+             }
+           });
+
+           //Output in console
+           > hello from mixin!
+           > hello from Vue instance!
+
+   - title: Basic HTML app base (module)
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           <!DOCTYPE html>
+           <html>
+             <head>
+               <meta charset="utf-8">
+               <meta http-equiv="X-UA-Compatible" content="IE=edge">
+               <meta name="viewport" content="width=device-width,initial-scale=1.0">
+               <title>Hello World!</title>
+               <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+               <!-- This is a development version of Vue.js! -->
+               <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+               <script src="/main.js" type="module"></script>
+             </head>
+             <body>
+               <div id="app"></div>
+             </body>
+           </html>
+
+   - title: On Keyup
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           <input type="text" @:keyup="this.$data.name = $event.target.value">
+
+   - title: $forceUpdate
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           methods: {
+             methodThatForcesUpdate() {
+               this.$forceUpdate();
+             }
+           }
+
+   - title: Custom Events
+     path: VUEsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           <button-counter :incrementevent="incWithVal">
+
+           methods: {
+             incWithVal: function(toAdd) {
+               this.counter += 1;
+               this.$emit('incrementevent');
+             }
+           }
+
+   - title: Multiple Slots
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div class="container">
+             <header>
+               <slot name="header"></slot>
+             </header>
+             <main>
+               <slot>Default content</slot>
+             </main>
+             <footer>
+               <slot name="footer"></slot>
+             </footer>
+           </div>
+
+   - title: Slots
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <template>
+             <div class="container">
+               <app-quote>
+                 <h2>The Quote</h2>
+                 <p>A wonderful quote</p>
+               </app-quote>
+             </div>
+           </template>
+
+           <script>
+           import appQuote from './components/appQuote.vue';
+           export default {
+             components: { appQuote }
+           }
+           </script>
+
+   - title: Filters
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           filters: {
+             toLowercase(value) {return transformed(value);}
+           }
+           <p>{{ text | toLowercase }}</p>
+
+
+           /* computed are sometimes better than filters: */
+           computed: {
+             filteredFruits: function() {
+               return this.fruits.filter((element) => {
+                 return element.match(this.filterText);
+               });
+             }
+           }
+
+   - title: Conditions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <h1 v-if="isVisible == 'if'">If</h1>
+           <h1 v-else-if="isVisible === 'elseif'">Else If</h1>
+           <h1 v-else>Else</h1>
+
+   - title: Conditions Expressions
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           {{ isTrue ? 'yes' : 'no' }}
+
+   - title: Debounce
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <input @mousedown="onMouseDown | debounce 300"/>
+
+   - title: Inline component HTML
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+           <div id="app">{{ message }}</div>
+
+           <script type="text/javascript">
+             var app = new Vue({
+               el: '#app',
+               data: () => ({
+                 test: 'someData'
+               }),
+             })
+           </script>
+
+   - title: Inline component HTML (inline-template)
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+
+           <formstart inline-template>
+             {{test}}
+           </formstart>
+
+           <script type="text/javascript">
+             Vue.component('formstart', {
+               data: () => ({
+                 test: 'someData'
+               }),
+               mounted() {
+                 console.log('vue init!');
+               },
+               methods: {
+                 resetForm: function(event) {
+                 },
+               }
+             });
+           </script>
+
+   - title: Define component (inline)
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           Vue.component('vuetestcomp', {
+             data: () => ({
+               test: 'algo'
+             }),
+             template: ` <span v-if="false">{{test}}</span> `,
+             mounted() {
+               console.log(1, this.$data.test);
+             },
+             methods: {
+               test: function(event) {}
+             }
+           });
+
+   - title: Config Service
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           import _ from 'lodash';
+
+           var defaultConfig = {
+               prod: false,
+               endPoints: {},
+               msgs: {},
+               debug: {}
+           };
+
+           function app_config_internal() {
+               var userSettings = window.userSettings || {};
+               var config = _.merge({}, defaultConfig, userSettings);
+
+               if (config.prod) {
+                   delete config.debug;
+               }
+
+               var configObject = {
+                   get: param => _.cloneDeep(_.result(config, param)),
+                   getAll: () => _.cloneDeep(config),
+                   msg: txt => _.cloneDeep(_.result(config, 'msgs.' + txt)),
+                   debug: txt => _.cloneDeep(_.result(config, 'debug.' + txt)),
+                   isDev: !config.prod,
+                   isProd: config.prod
+               };
+
+               window.__configObject = _.cloneDeep(configObject);
+               return _.cloneDeep(configObject);
+           }
+
+           export default app_config_internal();
+
+   - title: Test Service
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           export default {
+               test() {
+                   return 'OK';
+               }
+           };
+
+   - title: Computed
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div id="example">
+             Original: "{{ message }}" <br> Computed reversed: "{{ reversedMessage }}"
+           </div>
+
+           <script>
+           computed: {
+             reversedMessage: () => {
+               return this.message.split('').reverse().join('')
+             }
+           }
+           </script>
+
+   - title: Watched Property
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <div id="demo">{{ fullName }}</div>
+
+           <script>
+           var vm = new Vue({
+             el: '#demo',
+             data: {
+               firstName: 'Foo',
+               lastName: 'Bar',
+               fullName: 'Foo Bar'
+             },
+             watch: {
+               firstName: function (val, oldVal) {
+                 this.fullName = val + ' ' + this.lastName
+               },
+               lastName: function (val, oldVal) {
+                 this.fullName = this.firstName + ' ' + val
+               }
+             }
+           })
+           </script>
+
+   - title: Watch Property
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <template>
+             <p>My name is {{name}}</p>
+             <button @click="changeName()">Change my name!</button>
+           </template>
+
+           <script>
+           export default {
+             data() {
+               return {name: 'Flavio'}
+             },
+             methods: {
+               changeName: () => {
+                 this.name = 'Flavius'
+               }
+             },
+             watch: {
+               name: function(val, oldVal) {
+                 console.log(this.name)
+               }
+             }
+           }
+           </script>
+
+   - title: Watch Property Full
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           var vm = new Vue({
+             data: {
+               a: 1,
+               b: 2,
+               c: 3,
+               d: 4,
+               e: {
+                 f: {
+                   g: 5
+                 }
+               }
+             },
+             watch: {
+               a: function (val, oldVal) {
+                 console.log('new: %s, old: %s', val, oldVal)
+               },
+               // string method name
+               b: 'someMethod',
+               // deep watcher
+               c: {
+                 handler: function (val, oldVal) { /* ... */ },
+                 deep: true
+               },
+               // the callback will be called immediately after the start of the observation
+               d: {
+                 handler: function (val, oldVal) { /* ... */ },
+                 immediate: true
+               },
+               e: [
+                 function handle1 (val, oldVal) { /* ... */ },
+                 function handle2 (val, oldVal) { /* ... */ }
+               ],
+               // watch vm.e.f's value: {g: 5}
+               'e.f': function (val, oldVal) { /* ... */ }
+             }
+           })
+
+   - title: Master Template
+     path: VUEsnip
+     params:
+        codeclass: 'html'
+        string: |-
+           <template>
+             <q-layout view="lHh Lpr lFf">
+
+               <q-layout-header>
+                 <q-toolbar color="primary":inverted="true">
+                   <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu" class="xburger" >
+                     <q-icon name="menu" outline />
+                   </q-btn>
+                   <q-toolbar-title>
+                     <img class="brand" src="statics/brand_m.png" alt="" @click.native="$router.push('/')" >
+                   </q-toolbar-title>
+                   <maincart></maincart>
+                 </q-toolbar>
+               </q-layout-header>
+
+               <leftmenu :left-drawer-open.sync="leftDrawerOpen" />
+
+               <q-page-container>
+                 <router-view />
+               </q-page-container>
+
+             </q-layout>
+           </template>
+
+           <script>
+           import $config from "../services/config.js";
+           import leftmenu from "../common/leftmenu.vue";
+           import maincart from "../common/mainCart.vue";
+
+           export default {
+             name: "MyLayout",
+             components: {
+               leftmenu,
+               maincart
+             },
+             data() {
+               return {
+                 leftDrawerOpen: null
+               };
+             },
+             methods: {}
+           };
+           </script>
+
+           <style>
+           </style>
+
+   - title: docs vue-cheat-sheet (web)
+     path: VUEsnip
+     type: 'object'
+     params:
+        openUrl: https://flaviocopes.com/vue-cheat-sheet/

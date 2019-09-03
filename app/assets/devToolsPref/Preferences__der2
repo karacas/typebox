@@ -1,0 +1,52 @@
+{
+    "brightray":
+    {
+        "devtools":
+        {
+            "bounds":
+            {
+                "height": 1310,
+                "width": 1554,
+                "x": 988,
+                "y": 20
+            },
+            "preferences":
+            {
+                "Inspector.drawerSplitViewState": "{\"horizontal\":{\"size\":0,\"showMode\":\"OnlyMain\"}}",
+                "colorFormat": "\"hex\"",
+                "console.sidebar.width": "{\"vertical\":{\"size\":0,\"showMode\":\"OnlyMain\"}}",
+                "console.sidebarSelectedFilter": "\"message\"",
+                "consoleShowSettingsToolbar": "false",
+                "consoleTimestampsEnabled": "true",
+                "drawer-view-closeableTabs": "{}",
+                "drawer-view-selectedTab": "\"coverage\"",
+                "drawer-view-tabOrder": "{\"console-view\":10,\"coverage\":20}",
+                "help.show-release-note": "false",
+                "hideNetworkMessages": "true",
+                "inspectorVersion": "26",
+                "messageLevelFilters": "{\"verbose\":false,\"info\":true,\"warning\":true,\"error\":true}",
+                "networkPanelSidebarState": "{\"vertical\":{\"size\":0,\"showMode\":\"OnlyMain\"}}",
+                "networkPanelSplitViewState": "{\"vertical\":{\"size\":0}}",
+                "networkPanelSplitViewWaterfall": "{\"vertical\":{\"size\":0}}",
+                "panel-selectedTab": "\"console\"",
+                "releaseNoteVersionSeen": "11",
+                "settings-view-tabOrder": "{\"preferences\":10,\"workspace\":20,\"experiments\":30,\"blackbox\":40,\"devices\":50,\"throttling-conditions\":60,\"Shortcuts\":70}",
+                "sidebarPosition": "\"bottom\"",
+                "sourcesPanelNavigatorSplitViewState": "{\"vertical\":{\"size\":0,\"showMode\":\"Both\"}}",
+                "sourcesPanelSplitViewState": "{\"vertical\":{\"size\":0,\"showMode\":\"Both\"},\"horizontal\":{\"size\":0,\"showMode\":\"Both\"}}",
+                "timelineCountersSplitViewState": "{\"horizontal\":{\"size\":0}}",
+                "timelineTreeViewDetailsSplitWidget": "{\"vertical\":{\"size\":0}}",
+                "uiTheme": "\"dark\"",
+                "undefined-tabOrder": "{\"sources.scopeChain\":10,\"sources.watch\":20}"
+            },
+            "zoom": 1.2239010857415449
+        }
+    },
+    "partition":
+    {
+        "per_host_zoom_levels":
+        {
+
+        }
+    }
+}

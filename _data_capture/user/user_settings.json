@@ -1,0 +1,81 @@
+/*{
+    "mainShortcut": "CmdOrCtrl+alt+space",
+    "mainShortcutAndFav": "shift+alt+space",
+    "animations": false,
+    "notifications": true,
+    "fixedTypeBoxOptions": true,
+    "toolTips": true,
+    "gotoRootAfterAction": false,
+    "ignoreThesePackages": [],
+    "ignoreTheseRules": [],
+    "packages": [],
+    "width": 960,
+    "maxItemsVisible": 8,
+    "visibleInTaskBar": false,
+    "autoupdateAllPackages": true,
+    "theme": {
+        "name": "default",
+        "subTheme": "",
+        "cssOverWrite": ""
+    },
+    "font": "default",
+    "icons": true,
+    "avoidResizeHeigth": false,
+    "userkaracas": true
+}*/
+{
+    "notifications": false,
+    "visibleInTaskBar": true,
+    "ignoreThesePackages": [
+        "internal_pack_launcher",
+        "internal_pack_paths",
+        "typebox-gist-sync-dev"
+    ],
+    "avoidResizeHeigth": true,
+    "here_are_dragons":
+    {
+        "chromiumConsole": false,
+        "deletePackages": false,
+        "installPackages": true,
+        "realClockEnabled": false,
+        "unpopAfterCopy": false,
+        "subpixelrender": false,
+        "alwaysOnTop": true,
+        "exposeRobotUi": true,
+        "search_box_main_window":
+        {
+            "hideOnBlur": false
+        },
+         "__debug": {
+         "canListenKeyboard": true,
+        },
+        "paths":
+        {
+            "caches": "%typebox%/_data_capture/caches/",
+            "favpath": "%typebox%/_data_capture/favorites/",
+            "hidden_path": "%typebox%/_data_capture/hidden/",
+            "historypath": "%typebox%/_data_capture/history/",
+            "lastpath": "%typebox%/_data_capture/lastrules/",
+            "logpath": "%typebox%/_data_capture/log/",
+            "newspath": "%typebox%/_data_capture/news/",
+            "packages": "%typebox%/_data_capture/packages/",
+            "packages_dev": "%typebox%/_data_capture/packages_dev/",
+            "packages_updates": "%typebox%/_data_capture/packages_tmp_updates/",
+            "rootDataStored": "%typebox%/_data_capture/",
+            "rules": "%typebox%/_data_capture/rules/",
+            "tmp": "%typebox%/_data_capture/tmp/",
+            "user": "%typebox%/_data_capture/user/",
+            "user_rules": "%typebox%/_data_capture/user_rules/"
+        }
+    },
+    testConfig: {
+         keyDelay: 60,
+         pause: 100,
+      },
+    "theme":
+    {
+        "subTheme": "default"
+    },
+    "width": 960,
+    "maxItemsVisible": 8
+}

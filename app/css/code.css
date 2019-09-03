@@ -1,0 +1,226 @@
+/*
+	HLJS
+*/
+#ruleViewer.hljs:not(.untouched),
+#ruleViewer .hljs:not(.untouched) {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  background: none !important;
+}
+#ruleViewer .hljs {
+  display: block;
+}
+#ruleViewer .hljs:not(.untouched) {
+  padding: 0;
+}
+#ruleViewer pre:not(.CodeMirror-line):not(.CodeMirror-placeholder):not(.noBack) {
+  display: -webkit-inline-box !important;
+  padding: calc(var(--padding) * 0.5) calc(var(--padding) * 0.75) !important;
+  background-color: var(--darkColor) !important;
+  border-radius: var(--radBorder) !important;
+  min-width: calc(100% - var(--padding) * 1.5) !important;
+}
+#ruleViewer pre:not(.untouched) {
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+body.isLight #ruleViewer pre:not(.noBack),
+body.isLight #ruleViewer .hljs:not(.noBack),
+body.isLight #ruleViewer code:not(.noBack) {
+  background-color: transparent;
+}
+#ruleViewer h1:first-child,
+#ruleViewer h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+#ruleViewer h2 code,
+#ruleViewer h2 pre {
+  font-size: 1em;
+}
+#ruleViewer h3 code,
+#ruleViewer h3 pre {
+  font-size: 1em;
+}
+.hljs {
+  background: transparent;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+.hljs-link {
+  text-decoration: underline;
+}
+/*
+	COLORS
+*/
+#ruleViewer .cm-def,
+#ruleViewer .hljs:not(.untouched) {
+  color: var(--code-default);
+}
+#ruleViewer .cm-tag {
+  color: var(--code-tag);
+}
+#ruleViewer .cm-comment,
+#ruleViewer .hljs-comment,
+#ruleViewer .hljs-quote {
+  color: var(--code-comment);
+}
+#ruleViewer .cm-keyword,
+#ruleViewer .hljs-doctag,
+#ruleViewer .hljs-keyword,
+#ruleViewer .hljs-formula {
+  color: var(--code-keyword);
+}
+#ruleViewer .cm-atom,
+#ruleViewer .hljs-section,
+#ruleViewer .hljs-name,
+#ruleViewer .hljs-selector-tag,
+#ruleViewer .hljs-deletion,
+#ruleViewer .hljs-subst {
+  color: var(--code-section);
+}
+#ruleViewer .cm-property,
+#ruleViewer .cm-meta,
+#ruleViewer .hljs-literal {
+  color: var(--code-property);
+}
+#ruleViewer .cm-string,
+#ruleViewer .cm-attribute,
+#ruleViewer .hljs-string,
+#ruleViewer .hljs-regexp,
+#ruleViewer .hljs-addition,
+#ruleViewer .hljs-attribute,
+#ruleViewer .hljs-meta-string {
+  color: var(--code-string);
+}
+#ruleViewer .cm-variable,
+#ruleViewer .cm-qualifier,
+#ruleViewer .hljs-built_in,
+#ruleViewer .hljs-class .hljs-title,
+#ruleViewer .hljs-attr,
+#ruleViewer .hljs-variable,
+#ruleViewer .hljs-template-variable,
+#ruleViewer .hljs-type,
+#ruleViewer .hljs-selector-class,
+#ruleViewer .hljs-selector-attr,
+#ruleViewer .hljs-selector-pseudo,
+#ruleViewer .hljs-number {
+  color: var(--code-variable);
+}
+#ruleViewer .cm-variable-2,
+#ruleViewer .hljs-symbol,
+#ruleViewer .hljs-bullet,
+#ruleViewer .hljs-link,
+#ruleViewer .hljs-meta,
+#ruleViewer .hljs-selector-id,
+#ruleViewer .hljs-title {
+  color: var(--code-symbol);
+}
+/*
+	CodeMirror
+*/
+#ruleViewer .CodeMirror {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  width: auto;
+  background: none !important;
+}
+#ruleViewer .CodeMirror-hscrollbar {
+  right: 0 !important;
+}
+#ruleViewer .CodeMirror-vscrollbar {
+  right: 0 !important;
+  bottom: var(--padding) !important;
+}
+#ruleViewer .CodeMirror-gutters {
+  background-color: transparent !important;
+}
+#ruleViewer .CodeMirror-scroll {
+  margin-right: 4px;
+  margin-bottom: 4px;
+  padding-bottom: 0;
+}
+#ruleViewer .CodeMirror-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+#ruleViewer .CodeMirror-sizer {
+  border-color: transparent !important;
+}
+#ruleViewer .cMirrorReadOnly .CodeMirror .CodeMirror-code {
+  opacity: 0.95;
+  filter: grayscale(0.1);
+}
+#ruleViewer .cMirrorReadOnly .CodeMirror-cursor {
+  visibility: hidden;
+}
+#ruleViewer .CodeMirror-scrollbar-filler {
+  background: transparent !important;
+}
+#ruleViewer .CodeMirror-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+#ruleViewer .react-codemirror2 {
+  display: contents;
+}
+#ruleViewer .CodeMirror,
+#ruleViewer .CodeMirror pre,
+#ruleViewer .CodeMirror-code {
+  font-family: var(--mainFontMono) !important;
+}
+#ruleViewer .CodeMirror-code {
+  font-weight: var(--mainFontWeightCode) !important;
+  font-size: var(--codeFontSize);
+  font-family: var(--mainFontMono);
+  line-height: 1.6 !important;
+}
+@media $bigSize {
+  #ruleViewer .CodeMirror-code {
+    font-size: var(--codeBigFontSize);
+    line-height: 1.6 !important;
+  }
+}
+#ruleViewer.big .CodeMirror-code,
+.big #ruleViewer .CodeMirror-code {
+  font-size: var(--codeBigFontSize);
+  line-height: 1.6 !important;
+}
+#ruleViewer .CodeMirror-vscrollbar {
+  bottom: 0;
+}
+#ruleViewer .CodeMirror-placeholder {
+  opacity: 0.4;
+  font-weight: 100;
+}
+#ruleViewer .CodeMirror pre {
+  padding-left: 0;
+}
+/*
+	CodeMirror OVERWRITES
+*/
+.overwritesLight .CodeMirror,
+.overwritesDark .CodeMirror {
+  color: var(--code-default) !important;
+}
+.overwritesLight .CodeMirror .cm-error,
+.overwritesDark .CodeMirror .cm-error {
+  background: none !important;
+}
+.overwritesLight .CodeMirror .CodeMirror-cursor,
+.overwritesDark .CodeMirror .CodeMirror-cursor {
+  border-color: var(--caretColor) !important;
+  border-left-width: 2px;
+}
+.overwritesLight .CodeMirror .CodeMirror-lines *,
+.overwritesDark .CodeMirror .CodeMirror-lines * {
+  font-style: normal;
+}

@@ -1,0 +1,488 @@
+.svgLineIcon svg {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  width: 17px !important;
+  height: 17px !important;
+  stroke: var(--accentColor);
+  stroke-width: 2;
+  background: transparent !important;
+  -webkit-opacity: 1;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  fill: transparent !important;
+  color: transparent !important;
+}
+.svgLineIcon svg path {
+  -webkit-opacity: 1;
+  fill: transparent !important;
+}
+.svgLineIcon.hover svg {
+  position: absolute;
+  stroke-width: 1.5;
+  left: 8px;
+  stroke: #fff;
+}
+.svgLineIcon.white svg {
+  stroke: #fff;
+}
+.svgLineIcon.white.hover svg {
+  stroke: #fff;
+  -webkit-opacity: 1 !important;
+}
+/* TOOLTIP */
+.MuiTooltip-popper {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+.MuiTooltip-popper .MuiTooltip-tooltip {
+  font-family: var(--mainFontSmall) !important;
+  font-size: var(--smallFontSize) !important;
+  font-weight: var(--smallFontWeight);
+  background-color: var(--hoverColor) !important;
+  letter-spacing: 0 !important;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1) !important;
+  -webkit-border-radius: var(--radBorder);
+  color: var(--textHighColor) !important;
+}
+/* REACT SELECT */
+.TB-select {
+  outline: none !important;
+  min-width: 110px;
+  -webkit-opacity: 1;
+  border: none !important;
+  user-select: none;
+}
+.TB-select .react-select__control {
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+  cursor: pointer;
+  -webkit-border-radius: var(--radBorder);
+  min-height: 32px;
+  border: none !important;
+}
+.TB-select .react-select__control .react-select__single-value {
+  font-weight: var(--smallFontWeight);
+  top: calc(50% + 0);
+  color: var(--textHighColor);
+}
+.TB-select .react-select__control:hover,
+.TB-select .react-select__control.react-select__control--is-focused {
+  background-color: var(--hoverColor);
+  -webkit-opacity: 1;
+}
+.TB-select .react-select__control:hover .react-select__single-value,
+.TB-select .react-select__control.react-select__control--is-focused .react-select__single-value {
+  color: var(--accentColor);
+  -webkit-opacity: 1;
+}
+.TB-select .react-select__control:hover .react-select__value-container--has-value,
+.TB-select .react-select__control.react-select__control--is-focused .react-select__value-container--has-value,
+.TB-select .react-select__control:hover .react-select__value-container--has-value div,
+.TB-select .react-select__control.react-select__control--is-focused .react-select__value-container--has-value div {
+  color: var(--textHighColor);
+  -webkit-opacity: 1;
+}
+.TB-select .react-select__input > input {
+  caret-color: var(--accentColor);
+}
+.TB-select.TB-select-mini {
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+}
+.TB-select.TB-select-mini .react-select__single-value {
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+}
+.TB-select.TB-select-mini .react-select__input > input {
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+}
+.TB-select.TB-select-mini .react-select__single-value {
+  font-size: var(--smallFontSize);
+}
+.TB-select.TB-select-mini .react-select__menu {
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+}
+.TB-select .react-select__indicators {
+  pointer-events: none;
+  max-height: 32px;
+  -webkit-opacity: 0;
+}
+.TB-select .react-select__indicators .react-select__indicator-separator {
+  display: none;
+}
+.TB-select .react-select__indicators .react-select__dropdown-indicator {
+  pointer-events: none;
+  padding: 4px;
+  padding-right: 8px;
+}
+.TB-select .react-select__indicators .react-select__dropdown-indicator svg {
+  color: var(--accentColor);
+}
+.TB-select.TB-select-top .react-select__indicators .react-select__dropdown-indicator svg {
+  transform: scale(-1);
+}
+.TB-select:hover .react-select__indicators,
+.TB-select .react-select__control--is-focused .react-select__indicators {
+  -webkit-opacity: 1;
+}
+.TB-select .react-select__menu {
+  background: var(--hoverColor);
+  -webkit-border-radius: var(--radBorder) !important;
+  box-shadow: none;
+  border: none !important;
+  margin: 0;
+  padding: 0;
+}
+.TB-select .react-select__menu-list {
+  box-shadow: none;
+  border: none !important;
+  padding: 0;
+}
+.TB-select .react-select__menu-list::-webkit-scrollbar,
+.TB-select .react-select__menu-list::-webkit-scrollbar-track {
+  background: transparent !important;
+  width: 3px;
+}
+.TB-select .react-select__menu-list::-webkit-scrollbar-thumb:vertical {
+  border-right: solid 2px var(--accentColor);
+}
+.TB-select .react-select__menu-list::-webkit-scrollbar-thumb:vertical:hover {
+  border-right: solid 2px var(--accentColor);
+}
+.TB-select .react-select__menu-list .react-select__option {
+  padding: 8px 10px !important;
+  height: 32px;
+  cursor: pointer;
+}
+.TB-select .react-select__menu-list .react-select__option--is-selected {
+  background-color: transparent;
+  color: var(--accentColor);
+}
+.TB-select .react-select__menu-list .react-select__option--is-focused {
+  background-color: var(--backLightColor);
+  background-color: transparent;
+  color: var(--textHighColor);
+}
+.TB-select .react-select__control--menu-is-open .react-select__single-value {
+  -webkit-opacity: 0.3 !important;
+}
+.TB-select.TB-select-withBack .react-select__control {
+  background-color: var(--hoverColor);
+  -webkit-opacity: 1;
+}
+.TB-select.TB-select-withBack .react-select__control .react-select__indicators {
+  -webkit-opacity: 1;
+}
+/* BUTTON */
+.TB-Button {
+  padding: 0 10px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 16px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-border-radius: var(--radBorder);
+  -webkit-opacity: var(--hiOpacity);
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+  margin-left: 1px;
+  margin-right: 1px;
+  user-select: none;
+  color: var(--textHighColor);
+}
+.TB-Button .tb-icon:before,
+.TB-Button i:before {
+  font-size: 18px !important;
+}
+.TB-Button svg {
+  width: 18px;
+  height: auto;
+}
+.TB-Button:not(.TB-Button-no-hover):focus,
+.TB-Button:not(.TB-Button-no-hover):hover {
+  background-color: var(--hoverColor); /* 0.05 en light */
+  color: var(--textHighColor);
+  -webkit-opacity: 1;
+}
+.TB-Button.TB-Button-force-hover {
+  background-color: var(--hoverColor); /* 0.05 en light */
+}
+.TB-Button.TB-Button-accent,
+.TB-Button.TB-Button-accent .tb-icon:before,
+.TB-Button.TB-Button-accent i:before {
+  color: var(--accentColor);
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-noLow,
+.TB-Button.TB-Button-noLow .tb-icon:before,
+.TB-Button.TB-Button-noLow i:before {
+  color: var(--textHighColor);
+}
+.TB-Button.TB-Button-noLow:hover,
+.TB-Button.TB-Button-noLow:hover .tb-icon:before,
+.TB-Button.TB-Button-noLow:hover i:before {
+  color: var(--textHighColor);
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-accent-hover :hover,
+.TB-Button.TB-Button-accent-hover:hover .tb-icon:before,
+.TB-Button.TB-Button-accent-hover:hover i:before {
+  color: var(--accentColor);
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-no-hover {
+  cursor: default;
+}
+.TB-Button.TB-Button-no-backhover {
+  background: none !important;
+}
+.TB-Button.TB-Button-disabled {
+  pointer-events: none !important;
+}
+.TB-Button.TB-Button-left {
+  justify-content: left;
+}
+.TB-Button.TB-Button-warn {
+  color: var(--warnColor) !important;
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-error {
+  color: var(--errorColor) !important;
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-valid {
+  color: var(--validColor) !important;
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-asert {
+  color: var(--asertColor) !important;
+  -webkit-opacity: 1 !important;
+}
+.TB-Button.TB-Button-asert span:hover {
+  color: var(--textHighColor) !important;
+}
+/* OPTIONS COMPO */
+.TB-Options-box {
+  width: 100%;
+}
+#ruleViewerWrappSize.smallViewer .TB-Options-box {
+  flex-wrap: wrap;
+}
+.TB-Option-celd {
+  width: 100%;
+  min-height: 32px;
+  margin-bottom: calc(var(--padding) * 1.25);
+  padding-bottom: calc(var(--padding) * 1.25);
+  border-bottom: solid 0.75px var(--hrTagColor);
+  max-width: 640px;
+}
+.TB-Option-celd .TB-Option-celd-label {
+  line-height: 32px;
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+  color: var(--textHighColor);
+  -webkit-opacity: var(--hiOpacity);
+  max-width: calc(640px * 0.75);
+  width: 35%;
+  user-select: none;
+}
+.TB-Option-celd .TB-Option-celd-value {
+  width: 65%;
+}
+/* SWITCH */
+.TB-Switch .MuiSwitch-root {
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+.TB-Switch .MuiSwitch-switchBase {
+  padding: 8px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.TB-Switch .MuiSwitch-switchBase.Mui-checked {
+  transform: translateX(100%);
+  -webkit-opacity: 1;
+}
+.TB-Switch .MuiIconButton-root:hover {
+  background: none !important;
+}
+.TB-Switch .MuiSwitch-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--hrTagColor) !important;
+  -webkit-opacity: 1 !important;
+  box-shadow: 0 0 1px rgba(0,0,0,0.1);
+}
+.TB-Switch:hover .MuiSwitch-thumb {
+  -webkit-opacity: 1 !important;
+}
+.TB-Switch .Mui-checked .MuiSwitch-thumb {
+  background: var(--accentColor) !important;
+  -webkit-opacity: 1 !important;
+}
+.TB-Switch:hover .Mui-checked .MuiSwitch-thumb {
+  background: var(--accentColor2) !important;
+}
+.TB-Switch .MuiSwitch-track {
+  border-radius: 32px;
+  -webkit-opacity: 1 !important;
+  background: var(--hoverColor) !important;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.3);
+}
+body.isLight .TB-Switch .MuiSwitch-track {
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.1);
+}
+/* superSelect */
+.superSelectFieldMenu {
+  background: var(--hoverColor) !important;
+  border-radius: var(--radBorder) !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: var(--smallFontSize) !important;
+  font-weight: var(--smallFontWeight) !important;
+}
+.superSelectFieldMenu,
+.superSelectFieldMenu > div {
+  opacity: 1 !important;
+}
+.superSelectFieldMenu,
+.superSelectFieldMenu > div,
+.superSelectFieldMenu > div > div {
+  transition: none !important;
+}
+.superSelectFieldMenu > div > div > div> div > div {
+  color: var(--textLowColor) !important;
+  font-size: var(--smallFontSize) !important;
+  font-weight: var(--smallFontWeight) !important;
+}
+.superSelectFieldMenu > div > div > div> div::-webkit-scrollbar,
+.superSelectFieldMenu > div > div > div> div::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.superSelectFieldMenu > div > div > div:first-child {
+  margin-left: 12px !important;
+}
+.superSelectFieldMenu > div > div > div:first-child > div {
+  color: var(--textLowColor) !important;
+  font-size: var(--smallFontSize) !important;
+  font-weight: var(--smallFontWeight) !important;
+}
+.superSelectFieldMenu > div > div > div:first-child input {
+  margin-left: 0 !important;
+  color: var(--textHighColor) !important;
+  font-size: var(--smallFontSize) !important;
+  font-weight: var(--smallFontWeight) !important;
+  caret-color: var(--accentColor);
+}
+.superSelectFieldMenu > div > div > div:first-child hr {
+  display: none !important;
+}
+.superSelectFieldMenu > div > div > div> div> div> div > span > div > div {
+  padding: 0px 6px !important;
+  height: 32px !important;
+  line-height: 32px;
+  overflow: hidden;
+  cursor: pointer !important;
+  font-size: var(--smallFontSize) !important;
+  font-weight: var(--smallFontWeight) !important;
+  color: var(--textLowColor) !important;
+}
+.superSelectFieldMenu > div > div > div> div> div> div > span > div > div:hover {
+  background-color: var(--hoverColor) !important;
+  color: var(--textHighColor) !important;
+  opacity: 1;
+}
+.superSelectField .labelIconWrapp,
+.superSelectFieldMenu .labelIconWrapp {
+  max-height: 32px;
+  display: block;
+  overflow: hidden;
+}
+.superSelectField .optionIcon i,
+.superSelectFieldMenu .optionIcon i,
+.superSelectField .labelIcon i,
+.superSelectFieldMenu .labelIcon i {
+  color: var(--accentColor);
+  font-size: 18px;
+  margin-right: calc(var(--padding) * 0.5);
+  margin-left: calc(var(--padding) * 0.25);
+  vertical-align: middle;
+  float: left;
+  width: 18px;
+  text-align: center;
+}
+.superSelectField .optionIcon .null,
+.superSelectFieldMenu .optionIcon .null {
+  display: block !important;
+  min-width: 1px !important;
+  height: 20px;
+  width: 0px;
+  margin-right: 0;
+  margin-left: calc(var(--padding) * 0.25);
+  font-family: sans-serif;
+}
+.popoverCoverForOutside {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.colorPicker .colorExample {
+  border-radius: 2px;
+}
+.colorPickerWrapper {
+  position: absolute;
+  z-index: 10;
+}
+.colorPickerWrapper .twitter-picker {
+  background: var(--hoverColor) !important;
+  border-radius: 2px !important;
+  padding: 12px 2px 6px 12px !important;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(1n) {
+  border-color: transparent transparent var(--hoverColor) !important;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(3n) {
+  padding: 0 !important;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(3n) span > div {
+  border-radius: 2px !important;
+  outline: none !important;
+  box-shadow: none !important;
+  user-select: none;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(3n) > div:nth-last-child(2) input {
+  width: calc(100% - 45px) !important;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(3n) > div:nth-last-child(2) input,
+.colorPickerWrapper .twitter-picker div:nth-child(3n) > div:nth-last-child(3) {
+  margin-top: 1px;
+  font-family: var(--mainFontSmall);
+  background-color: var(--buttonBackColor) !important;
+  color: var(--buttonFrontColor) !important;
+  box-shadow: none !important;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(3n) > div:nth-last-child(3) {
+  user-select: none;
+  border-radius: 2px 0 0 2px !important;
+}
+.colorPickerWrapper .twitter-picker div:nth-child(3n) > div:nth-last-child(2) input {
+  border-radius: 0 2px 2px 0 !important;
+}

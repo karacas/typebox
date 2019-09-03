@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <style id="loaderStyles">
+         @keyframes spinbodyloader {
+            from {
+               transform: rotate(0deg);
+            }
+            to {
+               transform: rotate(359deg);
+            }
+         }
+         body.bodyloader {
+            background: #0000 !important;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -webkit-app-region: drag;
+            overflow: unset;
+         }
+         body.bodyloader:before {
+            background: #282c34 !important;
+            content: ' ';
+            position: absolute;
+            display: block;
+            width: 64px;
+            height: 64px;
+            top: calc(50vh - 32px);
+            left: calc(50vw - 32px);
+            border-radius: 6px;
+         }
+         body.bodyloader:after {
+            content: ' ';
+            position: absolute;
+            display: block;
+            border: 2px solid transparent;
+            border-left-color: rgba(254, 255, 255, 0.5);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spinbodyloader 0.25s linear infinite;
+            top: calc(50vh - 14px);
+            left: calc(50vw - 14px);
+         }
+         body.bodyloader #root {
+            visibility: hidden;
+            pointer-events: none;
+         }
+      </style>
+      <!-- //KTODO: que sea dinamico -->
+      <link id="style_base_colors" rel="stylesheet" type="text/css" href="../../node_modules/google-material-color/dist/palette.css" />
+      <link id="style_base_icons_material" rel="stylesheet" type="text/css" href="../../node_modules/@mdi/font/css/materialdesignicons.min.css" />
+      <link id="style_base_icons_feather" rel="stylesheet" type="text/css" href="../../node_modules/@icon/feather/feather.css" />
+      <link id="style_base_icons_ionicons" rel="stylesheet" type="text/css" href="../../node_modules/@icon/ionicons/ionicons.css" />
+      <link id="style_base_icons_mdl2" rel="stylesheet" type="text/css" href="../../node_modules/mdl2-icons/css/mdl2-icons.css" />
+      <link id="style_base_icons_wicon" rel="stylesheet" type="text/css" href="../../node_modules/uiw-iconfont/fonts/w-icon.css" />
+      <link id="style_base_icons_fab" rel="stylesheet" type="text/css" href="../../node_modules/@icon/fontawesome-brands/fontawesome-brands.css" />
+      <link id="style_base_icons_far" rel="stylesheet" type="text/css" href="../../node_modules/@icon/fontawesome-regular/fontawesome-regular.css" />
+      <link id="style_base_icons_fas" rel="stylesheet" type="text/css" href="../../node_modules/@icon/fontawesome-solid/fontawesome-solid.css" />
+      <link id="style_base_icons_icons8" rel="stylesheet" type="text/css" href="../../node_modules/windows-10-icons/font/styles.min.css" />
+
+      <link id="style_codemirror_css" rel="stylesheet" type="text/css" />
+      <link id="style_codemirror_theme_css" rel="stylesheet" type="text/css" />
+
+      <link id="style_base" rel="stylesheet" type="text/css" href="../css/style.css" />
+      <link id="style_theme" rel="stylesheet" type="text/css" />
+
+      <link id="style_font_theme" rel="stylesheet" type="text/css" />
+      <style id="css_overwrite"></style>
+
+      <script type="application/javascript">
+         setTimeout(() => {
+            require('module-alias/register');
+            require('@render/main.js').start();
+         });
+      </script>
+   </head>
+   <body class="bodyloader">
+      <span id="root"></span>
+   </body>
+</html>

@@ -5,113 +5,204 @@ name: krc_moment_snipetts
 enabled: true
 icon: mdi-timer palette-Teal-A700 text
 rules:
+   - title: moment snippets
+     type: 'object'
+     params:
+        changePath:
+           path: MOMENTsnip
 
-- title: moment snippets
-  type: 'object'
-  params:
-    changePath:
-      path: MOMENTsnip
+   - title: new moment
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           Moment(new Date());
 
-- title: new moment
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      Moment(new Date());
+   - title: valueof (unix timestamp)
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().valueOf()
 
-- title: valueof (unix timestamp)
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().valueOf()
+   - title: toDate
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().toDate();
 
-- title: toDate
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().toDate();
+   - title: toISOString
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().toISOString();
 
-- title: toISOString
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().toISOString();
+   - title: toObject
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().toObject();
 
-- title: toObject
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().toObject();
+   - title: toString
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().toString();
 
-- title: toString
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().toString();
+   - title: set time format
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment("12-12-1995", "DD-MM-YYYY");
 
-- title: set time format
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment("12-12-1995", "DD-MM-YYYY");
+   - title: get time format
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().format("DD-MM-YYYY")
 
-- title: get time format
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().format("DD-MM-YYYY")
+   - title: get time format med
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().format('dddd DD [de] MMMM [de] YYYY')
 
-- title: get time format med
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().format('dddd DD [de] MMMM [de] YYYY')
+   - title: add days
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment(new Date()).add(90, 'd')
 
-- title: add days
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment(new Date()).add(90, 'days')
+   - title: is today
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment(date).isSame(new Date(), 'day')
 
-- title: is today
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment(date).isSame(new Date(), 'day')
+   - title: get time format full
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
 
-- title: get time format full
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
+   - title: from now
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment().fromNow();
 
-- title: from now
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      moment().fromNow();
+   - title: diff
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           new moment(new Date()).diff(timeStartH)
 
-- title: diff
-  path: MOMENTsnip
-  params:
-    codeclass: 'javascript'
-    string: |-
-      new moment(new Date()).diff(timeStartH)
+   - title: startOf
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment(objDate.dia).startOf('day')
 
-- title: docs (web)
-  path: MOMENTsnip
-  type: "object"
-  params:
-    openUrl: https://momentjs.com/docs/
+   - title: isBetween
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment(timeNow).isBetween(moment(t1), moment(t2));
+
+   - title: isBefore
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment('2010-10-20').isBefore('2010-10-21'); // true
+
+   - title: isSame
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment('2010-10-20').isSame('2010-10-21'); // true
+
+   - title: isAfter
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment('2010-10-20').isAfter('2010-01-01', 'year'); // false
+
+   - title: isDate
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment.isDate(obj);
+
+   - title: locale
+     path: MOMENTsnip
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment.locale('es')
+
+   - title: docs (web)
+     path: MOMENTsnip
+     type: 'object'
+     params:
+        openUrl: https://momentjs.com/docs/
+
+   - title: Moment.js cheatsheet (web)
+     path: MOMENTsnip
+     type: 'object'
+     params:
+        openUrl: https://devhints.io/moment
+
+   - title: Moment.js console (web)
+     path: MOMENTsnip
+     type: 'object'
+     params:
+        openUrl: https://repl.it/@wwendyc/Momentjs-Example
+
+   - title: Moment.js format to PHP
+     path: MOMENTsnip
+     type: 'object'
+     params:
+        codeclass: 'javascript'
+        string: |-
+           moment('1970-01-01T15:41:00-03:00').format("YYYY-MM-DDTHH:mm:ssZ")
+
+   - title: Moment.js Date.prototype.toJSON to PHP
+     path: MOMENTsnip
+     type: 'object'
+     params:
+        codeclass: 'javascript'
+        string: |-
+           Date.prototype.toJSON = function() {
+             let data = '10-10-2018';
+             let formatPHP = 'YYYY-MM-DDTHH:mm:ssZ';
+
+             try {
+               data = moment(this)
+                 .seconds(0)
+                 .milliseconds(0)
+                 .format(formatPHP);
+             } catch (e) {
+               console.error(e);
+               return this;
+             }
+
+             return String(data);
+           };

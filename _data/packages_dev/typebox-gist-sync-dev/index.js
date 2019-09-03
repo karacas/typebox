@@ -1,575 +1,642 @@
 'use strict';
 
+const GitHub = require('github-api');
 const path = require('path');
 const fs = require('fs');
-const util = require('util');
-const GitHub = require('github-api');
 
 const defaultConfig = {
-    __getGitTokenIn: 'https://github.com/settings/tokens/new',
-    __getGitTokenIn: 'https://github.com/settings/tokens',
-    token: null,
-    disabled: false,
-    syncOnDev: false,
-    gapTimePromises: 120,
-    gistDescription: 'typebox-config-sync{dev}{terminal}-0.0.6',
-    lastKnowHashFile: '.gistsynchash/gsh__{file}.json',
-    sizeLaskKnows: '40',
-    syncTime: 60 * 60 * 1000,
-    startOnInit: true,
-    syncFiles: [
-        { file: 'user_settings.json', ignore: ['width', 'maxItemsVisible'] },
-        { path: null, type: 'JSON5', file: 'typebox-gist-sync-dev_user_settings.json', ignore: ['token', 'disabled', 'syncOnDev'] }
-    ]
+   __getGitTokenIn: 'https://github.com/settings/tokens/new',
+   __getGitTokenIn: 'https://github.com/settings/tokens',
+   token: null,
+   disabled: false,
+   syncOnDev: false,
+   gapTimePromises: 120,
+   gistDescription: 'typebox-config-sync{dev}{terminal}-0.0.6',
+   lastKnowHashFile: '.gistsynchash/gsh__{file}.json',
+   sizeLaskKnows: '40',
+   syncTime: 60 * 60 * 1000,
+   startOnInit: true,
+   syncFiles: [
+      { file: 'user_settings.json', ignore: ['width', 'maxItemsVisible'] },
+      {
+         path: null,
+         type: 'JSON5',
+         file: 'typebox-gist-sync-dev_user_settings.json',
+         ignore: ['token', 'disabled', 'syncOnDev'],
+      },
+      { path: null, type: 'JSON', file: 'protected_notes_rules.json' },
+   ],
 };
 
+//KTODO: #672342
+//definir poriero la api, hacerla genérica en un internal, después registrar gist como un sincronizer, luego este plugin q usa el sincronizer
+//usar awaits
+//Hacer test
+//
+//el comparator también en un file con wrapp aparte
+//el transform, osea json5,json, o plain también en file aparte
+//la github-api en el main, que la traiga context, ver de duplicarla y mandarle got
+//que por cada sincronizer haya un new Sync, y pasarle como parámetro los wrapps
+//el comparator hacerlo por date, eso significa hacer un gist por cada config
+
 module.exports = context => {
-    var _get = context.require('lodash').get;
-    var hashCode = context.require('object-hash');
-    var JSON5 = context.require('json5');
-    var moment = context.require('moment');
-    var _ = context.require('lodash');
+   const _get = context.get;
 
-    let $gistObj;
-    let $gh = null;
-    let $gistId = null;
+   const hashCode = val => {
+      return context.global_aux.makeHash(String(JSON5.stringify(val)));
+   };
 
-    let $init = false;
+   const JSON5 = context.require('json5');
+   const mkpath = context.require('make-dir');
+   const { pick, omit } = context.require('lodash');
+   const uniq = arr => [...new Set(arr)];
 
-    let $console = {};
-    let $config = {};
+   let $gistObj;
+   let $gh = null;
+   let $gistId = null;
 
-    let $saveOnNextIdle = false;
+   let $init = false;
 
-    /***/
+   let $console = {};
+   let $config = {};
 
-    const promiseSerial = funcs =>
-        funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
+   let $saveOnNextIdle = false;
 
-    const auth = obj => {
-        return new Promise((resolve, reject) => {
-            if ($init && $gistId) {
-                resolve($gistId);
-            }
-            $gh = new GitHub(obj);
-            getConfigGists(true)
-                .then(resp => {
-                    $init = true;
-                    resolve($gistId);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
-    };
+   /***/
 
-    const getConfigGists = (minVersion = false) => {
-        return new Promise((resolve, reject) => {
-            if (!$gh) {
-                reject();
-                return;
-            }
+   const promiseSerial = funcs =>
+      funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
 
-            getAllGists()
-                .then(resp => {
-                    $gistId = null;
-                    let resultTmp = null;
-                    resp.data.map(snip => {
-                        if (!$gistId && snip.description === $config.gistDescription) {
-                            $gistId = snip.id;
-                            resultTmp = snip;
-                        }
-                    });
-                    if (!resultTmp || !$gistId) {
-                        resolve(null);
-                        return;
-                    }
-                    if (minVersion) {
-                        resolve(resultTmp);
-                        return;
-                    }
-                    $gh
-                        .getGist($gistId)
-                        .read()
-                        .then(dataRead => {
-                            resolve(dataRead.data);
-                        })
-                        .catch(e => {
-                            reject(e);
-                        });
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
-    };
+   const gisAuth = obj => {
+      return new Promise((resolve, reject) => {
+         if ($init && $gistId) {
+            resolve($gistId);
+         }
+         $gh = new GitHub(obj);
+         getConfigGists(true)
+            .then(resp => {
+               $init = true;
+               resolve($gistId);
+            })
+            .catch(e => {
+               reject(e);
+            });
+      });
+   };
 
-    const getAllGists = () => {
-        if (!$gh) {
+   const getConfigGists = (minVersion = false) => {
+      return new Promise((resolve, reject) => {
+         if (!$gh) {
             reject();
             return;
-        }
-        var me = $gh.getUser();
-        return me.listGists();
-    };
+         }
 
-    const createGist = filesObj => {
-        return new Promise((resolve, reject) => {
-            if (!$gh) {
-                reject();
-                return;
-            }
+         getAllGists()
+            .then(resp => {
+               $gistId = null;
+               let resultTmp = null;
+               resp.data.map(snip => {
+                  if (!$gistId && snip.description === $config.gistDescription) {
+                     $gistId = snip.id;
+                     resultTmp = snip;
+                  }
+               });
+               if (!resultTmp || !$gistId) {
+                  resolve(null);
+                  return;
+               }
+               if (minVersion) {
+                  resolve(resultTmp);
+                  return;
+               }
+               $gh.getGist($gistId)
+                  .read()
+                  .then(dataRead => {
+                     resolve(dataRead.data);
+                  })
+                  .catch(e => {
+                     reject(e);
+                  });
+            })
+            .catch(e => {
+               reject(e);
+            });
+      });
+   };
 
-            let gist = $gh.getGist();
+   const getAllGists = () => {
+      if (!$gh) {
+         reject();
+         return;
+      }
+      let me = $gh.getUser();
+      return me.listGists();
+   };
 
-            gist
-                .create({ public: false, description: $config.gistDescription, files: filesObj })
-                .then(data => {
-                    $gistId = _get(data, 'data.id');
-                    if (!data || !$gistId) {
-                        reject(data);
-                        return;
-                    }
-                    resolve(data);
-                })
-                .catch(data => {
-                    reject(data);
-                });
-        });
-    };
-
-    const updateGist = (id, filesObj) => {
-        if (!$gh || !$gistId) {
+   const createGist = filesObj => {
+      return new Promise((resolve, reject) => {
+         if (!$gh) {
             reject();
             return;
-        }
+         }
 
-        let gist = $gh.getGist(id);
+         let gist = $gh.getGist();
 
-        return gist.update({
-            files: filesObj
-        });
-    };
+         gist
+            .create({ public: false, description: $config.gistDescription, files: filesObj })
+            .then(data => {
+               $gistId = _get(data, 'data.id');
+               if (!data || !$gistId) {
+                  reject(data);
+                  return;
+               }
+               resolve(data);
+            })
+            .catch(data => {
+               reject(data);
+            });
+      });
+   };
 
-    const saveToGist = files => {
-        if (!$gistId) {
-            return createGist(files);
-        } else {
-            return updateGist($gistId, files);
-        }
-    };
+   const updateGist = (id, filesObj) => {
+      if (!$gh || !$gistId) {
+         reject();
+         return;
+      }
 
-    const saveFileToGist = (name, data) => {
-        if (content != null && typeof content == 'object') {
-            data = JSON.stringify(data, null, 2);
-        }
-        return saveToGist({
-            [name]: {
-                content: data
-            }
-        });
-    };
+      let gist = $gh.getGist(id);
 
-    const loadFileFromGist = name => {
-        return new Promise((resolve, reject) => {
-            getConfigGists(false)
-                .then(resp => {
-                    if (!resp || !resp.files) {
-                        resolve(null);
-                        return;
-                    }
+      return gist.update({
+         files: filesObj,
+      });
+   };
 
-                    let file = resp.files[name] || null;
+   const saveToGist = files => {
+      if (!$gistId) {
+         return createGist(files);
+      } else {
+         return updateGist($gistId, files);
+      }
+   };
 
-                    if (file && resp.updated_at) {
-                        file.updated_at = new Date(resp.updated_at).valueOf();
-                    }
-                    //KTODO: Avoid cache from disk
-                    resolve(file);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
-    };
+   const saveFileToGist = (name, data) => {
+      if (content != null && typeof content == 'object') {
+         data = JSON.stringify(data, null, 2);
+      }
+      return saveToGist({
+         [name]: {
+            content: data,
+         },
+      });
+   };
 
-    const loadlocalObjFile = ($path, $file, type = 'JSON5') => {
-        $path = $path || context.getSetting('here_are_dragons.paths.user');
-        $file = $file || 'user_settings.json';
-        let file2load = path.join($path, $file);
-        let fileloaded = context.getFile(file2load, type) || null;
+   const loadFileFromGist = name => {
+      return new Promise((resolve, reject) => {
+         getConfigGists(false)
+            .then(resp => {
+               if (!resp || !resp.files) {
+                  resolve(null);
+                  return;
+               }
 
-        let date = null;
-        if (fileloaded) {
-            let stats = fs.statSync(file2load);
-            date = moment(util.inspect(stats.mtime)).valueOf() || null;
-        }
-        return { fileloaded, date };
-    };
+               let file = resp.files[name] || null;
 
-    const saveocalObjFile = ($path, $file, $data, type = 'JSON5') => {
-        if ($data === null) return;
-        $path = $path || context.getSetting('here_are_dragons.paths.user');
-        $file = $file || 'user_settings.json';
-        let file2save = path.join($path, $file);
-        let filesaved = context.setFile(file2save, $data, type);
-        return filesaved;
-    };
+               if (file && resp.updated_at) {
+                  file.updated_at = new Date(resp.updated_at).valueOf();
+               }
+               //KTODO: Avoid cache from disk
+               resolve(file);
+            })
+            .catch(e => {
+               reject(e);
+            });
+      });
+   };
 
-    const loadGistObjFile = ($file, type = 'JSON5') => {
-        return new Promise((resolve, reject) => {
-            let result = null;
-            $gistObj
-                .then(() => {
-                    return loadFileFromGist($file);
-                })
-                .then(file => {
-                    if (file) {
-                        if (type.toLowerCase() === 'json5') {
-                            try {
-                                result = JSON5.parse(file.content);
-                            } catch (e) {
-                                $console.log('[typebox-gist]', 'file no obj', e);
-                                result = null;
-                            }
-                        } else {
-                            result = file.content;
-                        }
-                    } else {
+   const loadlocalObjFile = ($path, $file, type = 'JSON5') => {
+      $path = $path || context.getSetting('here_are_dragons.paths.user');
+      $file = $file || 'user_settings.json';
+      let file2load = path.join($path, $file);
+      let fileloaded = context.getFile(file2load, type) || null;
+
+      let date = null;
+      if (fileloaded) {
+         let stats = fs.statSync(file2load);
+         date = +new Date() || null;
+      }
+      return { fileloaded, date };
+   };
+
+   const saveocalObjFile = ($path, $file, $data, type = 'JSON5') => {
+      if ($data === null) return;
+      $path = $path || context.getSetting('here_are_dragons.paths.user');
+      $file = $file || 'user_settings.json';
+      let file2save = path.join($path, $file);
+      let filesaved = context.setFile(file2save, $data, type);
+      return filesaved;
+   };
+
+   const loadGistObjFile = ($file, type = 'JSON5') => {
+      return new Promise((resolve, reject) => {
+         let result = null;
+         $gistObj
+            .then(() => {
+               return loadFileFromGist($file);
+            })
+            .then(file => {
+               if (file) {
+                  if (type.toLowerCase() === 'json5') {
+                     try {
+                        result = JSON5.parse(file.content);
+                     } catch (e) {
+                        $console.log('[typebox-gist]', 'file no obj', e);
                         result = null;
-                        $console.log('[typebox-gist]', 'loadGistObjFile noFile', $file, file);
-                    }
-                    resolve({ content: result, url: file.raw_url });
-                })
-                .catch(e => {
-                    resolve({ content: null, url: null });
-                });
-        });
-    };
+                     }
+                  } else if (type.toLowerCase() === 'json') {
+                     try {
+                        result = JSON.parse(file.content);
+                     } catch (e) {
+                        $console.log('[typebox-gist]', 'file no obj', e);
+                        result = null;
+                     }
+                  } else {
+                     result = file.content;
+                  }
+               } else {
+                  result = null;
+                  $console.log('[typebox-gist]', 'loadGistObjFile noFile', $file, file);
+               }
+               resolve({ content: result, url: file.raw_url });
+            })
+            .catch(e => {
+               resolve({ content: null, url: null });
+            });
+      });
+   };
 
-    const getContentsPairSync = syncRule => {
-        return new Promise((resolve, reject) => {
-            let localFileObj = loadlocalObjFile(syncRule.path, syncRule.file, syncRule.type);
-            let localFile = localFileObj.fileloaded || null;
-            let localFileDate = localFileObj.date || null;
+   const getContentsPairSync = syncRule => {
+      return new Promise((resolve, reject) => {
+         let localFileObj = loadlocalObjFile(syncRule.path, syncRule.file, syncRule.type);
+         let localFile = localFileObj.fileloaded || null;
+         let localFileDate = localFileObj.date || null;
 
-            let gistFile;
-            let gistFileUrl;
-            loadGistObjFile(syncRule.file)
-                .then(file => {
-                    gistFile = file.content;
-                    gistFileUrl = file.url;
-                    resolve({ localFile, localFileDate, gistFile, gistFileUrl });
-                })
-                .catch(e => {
-                    resolve({ localFile: null, localFileDate: null, gistFile: null, gistFileUrl: null });
-                });
-        });
-    };
+         let gistFile;
+         let gistFileUrl;
 
-    const normaliceSyncRuleContent = (syncRule, content) => {
-        if (content == null) return null;
-        if (typeof content != 'object') return content;
-        let result = _.omit(content, syncRule.ignore);
-        return result;
-    };
+         loadGistObjFile(syncRule.file)
+            .then(file => {
+               gistFile = file.content;
+               gistFileUrl = file.url;
+               resolve({ localFile, localFileDate, gistFile, gistFileUrl });
+            })
+            .catch(e => {
+               resolve({ localFile: null, localFileDate: null, gistFile: null, gistFileUrl: null });
+            });
+      });
+   };
 
-    const hashSyncRuleContent = (syncRule, content) => {
-        if (!(content != null && typeof content == 'object')) return null;
-        let result = hashCode(content);
-        return result;
-    };
+   const normaliceSyncRuleContent = (syncRule, content) => {
+      if (content == null) return null;
+      if (typeof content != 'object') return content;
+      let result = omit(content, syncRule.ignore);
+      return result;
+   };
 
-    const comparator = syncRule => {
-        return new Promise(($resolve, reject) => {
-            getContentsPairSync(syncRule)
-                .then(obj => {
-                    let _lastKnowHashFile = $config.lastKnowHashFile.replace('{file}', syncRule.file.replace('.json', ''));
+   const hashSyncRuleContent = (syncRule, content) => {
+      if (!(content !== null && typeof content == 'object')) return null;
+      let result = hashCode(content);
+      return result;
+   };
 
-                    let lastKnowHashes = loadlocalObjFile(context.getSetting('here_are_dragons.paths.user'), _lastKnowHashFile, 'JSON5').fileloaded || {
-                        lastKnowHash: null,
-                        lastKnowHashes: []
-                    };
-                    let lastKnowHash = lastKnowHashes.lastKnowHash;
+   const comparator = syncRule => {
+      return new Promise(($resolve, reject) => {
+         getContentsPairSync(syncRule)
+            .then(obj => {
+               let _lastKnowHashFile = $config.lastKnowHashFile.replace('{file}', syncRule.file.replace('.json', ''));
 
-                    let local = obj.localFile;
-                    let localDate = obj.localFileDate;
+               let lastKnowHashes = loadlocalObjFile(context.getSetting('here_are_dragons.paths.user'), _lastKnowHashFile, 'JSON5').fileloaded || {
+                  lastKnowHash: null,
+                  lastKnowHashes: [],
+               };
 
-                    let localNormalized = normaliceSyncRuleContent(syncRule, obj.localFile);
-                    let gistNormalized = normaliceSyncRuleContent(syncRule, obj.gistFile);
-                    let gistUrl = normaliceSyncRuleContent(syncRule, obj.gistFileUrl);
+               let lastKnowHash = lastKnowHashes.lastKnowHash;
 
-                    let localHash = hashSyncRuleContent(syncRule, localNormalized);
-                    let gistHash = hashSyncRuleContent(syncRule, gistNormalized);
+               let local = obj.localFile;
+               let localDate = obj.localFileDate;
 
-                    let localId = localHash + '@' + localDate;
-                    let gistFileId = gistHash + '@' + hashCode(gistUrl);
+               let localNormalized = normaliceSyncRuleContent(syncRule, obj.localFile);
+               let gistNormalized = normaliceSyncRuleContent(syncRule, obj.gistFile);
+               let gistUrl = normaliceSyncRuleContent(syncRule, obj.gistFileUrl);
 
-                    let local_isInlastKnowHashes = lastKnowHashes.lastKnowHashes.includes(localId);
-                    let gist_isInlastKnowHashes = lastKnowHashes.lastKnowHashes.includes(gistFileId);
+               let localHash = hashSyncRuleContent(syncRule, localNormalized);
 
-                    if ($config.dev) {
-                        $console.log(
-                            '[typebox-gist]   ',
-                            '\nlocalNormalized:     ',
-                            localNormalized,
-                            '\ngistNormalized:      ',
-                            gistNormalized,
-                            '\nlocalHash: ',
-                            localHash,
-                            '\ngistHash:  ',
-                            gistHash,
-                            '\nlastKnowHash:  ',
-                            lastKnowHash,
-                            '\nlastKnowHashes:  ',
-                            lastKnowHashes,
-                            '\nlocal_isInlastKnowHashes:  ',
-                            local_isInlastKnowHashes,
-                            '\ngist_isInlastKnowHashes:  ',
-                            gist_isInlastKnowHashes,
-                            '\nlocalId:  ',
-                            localId,
-                            'gistFileId:  ',
-                            gistFileId
-                        );
-                    }
+               let gistHash = hashSyncRuleContent(syncRule, gistNormalized);
 
-                    const _validHash = hash => {
-                        return hash && hash !== null && hash.length > 1;
-                    };
+               let localId = `${localHash}@${localDate}`;
+               let gistFileId = `${gistHash}@${hashCode(gistUrl)}`;
 
-                    const _saveHasah2File = hash => {
-                        if (!_validHash(hash)) return;
+               let local_isInlastKnowHashes = lastKnowHashes.lastKnowHashes.includes(localId);
+               let gist_isInlastKnowHashes = lastKnowHashes.lastKnowHashes.includes(gistFileId);
 
-                        let _lastKnowHashes = {
-                            lastKnowHash: hash,
-                            lastKnowHashes: _.uniq([gistFileId.replace('null', '-'), localId.replace('null', '-'), ...lastKnowHashes.lastKnowHashes]).slice(
-                                0,
-                                $config.sizeLaskKnows
-                            )
-                        };
+               $console.log(
+                  '[typebox-gist]   ',
+                  '\nlocalNormalized:     ',
+                  localNormalized,
+                  '\ngistNormalized:      ',
+                  gistNormalized,
+                  '\nlocalHash: ',
+                  localHash,
+                  '\ngistHash:  ',
+                  gistHash,
+                  '\nlastKnowHash:  ',
+                  lastKnowHash,
+                  '\nlastKnowHashes:  ',
+                  lastKnowHashes,
+                  '\nlocal_isInlastKnowHashes:  ',
+                  local_isInlastKnowHashes,
+                  '\ngist_isInlastKnowHashes:  ',
+                  gist_isInlastKnowHashes,
+                  '\nlocalId:  ',
+                  localId,
+                  'gistFileId:  ',
+                  gistFileId
+               );
 
-                        if (hashCode(lastKnowHashes) === hashCode(_lastKnowHashes)) return;
+               const _validHash = hash => {
+                  return hash && hash !== null && hash.length > 1;
+               };
 
-                        return saveocalObjFile(context.getSetting('here_are_dragons.paths.user'), _lastKnowHashFile, _lastKnowHashes, 'JSON');
-                    };
+               const _saveHasah2File = hash => {
+                  if (!_validHash(hash)) return;
 
-                    const _savelocal2gist = () => {
-                        //KTODO: VER DE PONERLE COMENTS
-                        if (localNormalized === null) return $resolve();
+                  let _lastKnowHashes = {
+                     lastKnowHash: hash,
+                     lastKnowHashes: uniq([gistFileId.replace('null', '-'), localId.replace('null', '-'), ...lastKnowHashes.lastKnowHashes]).slice(
+                        0,
+                        $config.sizeLaskKnows
+                     ),
+                  };
 
-                        if (localNormalized === hashCode(obj.gistFile)) {
-                            _saveHasah2File(localHash);
-                            return $resolve();
-                        }
+                  if (hashCode(lastKnowHashes) === hashCode(_lastKnowHashes)) return;
 
-                        $gistObj
-                            .then(() => {
-                                return saveFileToGist(syncRule.file, localNormalized);
-                            })
-                            .then(() => {
-                                _saveHasah2File(localHash);
-                                setTimeout(() => {
-                                    $resolve();
-                                }, $config.gapTimePromises);
-                            })
-                            .catch(e => {
-                                $console.warn('[typebox-gist]', 'Saved gist fail', e);
-                                $resolve();
-                            });
-                    };
+                  return saveocalObjFile(context.getSetting('here_are_dragons.paths.user'), _lastKnowHashFile, _lastKnowHashes, 'JSON');
+               };
 
-                    const _saveGist2local = () => {
-                        //KTODO: VER DE PONERLE COMENTS
-                        if (gistNormalized === null || gistNormalized === undefined) $resolve();
-                        let data = Object.assign({}, local, gistNormalized);
-                        _saveHasah2File(gistHash);
+               const _savelocal2gist = () => {
+                  //KTODO: VER DE PONERLE COMENTS
+                  if (localNormalized === null) return $resolve();
 
-                        if (hashCode(data) === hashCode(local)) {
-                            return $resolve();
-                        }
+                  if (localNormalized === hashCode(obj.gistFile)) {
+                     _saveHasah2File(localHash);
+                     return $resolve();
+                  }
 
-                        saveocalObjFile(syncRule.path, syncRule.file, data, syncRule.type);
-                        setTimeout(() => {
-                            $resolve();
-                        }, $config.gapTimePromises);
-                    };
-
-                    const _compareInSomeLastsAndSaveNew = () => {
-                        let someHashes = _.uniq(lastKnowHashes.lastKnowHashes.map(hs => hs.split('@')[0]));
-                        let localInSomeLash = someHashes.includes(localHash);
-                        let gistInSomeLash = someHashes.includes(gistHash);
-
-                        if (localInSomeLash !== gistInSomeLash) {
-                            if (!localInSomeLash) {
-                                $console.log('[typebox-gist]', '>> COMPARE In some >> local win');
-                                return _savelocal2gist();
-                            }
-                            if (!gistInSomeLash) {
-                                $console.log('[typebox-gist]', '>> COMPARE In some >> gist win');
-                                return _saveGist2local();
-                            }
-                        }
-
-                        return false;
-                    };
-
-                    const _compareNoNullAndSaveNew = () => {
-                        if (!_validHash(localHash) && _validHash(gistHash)) {
-                            $console.log('[typebox-gist]', '>> COMPARE noNull >> gist win');
-                            return _saveGist2local();
-                        }
-                        if (!_validHash(gistHash) && _validHash(localHash)) {
-                            $console.log('[typebox-gist]', '>> COMPARE noNull >> local win');
-                            return _savelocal2gist();
-                        }
-                        return false;
-                    };
-
-                    const _compareAndSaveNew = () => {
-                        $console.log('[typebox-gist]', '>> COMPARE Save2local');
-                        //KTODO: Que gane el no vacio nulo o corrupto
-                        if (_compareInSomeLastsAndSaveNew() !== false) return;
-                        return _saveGist2local();
-                    };
-
-                    // ERROR NO HASH
-                    if (!_validHash(localHash)) {
-                        $console.warn('[typebox-gist]', 'LOCAL NO HASH', local, localNormalized);
-                        if (_compareNoNullAndSaveNew() == false) return $resolve();
-                    }
-
-                    //NO GIST
-                    if (!_validHash(gistHash)) {
-                        $console.log('[typebox-gist]', '>> NO GIST');
-                        if (_compareNoNullAndSaveNew() !== false) return;
-                    }
-
-                    // SECOND INSTANCE, SAVE GIST 2 local
-                    if (!_validHash(lastKnowHash)) {
-                        $console.log('[typebox-gist]', '>> SECOND INSTANCE > Gist 2 local');
-                        return _saveGist2local();
-                    }
-
-                    //EQUALS > RETURN
-                    if (localHash === gistHash) {
-                        $console.log('[typebox-gist]', '>> EQUALS > RETURN');
+                  $gistObj
+                     .then(() => {
+                        return saveFileToGist(syncRule.file, localNormalized);
+                     })
+                     .then(() => {
                         _saveHasah2File(localHash);
-                        return $resolve();
-                    }
+                        setTimeout(() => {
+                           $resolve();
+                        }, $config.gapTimePromises);
+                     })
+                     .catch(e => {
+                        $console.warn('[typebox-gist]', 'Saved gist fail', e);
+                        $resolve();
+                     });
+               };
 
-                    //unknouns & differents
-                    if (!local_isInlastKnowHashes && !gist_isInlastKnowHashes) {
-                        $console.log('[typebox-gist]', '>> unknouns & differents: COMPARE');
-                        return _compareAndSaveNew();
-                    }
+               const _saveGist2local = () => {
+                  //KTODO: VER DE PONERLE COMENTS
+                  if (gistNormalized === null || gistNormalized === undefined) $resolve();
 
-                    //New local
-                    if (!local_isInlastKnowHashes) {
-                        $console.log('[typebox-gist]', '>> NEW LOCAL > Save to gist');
+                  //KTODO
+                  let data = Object.assign({}, pick(local, syncRule.ignore), gistNormalized);
+
+                  _saveHasah2File(gistHash);
+
+                  if (hashCode(data) === hashCode(local)) {
+                     return $resolve();
+                  }
+
+                  saveocalObjFile(syncRule.path, syncRule.file, data, syncRule.type);
+                  setTimeout(() => {
+                     $resolve();
+                  }, $config.gapTimePromises);
+               };
+
+               const _compareInSomeLastsAndSaveNew = () => {
+                  let someHashes = uniq(lastKnowHashes.lastKnowHashes.map(hs => hs.split('@')[0]));
+                  let localInSomeLash = someHashes.includes(localHash);
+                  let gistInSomeLash = someHashes.includes(gistHash);
+
+                  if (localInSomeLash !== gistInSomeLash) {
+                     if (!localInSomeLash) {
+                        $console.log('[typebox-gist]', '>> COMPARE In some >> local win');
                         return _savelocal2gist();
-                    }
-
-                    //New Gist
-                    if (!gist_isInlastKnowHashes) {
-                        $console.log('[typebox-gist]', '>> NEW GIST > Save to local');
+                     }
+                     if (!gistInSomeLash) {
+                        $console.log('[typebox-gist]', '>> COMPARE In some >> gist win');
                         return _saveGist2local();
-                    }
+                     }
+                  }
 
-                    //knouns but differents
-                    if (local_isInlastKnowHashes && gist_isInlastKnowHashes) {
-                        $console.log('[typebox-gist]', '>> knouns but differents: COMPARE');
-                        return _compareAndSaveNew();
-                    }
+                  return false;
+               };
 
-                    $resolve();
-                })
-                .catch(e => {
-                    $console.warn('[typebox-gist] fail get pairs:', syncRule);
-                    $resolve();
-                });
-        });
-    };
+               const _compareNoNullAndSaveNew = () => {
+                  if (!_validHash(localHash) && _validHash(gistHash)) {
+                     $console.log('[typebox-gist]', '>> COMPARE noNull >> gist win');
+                     return _saveGist2local();
+                  }
+                  if (!_validHash(gistHash) && _validHash(localHash)) {
+                     $console.log('[typebox-gist]', '>> COMPARE noNull >> local win');
+                     return _savelocal2gist();
+                  }
+                  return false;
+               };
 
-    const sync = () => {
-        return new Promise(($resolve, reject) => {
-            $console.info('[typebox-gist] Start sync');
-            $gistObj = auth({ token: $config.token })
-                .then(() => {
-                    promiseSerial($config.syncFiles.map(obj => () => comparator(obj)))
-                        .then(() => {
-                            $console.info('[typebox-gist]', 'Sync end ok');
-                            $resolve();
-                        })
-                        .catch(e => {
-                            $console.error('[typebox-gist] ', e);
-                            reject();
-                        });
-                })
-                .catch(e => {
-                    $console.error('[typebox-gist] No Gist auth:', e);
-                    reject();
-                });
-        });
-    };
+               const _compareAndSaveNew = () => {
+                  $console.log('[typebox-gist]', '>> COMPARE Save2local');
+                  //KTODO: Que gane el no vacio nulo o corrupto
+                  if (_compareInSomeLastsAndSaveNew() !== false) return;
+                  return _saveGist2local();
+               };
 
-    return {
-        config: defaultConfig,
-        init() {
-            //KTODO: Usar un setInterval o idle para volver a disparar
+               // ERROR NO HASH
+               if (!_validHash(localHash)) {
+                  $console.warn('[typebox-gist]', 'LOCAL NO HASH', local, localNormalized, localHash);
+                  if (_compareNoNullAndSaveNew() == false) return $resolve();
+               }
 
-            $console = context.logger;
-            $config = this.config;
+               //NO GIST
+               if (!_validHash(gistHash)) {
+                  $console.log('[typebox-gist]', '>> NO GIST');
+                  if (_compareNoNullAndSaveNew() !== false) return;
+               }
 
-            if ($config.disabled) {
-                $console.info('[typebox-gist] disabled in config');
-                return;
-            }
+               // SECOND INSTANCE, SAVE GIST 2 local
+               if (!_validHash(lastKnowHash)) {
+                  $console.log('[typebox-gist]', '>> SECOND INSTANCE > Gist 2 local');
+                  return _saveGist2local();
+               }
 
-            if (!$config.token) {
-                $console.warn('[typebox-gist] No token: go to https://github.com/settings/tokens/new');
-                return;
-            }
+               //EQUALS > RETURN
+               if (localHash === gistHash) {
+                  $console.log('[typebox-gist]', '>> EQUALS > RETURN');
+                  _saveHasah2File(localHash);
+                  return $resolve();
+               }
 
-            $config.dev = context.getSetting('dev');
+               //unknouns & differents
+               if (!local_isInlastKnowHashes && !gist_isInlastKnowHashes) {
+                  $console.log('[typebox-gist]', '>> unknouns & differents: COMPARE');
+                  return _compareAndSaveNew();
+               }
 
-            if ($config.syncOnDev !== true && $config.dev) {
-                $console.info('[typebox-gist] disabled on dev');
-                return;
-            }
+               //New local
+               if (!local_isInlastKnowHashes) {
+                  $console.log('[typebox-gist]', '>> NEW LOCAL > Save to gist');
+                  return _savelocal2gist();
+               }
 
-            if (context.getSetting('dev')) {
-                $config.gistDescription = $config.gistDescription
-                    .replace('{dev}', '_dev')
-                    .replace('{terminal}', '_' + context.getSetting('here_are_dragons.terminalName') + '_');
-            } else {
-                $config.gistDescription = $config.gistDescription.replace('{dev}', '').replace('{terminal}', '');
-            }
+               //New Gist
+               if (!gist_isInlastKnowHashes) {
+                  $console.log('[typebox-gist]', '>> NEW GIST > Save to local');
+                  return _saveGist2local();
+               }
 
-            //SYNC NOW
-            if ($config.startOnInit) {
-                sync().then(() => {});
-            }
+               //knouns but differents
+               if (local_isInlastKnowHashes && gist_isInlastKnowHashes) {
+                  $console.log('[typebox-gist]', '>> knouns but differents: COMPARE');
+                  return _compareAndSaveNew();
+               }
 
-            //SYNC EVERY syncTime
-            if ($config.syncTime && $config.syncTime > 0) {
-                context.onIdleTimeInterval(() => {
-                    $console.info('[typebox-gist] Start on idle');
-                    sync().then(() => {});
-                }, $config.syncTime);
-            }
-
-            //ON CHANGE SYNC NEXT IDLE
-            context.on('changeSettings', () => {
-                $saveOnNextIdle = true;
+               $resolve();
+            })
+            .catch(e => {
+               $console.warn('[typebox-gist] fail get pairs:', syncRule);
+               $resolve();
             });
-            context.on('idle', () => {
-                if ($saveOnNextIdle) {
-                    $console.info('[typebox-gist] Start on changeSettings');
-                    $saveOnNextIdle = false;
-                    sync().then(() => {});
-                }
+      });
+   };
+
+   const sync = () => {
+      return new Promise(($resolve, reject) => {
+         $console.info('[typebox-gist] Start sync');
+         $gistObj = gisAuth({ token: $config.token })
+            .then(() => {
+               promiseSerial($config.syncFiles.map(obj => () => comparator(obj)))
+                  .then(() => {
+                     $console.info('[typebox-gist]', 'Sync end ok');
+                     $resolve();
+                  })
+                  .catch(e => {
+                     $console.error('[typebox-gist] ', e);
+                     reject();
+                  });
+            })
+            .catch(e => {
+               $console.error('[typebox-gist] No Gist gisAuth:', e);
+               reject();
             });
-        }
-    };
+      });
+   };
+
+   return {
+      config: defaultConfig,
+      init() {
+         //KTODO: Usar un setInterval o idle para volver a disparar
+
+         $console = context.logger;
+         $config = this.config;
+
+         //KTODO: Si es un obj, no un array insertar directo
+         context.addPermanentRules([
+            {
+               title: 'Sync configs',
+               path: 'internal_pack_options',
+               type: ['gist-sync-now'],
+               icon: {
+                  type: 'iconFont',
+                  iconClass: 'mdi-cloud-sync',
+               },
+            },
+         ]);
+
+         if ($config.disabled) {
+            $console.info('[typebox-gist] disabled in config');
+            return;
+         }
+
+         if (!$config.token) {
+            $console.warn('[typebox-gist] No token: go to https://github.com/settings/tokens/new');
+            return;
+         }
+
+         $config.dev = context.getSetting('dev');
+
+         if ($config.syncOnDev !== true && $config.dev) {
+            $console.info('[typebox-gist] disabled on dev');
+            return;
+         }
+
+         if (context.getSetting('dev')) {
+            $config.gistDescription = $config.gistDescription
+               .replace('{dev}', '_dev')
+               .replace('{terminal}', `_${context.getSetting('here_are_dragons.terminalName')}_`);
+         } else {
+            $config.gistDescription = $config.gistDescription.replace('{dev}', '').replace('{terminal}', '');
+         }
+
+         //SYNC NOW
+         if ($config.startOnInit) {
+            sync().then(() => {});
+         }
+
+         //ON CHANGE SYNC NEXT IDLE
+         //KTODO: que escuche también los changeSettings de los plugins
+         context.on('changeSettings', () => {
+            $saveOnNextIdle = true;
+         });
+
+         context.on('idle', () => {
+            if ($saveOnNextIdle) {
+               $console.info('[typebox-gist] Start on changeSettings');
+               $saveOnNextIdle = false;
+               sync().then(() => {});
+            }
+         });
+
+         //SYNC EVERY syncTime
+         if ($config.syncTime && $config.syncTime > 0) {
+            context.onIdleTimeInterval(() => {
+               $console.info('[typebox-gist] Start on idle');
+               sync().then(() => {});
+            }, $config.syncTime);
+         }
+      },
+      defineTypeExecutors() {
+         //KTODO: Config visual, mínimo para token
+         return [
+            {
+               title: 'Sync configs',
+               type: 'gist-sync-now',
+               id: 'gist-sync-now' + 'OCP',
+               enabled: obj => {
+                  return false;
+               },
+               exectFunc: obj => {
+                  let _path = 'internal_pack_options_info';
+                  context.setPath(_path);
+                  context.putLoader(_path, 'Sync in progress');
+                  sync().then(() => {
+                     context.putInfo(_path, 'Sync end ok');
+                  });
+               },
+            },
+         ];
+      },
+   };
 };

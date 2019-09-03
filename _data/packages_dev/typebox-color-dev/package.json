@@ -1,18 +1,11 @@
 {
-  "name": "typebox-color-dev",
-  "version": "0.0.1",
-  "main": "index.jsx",
-  "engines": {
-    "typebox": ">=0.46.0 <2.0.0"
-  },
-  "scripts": {
-    "compile": "node node_modules/babel-cli/bin/babel.js index.jsx --out-file index.js --plugins=inferno -x=jsx",
-    "prune": "npm prune --production"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-plugin-inferno": "^3.2.0",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "inferno": "^3.4.3"
-  }
+   "name": "typebox-color-dev",
+   "version": "0.0.90",
+   "main": "index.js",
+   "engines": {
+      "typebox": ">=0.71 <2.0.0"
+   },
+   "scripts": {
+      "compile": "npx babel  index.jsx --out-file index.js --config-file ./babel.config.js"
+   }
 }

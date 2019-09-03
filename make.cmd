@@ -1,0 +1,1 @@
+cls && (npm run make && out\make\squirrel.windows\x64\typebox_setup.exe  -- --startOpen=false && echo . & echo '[make OK]') 2>&1 | tee _report/make.log

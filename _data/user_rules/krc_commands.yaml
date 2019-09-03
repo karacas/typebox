@@ -1,0 +1,344 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+# https://support.microsoft.com/es-ar/help/192806/how-to-run-control-panel-tools-by-typing-a-command
+---
+name: krc_commands
+enabled: true
+icon: mdi-windows palette-Light-Blue-A100 text
+plataforms: 'win32'
+rules:
+   # SIMPLE TEXTS
+   - title: 'Add/Remove Programs [win cmd]'
+     type: ['command']
+     params:
+        command: 'control appwiz.cpl'
+
+   - title: 'Fonts Folder [win cmd]'
+     type: ['command']
+     params:
+        command: 'control fonts'
+
+   - title: 'Joystick Properties [win cmd]'
+     type: ['command']
+     params:
+        command: 'control joy.cpl'
+
+   - title: 'Keyboard Properties [win cmd]'
+     type: ['command']
+     params:
+        command: 'control main.cpl keyboard'
+
+   - title: 'Mouse Properties [win cmd]'
+     type: ['command']
+     params:
+        command: 'control main.cpl'
+
+   - title: 'Multimedia/Sound Properties [win cmd]'
+     type: ['command']
+     params:
+        command: 'control mmsys.cpl'
+
+   - title: 'Scanners and Cameras [win cmd]'
+     type: ['command']
+     params:
+        command: 'control sticpl.cpl'
+
+   - title: 'System Properties [win cmd]'
+     type: ['command']
+     params:
+        command: 'control sysdm.cpl'
+
+   - title: 'Scheduled Tasks [win cmd]'
+     type: ['command']
+     params:
+        command: 'control schedtasks'
+
+   - title: 'Admin Tools [win cmd]'
+     type: ['command']
+     params:
+        command: 'control.exe admintools'
+
+   - title: 'Computer Management [win cmd]'
+     type: ['command']
+     params:
+        command: '%windir%\system32\compmgmt.msc /s'
+
+   - title: 'Device Manager [win cmd]'
+     type: ['command']
+     params:
+        command: 'mmc devmgmt.msc'
+
+   - title: 'Services [win cmd]'
+     type: ['command']
+     params:
+        command: 'Services.msc'
+
+   - title: 'Lock WorkStation [win cmd]'
+     type: ['command']
+     params:
+        command: 'RunDll32.exe user32.dll,LockWorkStation'
+
+   - title: 'Open Control Panel [win cmd]'
+     type: ['command']
+     params:
+        command: 'RunDll32.exe shell32.dll,Control_RunDLL'
+
+   - title: 'Network Connections [win cmd]'
+     type: ['command']
+     params:
+        command: 'RunDll32.exe shell32.dll,Control_RunDLL ncpa.cpl'
+
+   - title: 'Firewall [win cmd]'
+     type: ['command']
+     params:
+        command: 'RunDll32.exe shell32.dll,Control_RunDLL firewall.cpl'
+
+   - title: 'Environment Variables [win cmd]'
+     type: ['command']
+     params:
+        command: 'Rundll32.exe sysdm.cpl,EditEnvironmentVariables'
+
+   - title: 'Disk Clean Up [win cmd]'
+     type: ['command']
+     params:
+        command: 'cleanmgr'
+
+   - title: 'Character Map [win cmd]'
+     type: ['command']
+     params:
+        command: 'charmap'
+
+   - title: 'On Screen Keyboard [win cmd]'
+     type: ['command']
+     params:
+        command: 'osk'
+
+   - title: 'Registry Editor / regedit [win cmd]'
+     type: ['command']
+     params:
+        command: 'regedit'
+
+   - title: 'Folder Sharing Management [win cmd]'
+     type: ['command']
+     params:
+        command: 'fsmgmt.msc'
+
+   - title: 'Local Users and Groups [win cmd]'
+     type: ['command']
+     params:
+        command: 'lusrmgr.msc'
+
+   - title: 'System Protection / Restore point [win cmd]'
+     type: ['command']
+     params:
+        command: 'rstrui.exe'
+
+   - title: 'Update [win cmd]'
+     type: ['command']
+     params:
+        command: 'control /name Microsoft.WindowsUpdate'
+
+   - title: 'ping 8.8.4.4'
+     type: ['command']
+     params:
+        command: 'start cmd.exe /K ping 8.8.4.4 -t'
+
+   #____________________________________________________________________________________
+
+   - title: 'ms-settings [New Control Panel]'
+     type: ['command']
+     params:
+        command: 'start ms-settings:'
+
+   - title: 'Settings display'
+     type: ['command']
+     params:
+        command: 'start ms-settings:display'
+
+   - title: 'Settings Notifications'
+     type: ['command']
+     params:
+        command: 'start ms-settings:notifications'
+
+   - title: 'Settings Batterysaver'
+     type: ['command']
+     params:
+        command: 'start ms-settings:batterysaver'
+
+   - title: 'Settings Storagesense'
+     type: ['command']
+     params:
+        command: 'start ms-settings:storagesense'
+
+   - title: 'Settings Project'
+     type: ['command']
+     params:
+        command: 'start ms-settings:project'
+
+   - title: 'Settings About'
+     type: ['command']
+     params:
+        command: 'start ms-settings:about'
+
+   - title: 'Settings Bluetooth'
+     type: ['command']
+     params:
+        command: 'start ms-settings:bluetooth'
+
+   - title: 'Settings Printers'
+     type: ['command']
+     params:
+        command: 'start ms-settings:printers'
+
+   - title: 'Settings Autoplay'
+     type: ['command']
+     params:
+        command: 'start ms-settings:autoplay'
+
+   - title: 'Settings Network'
+     type: ['command']
+     params:
+        command: 'start ms-settings:network-status'
+
+   - title: 'Settings Network wifisettings'
+     type: ['command']
+     params:
+        command: 'start ms-settings:network-wifisettings'
+
+   - title: 'Settings Network ethernet'
+     type: ['command']
+     params:
+        command: 'start ms-settings:network-ethernet'
+
+   - title: 'Settings Network vpn'
+     type: ['command']
+     params:
+        command: 'start ms-settings:network-vpn'
+
+   - title: 'Settings Personalization background'
+     type: ['command']
+     params:
+        command: 'start ms-settings:personalization-background'
+
+   - title: 'Settings Colors'
+     type: ['command']
+     params:
+        command: 'start ms-settings:colors'
+
+   - title: 'Settings Themes'
+     type: ['command']
+     params:
+        command: 'start ms-settings:themes'
+
+   - title: 'Settings Taskbar'
+     type: ['command']
+     params:
+        command: 'start ms-settings:taskbar'
+
+   - title: 'Settings Optionalfeatures'
+     type: ['command']
+     params:
+        command: 'start ms-settings:optionalfeatures'
+
+   - title: 'Settings Defaultapps'
+     type: ['command']
+     params:
+        command: 'start ms-settings:defaultapps'
+
+   - title: 'Settings Appsforwebsites'
+     type: ['command']
+     params:
+        command: 'start ms-settings:appsforwebsites'
+
+   - title: 'Settings Yourinfo'
+     type: ['command']
+     params:
+        command: 'start ms-settings:yourinfo'
+
+   - title: 'Settings Otherusers'
+     type: ['command']
+     params:
+        command: 'start ms-settings:otherusers'
+
+   - title: 'Settings Dateandtime'
+     type: ['command']
+     params:
+        command: 'start ms-settings:dateandtime'
+
+   - title: 'Settings Regionlanguage'
+     type: ['command']
+     params:
+        command: 'start ms-settings:regionlanguage'
+
+   - title: 'Settings Windowsupdate'
+     type: ['command']
+     params:
+        command: 'start ms-settings:windowsupdate'
+
+   - title: 'Settings Backup'
+     type: ['command']
+     params:
+        command: 'start ms-settings:backup'
+
+   - title: 'Settings Recovery'
+     type: ['command']
+     params:
+        command: 'start ms-settings:recovery'
+
+   - title: 'Settings Developers'
+     type: ['command']
+     params:
+        command: 'start ms-settings:developers'
+
+   - title: 'Restart'
+     type: ['command']
+     params:
+        command: 'start shutdown /r /t 0'
+
+   - title: 'Shutdown'
+     type: ['command']
+     params:
+        command: 'start shutdown /s /t 0'
+
+   #____________________________________________________________________________________
+
+   - title: 'Calc'
+     type: ['command']
+     icon: mdi-calculator palette-Light-Blue-A200 text
+     params:
+        command: 'start calculator:'
+
+   - title: 'Calendar'
+     type: ['command']
+     params:
+        command: 'start outlookcal:'
+
+   - title: 'Camera'
+     type: ['command']
+     params:
+        command: 'start microsoft.windows.camera:'
+
+   - title: 'MS Maps'
+     type: ['command']
+     params:
+        command: 'start bingmaps:'
+
+   - title: 'Microsoft Edge'
+     type: ['command']
+     params:
+        command: 'start microsoft-edge:'
+
+   - title: 'People'
+     type: ['command']
+     params:
+        command: 'start ms-people:'
+
+   - title: 'Photos'
+     type: ['command']
+     params:
+        command: 'start ms-photos:'
+
+   - title: 'Weather'
+     type: ['command']
+     params:
+        command: 'start bingweather:'

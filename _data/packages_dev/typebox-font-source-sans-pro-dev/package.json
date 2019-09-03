@@ -1,12 +1,12 @@
 {
-	"name": "typebox-font-source-sans-pro-dev",
-	"version": "0.0.1",
-	"theme": "font",
-	"main": "index.css",
-	"engines": {
-		"typebox": ">=0.46.0 <2.0.0"
-	},
-	"dependencies": {
-		"npm-font-source-sans-pro": "^1.0.2"
-	}
+   "name": "typebox-font-source-sans-pro-dev",
+   "version": "0.0.1",
+   "theme": "font",
+   "main": "index.css",
+   "engines": {
+      "typebox": ">=0.58.0 <2.0.0"
+   },
+   "dependencies": {
+      "npm-font-source-sans-pro": "^1.0.2"
+   }
 }

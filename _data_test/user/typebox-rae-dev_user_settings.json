@@ -1,0 +1,12 @@
+/*{
+    "dictArr": "./dicts/fs_rae_lemario_2002.js",
+    "urlRae": "http://dirae.es./palabras/{{term}}",
+    "urlRaeViewer": "http://www.wordreference.com/definicion/{{term}}",
+    "urlRaeViewerBase": "http://www.wordreference.com",
+    "viewerEnabled": true,
+    "viewerType": "html",
+    "iconRaeSvg": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path fill='#FF7043' d='M38 44H12V4h26c2.2 0 4 1.8 4 4v32c0 2.2-1.8 4-4 4'/><path fill='#BF360C' d='M10 4h2v40h-2c-2.2 0-4-1.8-4-4V8c0-2.2 1.8-4 4-4'/><path fill='#E64A19' d='M37 15H17v-4h20v4zm0 2H17v2h20v-2z'/></svg>"
+}*/
+{
+
+}

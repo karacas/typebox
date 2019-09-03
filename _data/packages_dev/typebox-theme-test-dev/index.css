@@ -1,6 +1,1 @@
-.ruleName{
-	color: #F00 !important;
-}
-body.redAccent {
-	--accentColor: #F00;
-}
+body{--iconSize:0px}body.redAccent{--accentColor:red;--backColor:#000}

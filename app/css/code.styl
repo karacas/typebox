@@ -1,0 +1,236 @@
+vendors = official;
+
+/*
+	HLJS
+*/
+#ruleViewer {
+	&.hljs:not(.untouched), .hljs:not(.untouched) {
+		overflow: visible !important;
+		overflow-x: visible !important;
+		background: none !important;
+	}
+
+	.hljs {
+		display: block;
+	}
+
+	.hljs:not(.untouched) {
+		padding: 0;
+	}
+
+	pre:not(.CodeMirror-line):not(.CodeMirror-placeholder):not(.noBack) {
+		display: -webkit-inline-box !important;
+		padding: calc(var(--padding) * 0.5) calc(var(--padding) * 0.75) !important;
+		background-color: var(--darkColor) !important;
+		border-radius: var(--radBorder) !important;
+		min-width: calc(100% - var(--padding) * 1.5) !important;
+	}
+
+	pre:not(.untouched) {
+		margin-top: 0;
+		margin-left: 0;
+		margin-right: 0;
+		// margin: 0;
+	}
+
+	body.isLight & pre:not(.noBack), body.isLight & .hljs:not(.noBack), body.isLight & code:not(.noBack) {
+		background-color: transparent;
+	}
+
+	& h1:first-child, & h2:first-child {
+		margin-top: 0;
+		padding-top: 0;
+	}
+
+	h2 {
+		code, pre {
+			font-size: 1em;
+		}
+	}
+
+	h3 {
+		code, pre {
+			font-size: 1em;
+		}
+	}
+}
+
+.hljs {
+	background: transparent;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+
+.hljs-link {
+	text-decoration: underline;
+}
+
+/*
+	COLORS
+*/
+#ruleViewer {
+	.cm-def, .hljs:not(.untouched) {
+		color: var(--code-default);
+	}
+
+	.cm-tag {
+		color: var(--code-tag);
+	}
+
+	.cm-comment, .hljs-comment, .hljs-quote {
+		color: var(--code-comment);
+	}
+
+	.cm-keyword, .hljs-doctag, .hljs-keyword, .hljs-formula {
+		color: var(--code-keyword);
+	}
+
+	.cm-atom, .hljs-section, .hljs-name, .hljs-selector-tag, .hljs-deletion, .hljs-subst {
+		color: var(--code-section);
+	}
+
+	.cm-property, .cm-meta, .hljs-literal {
+		color: var(--code-property);
+	}
+
+	.cm-string, .cm-attribute, .hljs-string, .hljs-regexp, .hljs-addition, .hljs-attribute, .hljs-meta-string {
+		color: var(--code-string);
+	}
+
+	.cm-variable, .cm-qualifier, .hljs-built_in, .hljs-class .hljs-title, .hljs-attr, .hljs-variable, .hljs-template-variable, .hljs-type, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number {
+		color: var(--code-variable);
+	}
+
+	.cm-variable-2, .hljs-symbol, .hljs-bullet, .hljs-link, .hljs-meta, .hljs-selector-id, .hljs-title {
+		color: var(--code-symbol);
+	}
+}
+
+/*
+	CodeMirror
+*/
+#ruleViewer {
+	.CodeMirror {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: auto;
+		width: auto;
+		background: none !important;
+	}
+
+	.CodeMirror-hscrollbar {
+		right: 0 !important;
+	}
+
+	.CodeMirror-vscrollbar {
+		right: 0 !important;
+		bottom: var(--padding) !important;
+	}
+
+	.CodeMirror-gutters {
+		background-color: transparent !important;
+	}
+
+	.CodeMirror-scroll {
+		margin-right: 4px;
+		margin-bottom: 4px;
+		padding-bottom: 0;
+
+		&::-webkit-scrollbar {
+			display: none !important;
+		}
+	}
+
+	.CodeMirror-sizer {
+		border-color: transparent !important;
+	}
+
+	.cMirrorReadOnly {
+		.CodeMirror .CodeMirror-code {
+			opacity: 0.95;
+			filter: grayscale(0.1);
+		}
+
+		.CodeMirror-cursor {
+			visibility: hidden;
+		}
+	}
+
+	.CodeMirror-scrollbar-filler {
+		background: transparent !important;
+	}
+
+	.CodeMirror-scroll {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	.react-codemirror2 {
+		display: contents;
+	}
+
+	.CodeMirror, .CodeMirror pre, .CodeMirror-code {
+		font-family: var(--mainFontMono) !important;
+	}
+
+	.CodeMirror-code {
+		font-weight: var(--mainFontWeightCode) !important;
+		font-size: var(--codeFontSize);
+		font-family: var(--mainFontMono);
+		line-height: 1.6 !important;
+
+		@media $bigSize {
+			font-size: var(--codeBigFontSize);
+			line-height: 1.6 !important;
+		}
+	}
+
+	&.big .CodeMirror-code, .big & .CodeMirror-code {
+		font-size: var(--codeBigFontSize);
+		line-height: 1.6 !important;
+	}
+
+	.CodeMirror-vscrollbar {
+		bottom: 0;
+	}
+
+	.CodeMirror-placeholder {
+		opacity: 0.4;
+		font-weight: 100;
+	}
+
+	.CodeMirror pre {
+		padding-left: 0;
+	}
+}
+
+/*
+	CodeMirror OVERWRITES
+*/
+.overwritesLight .CodeMirror, .overwritesDark .CodeMirror {
+	& {
+		color: var(--code-default) !important;
+	}
+
+	.cm-error {
+		background: none !important;
+	}
+
+	.CodeMirror-cursor {
+		border-color: var(--caretColor) !important;
+		border-left-width: 2px;
+	}
+
+	.CodeMirror-lines * {
+		font-style: normal;
+	}
+}

@@ -1,0 +1,227 @@
+body {
+  --offsetTitle: 42px;
+  --offsetBottom: 46px;
+}
+.TBN_main_viwer,
+.TBN_main_viwerMD,
+#noteOptionsWrapp {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  left: 29px; /* column number of ace editor */
+  overflow: hidden;
+  overflow-y: scroll;
+  overflow-y: auto;
+  width: auto;
+  height: auto;
+}
+.TBN_main_viwerMD,
+#noteOptionsWrapp {
+  left: 0;
+  padding-top: calc(var(--padding) * 0.3);
+  background: var(--backColor) !important;
+  z-index: 10;
+}
+#TBN_main {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0;
+}
+#TBN_main .TBN_main_wrapp {
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--offsetBottom));
+}
+#TBN_main .noteFooterBar {
+  display: flex;
+  position: relative;
+  z-index: 20;
+  margin-top: calc(var(--padding) * 0.25 + 8px);
+  width: auto;
+  user-select: none;
+}
+#TBN_main .TBN_code_wrapp {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  width: auto;
+}
+#TBN_main #noteTitle {
+  width: 100%;
+  outline: none;
+  border: none;
+  background: none;
+  font-family: var(--mainFont);
+  caret-color: var(--accentColor);
+  color: var(--cursorColor);
+  font-size: var(--h1FontSize);
+  font-weight: var(--h1FontWeight);
+  padding: 0;
+  margin-left: 0;
+  margin-top: -4px;
+  padding-bottom: 4px;
+  border-bottom: solid 1px var(--hrTagColor);
+  color: var(--accentColor);
+}
+#TBN_main #noteTitle::placeholder {
+  color: var(--textLowColor);
+  -webkit-opacity: var(--medOpacity);
+}
+body.isDark #TBN_main #noteTitle::selection {
+  background: rgba(255,255,255,0.2);
+}
+body.isLight #TBN_main #noteTitle::selection {
+  background: rgba(0,0,0,0.2);
+}
+#TBN_main .TBN_code_wrapp {
+  top: var(--offsetTitle) !important;
+}
+#noteOptionsWrapp {
+  z-index: 12;
+/* HIIDEN */
+}
+#noteOptionsWrapp:not(._opt_enabled) {
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  user-select: none !important;
+}
+#TBN_main._woptions #noteComponentEditWrapp {
+  visibility: hidden;
+  pointer-events: none;
+}
+#TBN_main._woptions #noteOptionsBtn .tb-icon:before,
+#TBN_main._woptions #noteOptionsBtn i:before {
+  color: var(--accentColor) !important;
+  -webkit-opacity: 1 !important;
+}
+#TBN_main #noteOptions {
+  width: 100%;
+  min-height: 150%;
+}
+#TBN_main #noteOptions #noteOptionsLeft {
+  width: 100%;
+  padding-right: calc(var(--padding) * 2);
+}
+#TBN_main #noteOptions .noteInfoBox {
+  width: 25%;
+  min-width: 190px;
+}
+#TBN_main #noteOptions .noteOptionsH3 {
+  user-select: none;
+  pointer-events: none;
+  margin-top: calc(var(--padding) * 0.15) !important;
+  margin-bottom: calc(var(--padding) * 1.5) !important;
+}
+#ruleViewerWrappSize.smallViewer #TBN_main #noteOptions .noteInfoBox {
+  margin-top: calc(var(--padding) * 1.5);
+}
+#ruleViewerWrappSize.smallViewer #TBN_main #noteOptions #noteOptionsLeft {
+  padding-right: 0;
+}
+#TBN_main .noteInfos .noteInfo {
+  line-height: 2;
+  font-size: var(--smallFontSize);
+  color: var(--textHighColor);
+  -webkit-opacity: var(--hiOpacity);
+}
+#TBN_main .TB-Button-wIcon i {
+  margin-right: 8px;
+}
+#TBN_main .TB-Button-autowidth {
+  width: min-content;
+}
+#TBN_main .TB-input-text {
+  min-width: 120px;
+  border: none;
+  border-color: transparent;
+  letter-spacing: 0.25px;
+  font-size: var(--smallFontSize);
+  font-weight: var(--smallFontWeight);
+  background-color: var(--hoverColor);
+  color: var(--textHighColor);
+  caret-color: var(--textHighColor) !important;
+  outline: none;
+  box-shadow: none;
+  border-radius: var(--radBorder) !important;
+  max-height: 32px;
+  line-height: 30px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 2px;
+  padding-bottom: 0;
+}
+#TBN_main .TB-input-text.TB-input-samll-font {
+  font-size: var(--smallFontSize);
+}
+#TBN_main .TB-input-text::placeholder {
+  color: var(--textLowColor);
+  opacity: var(--medOpacity);
+}
+#TBN_main .TB-input-text:focus {
+  animation: focusAnim calc(0.2s * var(--animSpeedFactor)) ease-in;
+}
+#TBN_main .TB-lineGauge {
+  background: #f00;
+  transform-origin: 0;
+  display: block;
+  height: 4px;
+}
+#TBN_main .TB-lineGauge.__1 {
+  background: linear-gradient(to right, #f00, #f00, #ffa500);
+}
+#TBN_main .TB-lineGauge.__2 {
+  background: linear-gradient(to right, #f00, #ffa500, #ff0);
+}
+#TBN_main .TB-lineGauge.__3 {
+  background: linear-gradient(to right, #ffa500, #ff0, #ff0, #008000);
+}
+#TBN_main .TB-lineGauge.__4 {
+  background: linear-gradient(to right, #ff0, #008000, #008000);
+}
+#TBN_main .superSelectField {
+  background: var(--hoverColor) !important;
+  border-radius: var(--radBorder) !important;
+  opacity: 1 !important;
+}
+#TBN_main .superSelectField > div {
+  background: none !important;
+  display: block;
+  margin: 0;
+  padding: 0;
+  height: 32px;
+  line-height: 32px;
+  padding-left: 8px;
+  outline: none;
+  box-shadow: none;
+  border-color: transparent !important;
+  cursor: pointer;
+  border: none !important;
+  color: var(--textHighColor) !important;
+  font-weight: var(--smallFontWeight) !important;
+  font-size: var(--smallFontSize);
+  opacity: var(--medOpacity);
+}
+#TBN_main .superSelectField > div:hover {
+  opacity: 1;
+}
+#TBN_main .superSelectField hr {
+  display: none !important;
+}
+#TBN_main .superSelectField svg {
+  fill: var(--accentColor) !important;
+  margin-right: 2px;
+}
+@keyframes focusAnim {
+  0% {
+    box-shadow: 0 1px 0 var(--accentColor);
+  }
+}

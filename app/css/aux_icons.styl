@@ -1,0 +1,69 @@
+vendors = official;
+
+/* OCTOICONS */
+@import './../../node_modules/octicons-styl/octicons/octicons.styl';
+
+@font-face {
+	font-family: 'octicons_tb';
+	src: url(octicons-font-path + './../node_modules/octicons-styl/octicons/octicons.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.octicon, .mega-octicon {
+	font-family: 'octicons_tb' !important;
+}
+
+i, .tb-icon {
+	&:before {
+		font-style: normal;
+		font-weight: normal;
+		text-decoration: none !important;
+		font-variant: normal !important;
+		text-transform: none;
+	}
+
+	&[class*='mdi-']:before {
+		font-family: 'Material Design Icons' !important;
+	}
+
+	&[class*='fe-']:before {
+		font-family: 'feather' !important;
+	}
+
+	&[class*='ion-']:before {
+		font-family: 'ionicons' !important;
+	}
+
+	&[class*='octicon-']:before {
+		font-family: 'octicons_tb' !important;
+	}
+
+	&[class*='mdl2-']:before {
+		font-family: 'MDL2' !important;
+	}
+
+	&[class*='w-icon-']:before {
+		font-family: 'w-icon' !important;
+	}
+
+	&[class*='fab-']:before {
+		font-family: 'fontawesome-brands' !important;
+	}
+
+	&[class*='far-']:before {
+		font-family: 'fontawesome-regular' !important;
+	}
+
+	&[class*='fas-']:before {
+		font-family: 'fontawesome-solid' !important;
+	}
+
+	&[class*='icons8-']:before {
+		font-family: 'icons8-win10' !important;
+	}
+
+	&[class*='fe-'], &[class*='fab-'], &[class*='far-'], &[class*='fas-'], &[class*='w-icon-'], &[class*='mdl2-'] {
+		transform: scale(0.9) translateY(0%);
+	}
+}

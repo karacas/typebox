@@ -1,0 +1,67 @@
+/*{
+    "mainShortcut": "CmdOrCtrl+alt+space",
+    "mainShortcut_PopAndFav": "super+alt+up",
+    "mainShortcut_PopAndLast": "super+alt+down",
+    "mainShortcut_StopKeyListener": "super+alt+ctrl+0",
+    "mainShortcut_StartKeyListener": "super+alt+ctrl+1",
+    "animations": false,
+    "notifications": true,
+    "fixedTypeBoxOptions": true,
+    "toolTips": true,
+    "ignoreThesePackages": [],
+    "ignoreTheseRules": [],
+    "packages": [],
+    "width": 960,
+    "maxItemsVisible": 8,
+    "visibleInTaskBar": false,
+    "autoupdateAllPackages": true,
+    "theme": {
+        "name": "default",
+        "subTheme": "",
+        "cssOverWrite": ""
+    },
+    "font": "default",
+    "icons": true,
+    "statusPersist": false,
+    "avoidResizeHeigth": false,
+    "tests": null,
+    "userkaracas": true
+}*/
+{
+    "notifications": false,
+    "ignoreThesePackages": [
+        "internal_pack_launcher",
+        "internal_pack_paths",
+        "typebox-gist-sync-dev"
+    ],
+    "here_are_dragons": {
+        "chromiumConsole": false,
+        "deletePackages": false,
+        "installPackages": true,
+        "realClockEnabled": false,
+        "paths": {
+            "caches": "%typebox%/_data_test/caches/",
+            "favpath": "%typebox%/_data_test/favorites/",
+            "hidden_path": "%typebox%/_data_test/hidden/",
+            "historypath": "%typebox%/_data_test/history/",
+            "lastpath": "%typebox%/_data_test/lastrules/",
+            "logpath": "%typebox%/_data_test/log/",
+            "newspath": "%typebox%/_data_test/news/",
+            "packages": "%typebox%/_data_test/packages/",
+            "packages_dev": "%typebox%/_data_test/packages_dev/",
+            "packages_updates": "%typebox%/_data_test/packages_tmp_updates/",
+            "rootDataStored": "%typebox%/_data_test/",
+            "rules": "%typebox%/_data_test/rules/",
+            "tmp": "%typebox%/_data_test/tmp/",
+            "user": "%typebox%/_data_test/user/",
+            "user_rules": "%typebox%/_data_test/user_rules/"
+        },
+        "testConfig": {
+            "isTestSuite": true
+        }
+    },
+    "theme": {
+        "subTheme": "redAccent",
+        "name": "typebox-theme-test-dev"
+    }
+}
