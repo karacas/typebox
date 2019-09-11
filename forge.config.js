@@ -114,6 +114,15 @@ const $config = {
          },
       },
       {
+         name: '@electron-forge/maker-snap',
+         platforms: ['linux'],
+         config: {
+            description: 'Universal & Open Source keystroke launcher',
+            categories: ['productivity'],
+         },
+         escription: 'Universal & Open Source keystroke launcher',
+      },
+      {
          name: '@electron-forge/maker-flatpak',
          platforms: ['linux'],
          config: {

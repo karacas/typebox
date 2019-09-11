@@ -358,8 +358,8 @@ let settings = {
          frame: false,
          transparent: true,
          backgroundColor: '#282c34',
-         hasShadow: true,
-         vibrancy: 'light',
+         hasShadow: false,
+         // vibrancy: 'light',
          titleBarStyle: 'hidden',
          center: true,
          // useContentSize: true,
@@ -391,20 +391,20 @@ if (ostype === 'win32') {
 
 //MAC OVERWRITES
 if (ostype === 'darwin') {
-   settings.defaultTerminalApp = require('get-term')() || 'Terminal';
-
-   settings.mainShortcut = 'Cmd+space';
-   settings.transparent = false;
+   settings.mainShortcut = 'Alt+space';
+   settings.here_are_dragons.electron_windows_list_options.transparent = false;
 
    //Poor performance
    settings.avoidResizeHeigth = true;
+   settings.defaultTerminalApp = require('get-term')() || 'Terminal';
 }
 
 //LINUX OVERWRITES
 if (ostype === 'linux' || ostype === 'freebsd' || ostype === 'sunos') {
    settings.defaultTerminalApp = tmpDefaultTerminaltermGnome;
    settings.mainShortcut = 'Ctrl+space';
-   settings.transparent = false;
+   settings.here_are_dragons.electron_windows_list_options.transparent = false;
+   settings.avoidResizeHeigth = true;
 }
 
 //DEV OVERWRITES

@@ -90,7 +90,9 @@ const extract_uiohook_dll = () => {
    if (!isRunningInAsar) return false;
 
    const APP_ASAR_TMP = './out/typebox-win32-x64/resources/app.asar';
-   const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v70-win32-x64\\build\\Release\\uiohook.dll';
+   // const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v70-win32-x64\\build\\Release\\uiohook.dll';
+   // const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v75-win32-x64\\build\\Release\\uiohook.dll';
+   const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v73-win32-x64\\build\\Release\\uiohook.dll';
 
    const fs = require('fs');
 

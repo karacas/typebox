@@ -25,6 +25,11 @@ const { saveFileSync, fileExists, fileDelete } = require('@aux/aux_fs.js');
 let initiated = false;
 let settings = null;
 
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('enable-renderer-backgrounding');
+app.commandLine.appendSwitch('disable-pinch');
+app.commandLine.appendSwitch('disable-features', 'ColorCorrectRendering');
+
 async function init() {
    config_maker.init(argv);
    settings = config_maker.settings.getSettings() || {};
@@ -38,64 +43,56 @@ async function init() {
       return;
    }
 
-   try {
-      //KTODO: Ver esto en mac
-      if (app.dock && app.dock.hide) app.dock.hide();
+   //KTODO: Ver esto en mac
+   if (app.dock && app.dock.hide) app.dock.hide();
 
-      global.sharedObj.INIT_TIME = INIT_TIME;
-      global.sharedObj.robotUI = robotUI;
-      global.sharedObj.status = status;
-      global.sharedObj.realClock = realClock;
-      global.sharedObj.testUImanager = testUImanager;
-      global.sharedObj.viewEvents = new EventEmitter();
-      global.sharedObj._timeToStart = 0;
-      global.sharedObj.setAndSaveSettings = config_maker.settings.setAndSaveSettings;
-      global.sharedObj.settings = settings;
-      global.sharedObj.idleTime = idleTime;
-      global.sharedObj.toaster = toaster;
+   global.sharedObj.INIT_TIME = INIT_TIME;
+   global.sharedObj.robotUI = robotUI;
+   global.sharedObj.status = status;
+   global.sharedObj.realClock = realClock;
+   global.sharedObj.testUImanager = testUImanager;
+   global.sharedObj.viewEvents = new EventEmitter();
+   global.sharedObj._timeToStart = 0;
+   global.sharedObj.setAndSaveSettings = config_maker.settings.setAndSaveSettings;
+   global.sharedObj.settings = settings;
+   global.sharedObj.idleTime = idleTime;
+   global.sharedObj.toaster = toaster;
 
-      global.sharedObj.acceleratorKey = { on: null, off: null };
-      global.sharedObj.keyIsActive = () => false;
-      global.sharedObj.keyStop = () => {};
-      global.sharedObj.keyRestart = () => {};
+   global.sharedObj.acceleratorKey = { on: null, off: null };
+   global.sharedObj.keyIsActive = () => false;
+   global.sharedObj.keyStop = () => {};
+   global.sharedObj.keyRestart = () => {};
 
-      status.init();
-      await $timeout();
+   status.init();
+   await $timeout();
 
-      if (flagFreshInstall && status && fileExists(flagFreshInstall)) {
-         fileDelete(flagFreshInstall, () => {}, () => {});
-         logger.info('Typebox installed Ok');
-         await status.set({ freshInstall: true });
-         await $timeout(1);
-      }
-
-      robotUI.init();
-      realClock.init(get(settings, 'here_are_dragons.realClockOptions'), get(settings, 'here_are_dragons.realClockEnabled'));
-      idleTime.init();
-      window_and_systray.init();
-      testUImanager.init();
-
-      if (get(settings, 'here_are_dragons.exposeRobotUi')) global.sharedObj.robotUI = robotUI;
-
-      if (settings.here_are_dragons.canListenKeyboard) {
-         let keyboard_manager = require('@main/keyboard_manager.js');
-         keyboard_manager.init();
-         global.sharedObj.acceleratorKey.on = keyboard_manager.on;
-         global.sharedObj.acceleratorKey.off = keyboard_manager.off;
-         global.sharedObj.keyStop = keyboard_manager.keyStop;
-         global.sharedObj.keyRestart = keyboard_manager.keyRestart;
-         global.sharedObj.keyIsActive = keyboard_manager.keyIsActive;
-      }
-
-      initiated = true;
-   } catch (e) {
-      logger.error('[MAIN] Start error', e);
+   if (flagFreshInstall && status && fileExists(flagFreshInstall)) {
+      fileDelete(flagFreshInstall, () => {}, () => {});
+      logger.info('Typebox installed Ok');
+      await status.set({ freshInstall: true });
+      await $timeout(1);
    }
+
+   robotUI.init();
+   realClock.init(get(settings, 'here_are_dragons.realClockOptions'), get(settings, 'here_are_dragons.realClockEnabled'));
+   idleTime.init();
+   window_and_systray.init();
+   testUImanager.init();
+
+   if (get(settings, 'here_are_dragons.exposeRobotUi')) global.sharedObj.robotUI = robotUI;
+
+   if (settings.here_are_dragons.canListenKeyboard) {
+      let keyboard_manager = require('@main/keyboard_manager.js');
+      keyboard_manager.init();
+      global.sharedObj.acceleratorKey.on = keyboard_manager.on;
+      global.sharedObj.acceleratorKey.off = keyboard_manager.off;
+      global.sharedObj.keyStop = keyboard_manager.keyStop;
+      global.sharedObj.keyRestart = keyboard_manager.keyRestart;
+      global.sharedObj.keyIsActive = keyboard_manager.keyIsActive;
+   }
+
+   initiated = true;
 }
 
-app.commandLine.appendSwitch('ignore-certificate-errors');
-app.commandLine.appendSwitch('enable-renderer-backgrounding');
-app.commandLine.appendSwitch('disable-pinch');
-app.commandLine.appendSwitch('disable-features', 'ColorCorrectRendering');
 app.on('ready', init);
 app.on('activate', init);
