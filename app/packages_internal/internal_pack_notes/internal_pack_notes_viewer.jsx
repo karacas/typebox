@@ -313,13 +313,21 @@ function noteComponent({
          let noteIdTmp = get(this.state.rule, 'params._note_is_new') ? 'NEW_NOTE' : this.state.id;
 
          if (get(this.state.ruleEdit, 'params._note_is_new')) {
-            if (Config.isDev) console.log('[NEW NOTE]');
+            if (Config.isDev) console.log('[RENEW NEW NOTE]');
             if (cache_session) cache_session.del(noteIdTmp);
+
             const ruleEdit = cloneDeep(this.state.ruleEdit);
+            const newId = getNewNote()._internal_id;
+
+            ruleEdit.params = { _note_is_new: true, _internal_id: newId };
+            ruleEdit._internal_id = newId;
             ruleEdit.title = '';
-            ruleEdit.params = { _note_is_new: true };
-            await this.setStateAsync({ data: '', dataEdit: '', focus: false, rule: cloneDeep(ruleEdit), ruleEdit: ruleEdit });
+
+            await this.setStateAsync({ data: '', dataEdit: '', focus: false, id: newId, rule: cloneDeep(ruleEdit), ruleEdit: cloneDeep(ruleEdit) });
+
             this.obsoleteId(this.state.rule, oldRule);
+            setTimeout(this._cancel, 1);
+
             this._refocusMain();
          } else {
             await this.setStateAsync({ rule: cloneDeep(this.state.ruleEdit), data: this.state.dataEdit });
@@ -334,7 +342,15 @@ function noteComponent({
          const isDifTitle = this.state.rule.title !== this.state.ruleEdit.title;
          if (isDifTitle) return true;
 
-         const isDifParams = !equal(this.state.rule.params, this.state.ruleEdit.params);
+         let actualNote = cloneDeep(this.state.rule.params);
+         let editedNote = cloneDeep(this.state.ruleEdit.params);
+
+         //id:fcqmdBj5L1
+         if (actualNote._note_icon && actualNote._note_icon.value === null) delete actualNote._note_icon; // NO ICON
+         if (editedNote._note_icon && editedNote._note_icon.value === null) delete editedNote._note_icon; // NO ICON
+
+         const isDifParams = !equal(actualNote, editedNote);
+
          return isDifParams;
       },
       _lostFocus(editor) {

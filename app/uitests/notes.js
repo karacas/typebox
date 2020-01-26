@@ -12,25 +12,6 @@ const getTapeTests = appContext => {
 
    return [
       {
-         name: 'new note 1',
-         options: {},
-         callBack: async (tape, context) => {
-            return await typeResult(
-               {
-                  setPath: 'INTERNAL_PACK_NOTES',
-                  intervalTToForceReRender: 100,
-                  expectedHtml: 'CodeMirror',
-                  elHtml: '#ruleViewerWrapp',
-                  whitOutSpaces: true,
-                  _name: 'notes1',
-               },
-               tape,
-               context,
-               appContext
-            );
-         },
-      },
-      {
          name: 'new note 2',
          options: {},
          callBack: async (tape, context) => {
@@ -66,6 +47,8 @@ const getTapeTests = appContext => {
                            return true;
                         }
                      }
+
+                     return false;
                   },
                },
                tape,

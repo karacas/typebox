@@ -48,8 +48,10 @@ async function _internal_place_text_clipboard($str, $keyUps = false, deletes = 0
    if (!robotIsLoad) loadRobotJS();
    if (!clipboard || !robotIsLoad) return false;
 
+   await keyUps();
    if (deletes) deleteStrokes(deletes);
-   else if ($keyUps) await keyUps();
+
+   await _timeout(placeTextDelay);
 
    clipboard.writeText($str);
    robot.keyTap('v', Config.isMac ? 'command' : 'control');

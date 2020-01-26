@@ -446,6 +446,10 @@
 		opacity: 1 !important;
 	}
 
+	.MuiSwitch-switchBase.Mui-checked {
+		transform: translateX(100%);
+	}
+
 	&:hover .Mui-checked .MuiSwitch-thumb {
 		background: var(--accentColor2) !important;
 	}
@@ -617,6 +621,7 @@
 		.twitter-picker {
 			background: transparent !important;
 			border: none !important;
+			box-shadow: none;
 
 			div:nth-child(1n) {
 				// ARROW

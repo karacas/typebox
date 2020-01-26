@@ -600,7 +600,7 @@ $borderContent {
 
 	50% {
 		transform: translate(-50%, -50%) scale(0.5);
-		opacity: 0.25;
+		opacity: 0.5;
 	}
 
 	100% {
@@ -616,7 +616,7 @@ $borderContent {
 	}
 
 	40% {
-		opacity: 0.1;
+		opacity: 0.3;
 	}
 
 	100% {
@@ -633,7 +633,7 @@ $borderContent {
 
 	45% {
 		transform: translate(-50%, -50%) scale(1);
-		opacity: 0.4;
+		opacity: 0.8;
 	}
 
 	100% {
@@ -699,14 +699,21 @@ $borderContent {
 		padding-bottom: 100%;
 		transform: translate(-50%, -50%);
 		border-radius: 100px;
-		animation: flashCircle calc(0.35s * var(--animSpeedFactor)) ease;
+		animation: flashCircle calc(0.5s * var(--animSpeedFactor)) ease;
 		pointer-events: none;
 		opacity: 0;
 	}
 }
 
+.circlePopOpen-Max {
+	&:after {
+		background: none !important;
+		border: dotted 2px var(--accentColor2) !important;
+	}
+}
+
 .circlePopOpen-Min:after {
-	animation: flashCircleMin calc(0.15s * var(--animSpeedFactor)) ease;
+	animation: flashCircleMin calc(0.25s * var(--animSpeedFactor)) ease;
 }
 
 .circlePopOpen-Max:after {

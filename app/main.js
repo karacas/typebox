@@ -67,7 +67,11 @@ async function init() {
    await $timeout();
 
    if (flagFreshInstall && status && fileExists(flagFreshInstall)) {
-      fileDelete(flagFreshInstall, () => {}, () => {});
+      fileDelete(
+         flagFreshInstall,
+         () => {},
+         () => {}
+      );
       logger.info('Typebox installed Ok');
       await status.set({ freshInstall: true });
       await $timeout(1);

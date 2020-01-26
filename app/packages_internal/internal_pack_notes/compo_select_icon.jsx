@@ -162,11 +162,11 @@ const IconColor = props => {
                         style={{
                            backgroundColor: scolor || null,
                            color: labelReadable,
-                           height: 26,
-                           marginTop: 3,
+                           height: 32,
+                           marginTop: 0,
                            marginLeft: 3,
                            width: 'calc(100% - 3px)',
-                           lineHeight: '27px',
+                           lineHeight: '33px',
                            cursor: 'pointer',
                         }}
                      >

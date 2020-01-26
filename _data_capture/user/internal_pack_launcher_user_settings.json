@@ -1,0 +1,57 @@
+/*{
+    "uniqByExec": true,
+    "remakeIdle": true,
+    "unique": true,
+    "suppressErrors": true,
+    "followSymbolicLinks": false,
+    "onlyFiles": true,
+    "remakeIdleTime": 7200000,
+    "waitToPutRules": 128,
+    "deep": 4,
+    "extensions": [
+        "exe",
+        "lnk",
+        "cpl",
+        "msc",
+        "appref-ms"
+    ],
+    "ignore": [
+        "##/#nstal#",
+        "##/#add to#",
+        "##/#open#with#",
+        "##/#help#",
+        "##/#readme#",
+        "##/#register#",
+        "##/#{u,U}pdate#",
+        "##/#{u,U}pgrade#",
+        "##/#run.lnk",
+        "##/#{s,S}etup#.exe",
+        "##/#{s,S}etup.exe",
+        "##/squirrel.exe",
+        "##/typebox.exe",
+        "##/typebox.lnk",
+        "##/typebox_#.exe",
+        "##/#Build Tools Command Prompt.lnk",
+        "##/#release#info#",
+        "##/#release#notes#",
+        "##/#plug#in#",
+        "##/typebox.app",
+        "##/node_modules/##",
+        "##/.git/##"
+    ],
+    "paths": [
+        "%APPDATA%/Microsoft/Windows/Start Menu/##/##/#",
+        "%PROGRAMDATA%/Microsoft/Windows/Start Menu/##/##/#",
+        "%USERPROFILE%/Desktop/#",
+        "%USERPROFILE%/Links/#",
+        "%USERPROFILE%/Test/#",
+        "%APPDATA%/Microsoft/Internet Explorer/Quick Launch/User Pinned/TaskBar/#",
+        "%PROGRAMDATA%/chocolatey/bin/##/#",
+        "D:/tmp/##",
+        "C:/Dropbox/portable/##",
+        "C:/dropbox/Dropbox/portable/##"
+    ]
+}*/
+{
+
+}

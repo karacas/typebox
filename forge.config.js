@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use strict';
 
 const path = require('path');
@@ -27,10 +28,10 @@ const _electronPackagerConfig = {
    icon: path.resolve(iconPath, 'icon'),
    appBundleId: appId,
    appCategoryType: 'public.app-category.developer-tools',
-   win32metadata: {
-      CompanyName: companyName,
-      OriginalFilename: 'typebox',
-   },
+   // win32metadata: {
+   //    CompanyName: companyName,
+   //    OriginalFilename: 'typebox',
+   // },
    __asarUnpack: ['./node_modules/iohook', '**/*.node', '**/*.dll'],
    __unpackDir: ['./node_modules/iohook'],
    __osxSign: {

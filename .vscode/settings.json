@@ -1,0 +1,23 @@
+{
+   "vscode_custom_css.policy": true,
+   "files.exclude": {
+      "**/_dev": true,
+   },
+   "search.exclude": {
+      "**/_dev": true
+   },
+   "path-autocomplete.pathMappings": {
+      "@root": "./app/",
+      "@api": "./app/api/",
+      "@main": "./app/main/",
+      "@aux": "./app/auxs/",
+      "@render": "./app/render/",
+      "@mainview": "./app/main_view/",
+      "@components": "./app/components/",
+      "@packages_internal": "./app/packages_internal/",
+      "@uitests": "./app/uitests/",
+      "@captures": "./app/captures/",
+      "@css": "./app/css/",
+      "@assets": "./app/assets/"
+   }
+}

@@ -1,0 +1,16 @@
+/*{
+    "command": "tm!",
+    "commandResetDark": "td!",
+    "commandThemeLight": "tl!",
+    "defaultThemeDark": [
+        "default",
+        "default"
+    ],
+    "defaultThemeLight": [
+        "default",
+        "defaultLight"
+    ]
+}*/
+{
+
+}

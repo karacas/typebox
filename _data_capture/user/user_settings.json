@@ -1,11 +1,13 @@
 /*{
     "mainShortcut": "CmdOrCtrl+alt+space",
-    "mainShortcutAndFav": "shift+alt+space",
+    "mainShortcut_PopAndFav": "super+alt+up",
+    "mainShortcut_PopAndLast": "super+alt+down",
+    "mainShortcut_StopKeyListener": "super+alt+ctrl+0",
+    "mainShortcut_StartKeyListener": "super+alt+ctrl+1",
     "animations": false,
     "notifications": true,
     "fixedTypeBoxOptions": true,
     "toolTips": true,
-    "gotoRootAfterAction": false,
     "ignoreThesePackages": [],
     "ignoreTheseRules": [],
     "packages": [],
@@ -20,20 +22,25 @@
     },
     "font": "default",
     "icons": true,
+    "statusPersist": false,
     "avoidResizeHeigth": false,
+    "tests": null,
+    "advancedContextuals": false,
     "userkaracas": true
 }*/
 {
     "notifications": false,
     "visibleInTaskBar": true,
     "ignoreThesePackages": [
-        "internal_pack_launcher",
-        "internal_pack_paths",
         "typebox-gist-sync-dev"
     ],
     "avoidResizeHeigth": true,
     "here_are_dragons":
     {
+        "electron_windows_list_options":
+        {
+            "transparent": false,
+        },
         "chromiumConsole": false,
         "deletePackages": false,
         "installPackages": true,
@@ -46,8 +53,9 @@
         {
             "hideOnBlur": false
         },
-         "__debug": {
-         "canListenKeyboard": true,
+        "__debug":
+        {
+            "canListenKeyboard": true
         },
         "paths":
         {
@@ -68,13 +76,9 @@
             "user_rules": "%typebox%/_data_capture/user_rules/"
         }
     },
-    testConfig: {
-         keyDelay: 60,
-         pause: 100,
-      },
     "theme":
     {
-        "subTheme": "default"
+        "name": "default"
     },
     "width": 960,
     "maxItemsVisible": 8

@@ -1,0 +1,72 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: m
+enabled: true
+icon: icons8-double-right palette-Orange-A700 text
+rules:
+   - title: Prisma snippets
+     type: 'object'
+     params:
+        changePath:
+           path: PRISMAsnip
+
+   - title: Path Identity /IdentityServer
+     path: PRISMAsnip
+     params:
+        string: |-
+           cd /d c:\prisma\prisma_v3\src\microservices\identity\IdentityServer\
+
+   - title: Run Identity 5010
+     path: PRISMAsnip
+     params:
+        string: |-
+           dotnet run --server.urls http://localhost:5010
+
+   - title: Path Prices / Prices.API
+     path: PRISMAsnip
+     params:
+        string: |-
+           cd /d c:\prisma\prisma_v3\src\microservices\prices\Prices.API
+
+   - title: Run Prices 5000
+     path: PRISMAsnip
+     params:
+        string: |-
+           dotnet run --server.urls http://localhost:5000
+
+   - title: Path Assorment / Assortment.API
+     path: PRISMAsnip
+     params:
+        string: |-
+           cd /d c:\prisma\prisma_v3\src\microservices\assortment\Assortment.API
+
+   - title: Run Assorment 5002
+     path: PRISMAsnip
+     params:
+        string: |-
+           dotnet run --server.urls http://localhost:5002
+
+   - title: Path Frontend src/frontend
+     path: PRISMAsnip
+     params:
+        string: |-
+           cd /d c:\prisma\prisma_v3\src\frontend\
+
+   - title: Run Frontend / start:dev
+     path: PRISMAsnip
+     params:
+        string: |-
+           npm run start:dev
+
+   - title: Build Frontend / build-prod
+     path: PRISMAsnip
+     params:
+        string: |-
+           npm run build-prod
+
+   - title: Path Prisma [root]
+     path: PRISMAsnip
+     params:
+        string: |-
+           cd /d c:\prisma

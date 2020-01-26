@@ -307,9 +307,9 @@ function noteOptions(props) {
                               className={'TB-Button TB-Button-autowidth  TB-Button-left TB-Button-no-backhover'}
                            >
                               {_pass_inView ? (
-                                 <i className="mdi-eye" style={{ top: 4, position: 'relative' }} />
+                                 <i className="mdi-eye" style={{ top: 2, position: 'relative' }} />
                               ) : (
-                                 <i className="mdi-eye-off" style={{ top: 4, position: 'relative' }} />
+                                 <i className="mdi-eye-off" style={{ top: 2, position: 'relative' }} />
                               )}
                            </div>
 

@@ -322,7 +322,11 @@ function load_and_makeSettings() {
    //DELETE TMP
    if (fs.existsSync(settings.here_are_dragons.paths.tmp)) {
       try {
-         rimraf(settings.here_are_dragons.paths.tmp, () => {}, () => {});
+         rimraf(
+            settings.here_are_dragons.paths.tmp,
+            () => {},
+            () => {}
+         );
       } catch (e) {}
    }
 

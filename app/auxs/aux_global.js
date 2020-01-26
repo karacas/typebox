@@ -1,18 +1,19 @@
 'use strict';
 
-const { mergeWith, debounce, cloneDeep, get, memoize, has } = require('lodash');
+const { mergeWith, debounce, memoize, has, get } = require('lodash');
 const { makeHash } = require('./aux_crypt.js');
 const { promisify } = require('util');
 const mkpath = require('make-dir');
 const fs = require('fs');
 const path = require('path');
 const mergeOptions = require('merge-options');
-const resolvePath = require('object-resolve-path');
+const klona = require('klona');
 const equal = require('fast-deep-equal');
 const removeDiacritics = require('diacritics').remove;
-const lrucache = require('lru-cache');
+const Lrucache = require('lru-cache');
 const $timeout = ms => new Promise(res => setTimeout(res, ms));
-const cache_normalize = new lrucache({ max: 4096 * 2 });
+const resolvePath = require('object-resolve-path');
+const cache_normalize = new Lrucache({ max: 4096 * 2 });
 const isString = val => typeof val === 'string';
 
 const deepClone30 = obj => {
@@ -37,11 +38,10 @@ const uniqueElementsBy = (arr, fn) =>
       return acc;
    }, []);
 
-const _cloneDeep = obj => {
-   if (!obj || typeof obj === 'string' || typeof obj === 'number') return obj;
-   if (typeof obj !== 'object') return cloneDeep(obj);
-   return JSON.parse(JSON.stringify(obj));
-};
+const _cloneDeep = klona;
+//if (!obj || typeof obj === 'string' || typeof obj === 'number') return obj;
+//if (typeof obj !== 'object') return cloneDeep(obj);
+//return JSON.parse(JSON.stringify(obj));
 
 const _get = (o, path) => {
    if (!o || !path || typeof o !== 'object' || typeof path !== 'string') return o;
@@ -56,6 +56,7 @@ const customizer = (objValue, srcValue) => {
    if (Array.isArray(srcValue)) {
       return srcValue;
    }
+   return null;
 };
 
 const isExist = obj => {
@@ -269,7 +270,7 @@ const NULL_FUNCT = () => null;
 
 const textToHTML = text => {
    if (typeof text !== 'string') {
-      logger.warn('[textToHTML]', text, 'is no string  / ', typeof text);
+      console.warn('[textToHTML]', text, 'is no string  / ', typeof text);
       return '';
    }
    return `${text || ''}` // make sure it is a string;

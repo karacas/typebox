@@ -91,12 +91,13 @@ const extract_uiohook_dll = () => {
 
    const APP_ASAR_TMP = './out/typebox-win32-x64/resources/app.asar';
    // const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v70-win32-x64\\build\\Release\\uiohook.dll';
-   // const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v75-win32-x64\\build\\Release\\uiohook.dll';
-   const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v73-win32-x64\\build\\Release\\uiohook.dll';
+   // const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v73-win32-x64\\build\\Release\\uiohook.dll';
+   const UIOHOOK_PATH = 'node_modules\\iohook\\builds\\electron-v75-win32-x64\\build\\Release\\uiohook.dll';
 
    const fs = require('fs');
 
-   const iohookNodefilePath = normalicePath('%TEMP%' + '/uiohook.dll', true);
+   // const iohookNodefilePath = normalicePath('%TEMP%' + '/uiohook.dll', true);
+   let iohookNodefilePath = normalicePath('%TMP%' + '/uiohook.dll', true);
    if (fs.existsSync(iohookNodefilePath)) return;
 
    const asar = require('asar');

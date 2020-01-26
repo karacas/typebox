@@ -20,7 +20,7 @@ const _auxMakeSucrase = function(file, task) {
 
 const _auxMakeBabel = function(file, task) {
    let command = 'npx babel {$fileIn} -o {$fileOut} --config-file ./babel.config.js';
-   let fileIn = normalicePath(file.dir + '/' + file.base, true);
+   let fileIn = normalicePath(`${file.dir}/${file.base}`, true);
    let fileOut = normalicePath(replaceJSX(fileIn), true);
    let $command = command.replace('{$fileOut}', fileOut).replace('{$fileIn}', fileIn);
    return task.source(fileIn).shell($command);
@@ -28,7 +28,7 @@ const _auxMakeBabel = function(file, task) {
 
 const _auxMakeYarn = function(file, task) {
    let command = 'yarn install --non-interactive --prod --cwd {$fileIn}';
-   let fileIn = normalicePath(file.dir + '/' + file.base, true);
+   let fileIn = normalicePath(`${file.dir}/${file.base}`, true);
    let fileOut = normalicePath(replaceJSX(fileIn), true);
    let $command = command.replace('{$fileIn}', fileIn);
    return task.source(fileIn).shell($command);
@@ -37,9 +37,9 @@ const _auxMakeYarn = function(file, task) {
 exports.symPacks = function*(task) {
    yield task.source(['./packages_dev']).run({}, function*(file) {
       // yield _auxMakeSymPacks(file, task)
-      let fileIn = normalicePath(file.dir + '/' + file.base, true);
-      let fileOut = normalicePath('./app/' + '/' + fileIn);
-      let fileOut2 = normalicePath('./_data/' + '/' + fileIn);
+      let fileIn = normalicePath(`${file.dir}/${file.base}`, true);
+      let fileOut = normalicePath(`${'./app/' + '/'}${fileIn}`);
+      let fileOut2 = normalicePath(`${'./_data/' + '/'}${fileIn}`);
 
       // console.log(fileIn, fileOut, fileOut2)
       symlinkDir(fileIn, fileOut2)
@@ -150,7 +150,7 @@ exports.prettierStylus = function*(task) {
    yield task.source('./packages_dev/*/*.styl').shell('npx stylus-supremacy format $file -r');
 };
 
-exports.optimizeCss = function*(task) {
+exports.optimizeCssOld = function*(task) {
    yield task
       .source([
          './app/css/style.css',
@@ -161,6 +161,14 @@ exports.optimizeCss = function*(task) {
       .shell('npx postcss $file -r --no-map');
 
    yield task.source('./packages_dev/*/*.css').shell('npx postcss $file -r --no-map');
+};
+
+exports.optimizeCss = function*(task) {
+   yield task.source('package.json').shell('npx postcss app/css/style.css -r --no-map');
+   yield task.source('package.json').shell('npx postcss node_modules/google-material-color/dist/*.css -r --no-map');
+   yield task.source('package.json').shell('npx postcss node_modules/@mdi/font/css/*.css -r --no-map');
+   yield task.source('package.json').shell('npx postcss node_modules/google-material-color/dist/*.css -r --no-map');
+   yield task.source('package.json').shell('npx postcss packages_dev/*/*.css -r --no-map');
 };
 
 exports.prettierApp = function*(task) {

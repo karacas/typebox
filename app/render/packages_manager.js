@@ -169,7 +169,10 @@ function checkAndRemove(packInstalled) {
    packInstalled = aux_packOnlyName(packInstalled);
    return new Promise((resolve, reject) => {
       let userPacks = getSettingsPackages();
-      let needDelete = !includes(userPacks.map(pack => aux_packOnlyName(pack)), packInstalled);
+      let needDelete = !includes(
+         userPacks.map(pack => aux_packOnlyName(pack)),
+         packInstalled
+      );
       if (needDelete) {
          popWin();
 

@@ -461,7 +461,8 @@ const makeRuleFromObj = (obj, fileName = '') => {
       delete data.params._internal_id;
    }
 
-   if (!data._internal_id || $get(data, 'params._note_is_new')) {
+   if (!data._internal_id) {
+      //Cuando agarra el id, si estaba encriptado hace lio id:dJQ-O89d9Z
       data._internal_id = getDataNewRuleRaw()._internal_id;
       logger.info('[internal_pack_notes] create new item', $cloneDeep(data));
    }
@@ -1707,11 +1708,7 @@ module.exports = context => {
                      const $note_type = $get($rule, 'params._note_type');
                      let $data = await getDataFromRule($rule, false, false);
 
-                     let param = context.get(obj, 'event,detail.paramRegex');
-                     $data = await processNoteStr($rule, $data, $note_type, param);
-                     if (!$data) return;
-
-                     context.copyToClipboard($data, !(obj.event && obj.event.shiftKey));
+                     if ($data) context.copyToClipboard($data, !(obj.event && obj.event.shiftKey));
                   } catch (e) {
                      logger.warn(e);
                   }
@@ -1840,7 +1837,7 @@ module.exports = context => {
          return [
             {
                type: TB_NOTES_OBJ,
-               title: 'Note niewer',
+               title: 'Note newer',
                async enabled($rule) {
                   if (forceEditViewer) return true;
 

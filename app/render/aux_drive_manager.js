@@ -3,35 +3,45 @@
 const path = require('path');
 const rimraf = require('rimraf');
 const app = require('electron').remote.app;
+
+// @ts-ignore
 const mkpath = require('@aux/aux_fs.js').mkpath;
+// @ts-ignore
 const Logger = require('@render/logger.js');
+// @ts-ignore
 const Config = require('@render/config.js');
+// @ts-ignore
 const sharedData = require('@render/shared_data.js');
-const ListViewStore = require('@render/list_view_store.js');
+// @ts-ignore
 const aux_webManager = require('@render/aux_web_manager.js');
+// @ts-ignore
+const global_aux = require('@aux/aux_global.js');
+// @ts-ignore
+const aux_fs = require('@aux/aux_fs.js');
+// @ts-ignore
+const { gotoRootOnExec } = require('@render/aux_executor.js');
+
 const fileExtension = require('file-extension');
 const isUrl = require('is-url');
 const winshort = require('windows-shortcuts');
 const sudo = require('sudo-prompt');
-const global_aux = require('@aux/aux_global.js');
-const aux_fs = require('@aux/aux_fs.js');
 const get = global_aux.get;
 const icons = Config.get('icons');
-const lrucache = require('lru-cache');
+const Lrucache = require('lru-cache');
 const isValidPath = require('is-valid-path');
 const Queue = require('promise-queue');
 const ms = require('ms');
-const cache_get_file_info = new lrucache({ max: 4096 * 2, maxAge: ms('5m') });
-const cache_icon_exist = new lrucache({ max: 4096, maxAge: ms('5m') });
+const cache_get_file_info = new Lrucache({ max: 4096 * 2, maxAge: ms('5m') });
+const cache_icon_exist = new Lrucache({ max: 4096, maxAge: ms('5m') });
 const fileExists = aux_fs.fileExists;
 const _isPath = aux_fs._isPath;
-const { gotoRootOnExec } = require('@render/aux_executor.js');
 const { shell } = require('electron').remote;
 const globby = require('globby');
 const fs = require('fs');
 const fsPlus = require('fs-plus');
 const { promisify } = require('util');
 const fs_statAsync = promisify(fs.stat);
+
 const $pause = time => new Promise(res => setTimeout(res, time || 1));
 let child_process = null;
 
@@ -123,8 +133,8 @@ async function getFileInfo($pathname, useCache = true) {
             await new Promise((resolve, reject) => {
                winshort.query(pathname, ($error, $file) => {
                   if (!$error && $file.target && checkWinIsExecExt($file.target)) {
-                     if (config.isDev) Logger.log('[getFileInfo] alternative');
-                     data._icon = $file.icon || $file.expanded.icon || $file.target || null;
+                     if (Config.isDev) Logger.log('[getFileInfo] alternative');
+                     data._icon = $file.icon || $file.target || null;
                      data.lnkSource = normalicePath($file.target);
                      data.realSource = data.lnkSource;
                      if ($file.expanded && $file.expanded.args && $file.expanded.args.length) {
@@ -342,6 +352,9 @@ function _getFsFileIconWin(file) {
 
    return new Promise((resolve, reject) => {
       let _tryGetFileAppCacheExist = tryGetFileAppCacheExist(tmpIcon);
+
+      Logger.log(tmpIcon);
+
       if (_tryGetFileAppCacheExist) {
          resolve(_tryGetFileAppCacheExist);
          return;
@@ -351,23 +364,24 @@ function _getFsFileIconWin(file) {
          resolve(NOICON);
          return;
       }
-
-      app.getFileIcon(getLinkIconPath(file), { size: 'large' }, (err, res) => {
-         if (res && res.getSize && res.getSize().width) {
-            if (!fileExists(path.dirname(tmpIcon), true)) mkpath.sync(path.dirname(tmpIcon));
-            fs.writeFile(tmpIcon, res.toPNG(), function(err) {
-               if (err) {
-                  Logger.warn('[getFsFileIcon]', file, tmpIcon, 'writeFile', err);
-                  resolve(NOICON);
-                  return;
-               }
-               resolve(tmpIcon);
-            });
-         } else {
+      app.getFileIcon(getLinkIconPath(file), { size: 'large' })
+         .then(res => {
+            if (res && res.getSize && res.getSize().width) {
+               if (!fileExists(path.dirname(tmpIcon), true)) mkpath.sync(path.dirname(tmpIcon));
+               fs.writeFile(tmpIcon, res.toPNG(), function(err) {
+                  if (err) {
+                     Logger.warn('[getFsFileIcon]', file, tmpIcon, 'writeFile', err);
+                     resolve(NOICON);
+                     return;
+                  }
+                  resolve(tmpIcon);
+               });
+            }
+         })
+         .catch(err => {
             Logger.warn('[getFsFileIcon]', file, tmpIcon, 'noDataImg', err);
             resolve(NOICON);
-         }
-      });
+         });
    });
 }
 
@@ -477,7 +491,7 @@ function _getFsFileIconLnx(file) {
 
       if (!cache_getFsFileIconLnx) {
          cache_getFsFileIconLnx = await globby(linux_list_icon_paths, {
-            extensions: ['png', 'svg'],
+            // extensions: ['png', 'svg'],
             onlyFiles: true,
             followSymbolicLinks: true,
             suppressErrors: true,
@@ -651,6 +665,7 @@ function getIconLinuxName(pathItem) {
 
       return icon[1];
    }
+   return null;
 }
 
 function checkIsExecAltLinux(pathItem) {
@@ -658,7 +673,7 @@ function checkIsExecAltLinux(pathItem) {
       if (true) {
          try {
             //KTODO: PROBAR
-            const pathstats = fs.statsync(pathname);
+            const pathstats = fs.statSync(pathItem);
             if (pathstats && pathstats.mode) {
                return !(pathstats.mode & 0b001001001);
             }
@@ -740,17 +755,6 @@ function getMutipleFilesSerial(arr) {
 }
 
 const getMutipleFiles = (arr, par = true) => (par ? getMutipleFilesParallel(arr) : getMutipleFilesSerial(arr));
-
-const getTasks = async () => {
-   const tasks = await Promise.all(
-      globTasks.map(async task => {
-         const globs = await getPattern(task, dirGlob);
-         return Promise.all(globs.map(globToTask(task)));
-      })
-   );
-
-   return arrayUnion(...tasks);
-};
 
 function existDriveWin(drive) {
    if (!drive) return false;
@@ -892,7 +896,7 @@ function openFile(item, forceSU = false, useOverride = true, goBack = true) {
             if (true) {
                try {
                   //KTODO: PROBAR
-                  const pathstats = fs.statsync(pathname);
+                  const pathstats = fs.statSync(pathItem);
                   if (pathstats && pathstats.mode) {
                      return !(pathstats.mode & 0b001001001);
                   }
@@ -1141,7 +1145,7 @@ function deleteCaches() {
    try {
       rimraf.sync(cacheFolder);
    } catch (e) {
-      logger.warn(e);
+      Logger.warn(e);
    }
 
    let cacheFolderIcons = Config.get('here_are_dragons.paths.caches_icons');
@@ -1149,7 +1153,7 @@ function deleteCaches() {
    try {
       rimraf.sync(cacheFolderIcons);
    } catch (e) {
-      logger.warn(e);
+      Logger.warn(e);
    }
 
    sharedData.app_window_and_systray.refreshListWindow();
@@ -1157,19 +1161,20 @@ function deleteCaches() {
 
 function deleteUserData() {
    let userFolder = Config.get('here_are_dragons.paths.user');
-   if (!cacheFolder || !sharedData.app_window_and_systray) return;
+   if (!userFolder || !sharedData.app_window_and_systray) return;
    try {
       rimraf.sync(userFolder);
       setTimeout(() => {
          sharedData.app_window_and_systray.refreshListWindow();
       }, 100);
    } catch (e) {
-      logger.warn(e);
+      Logger.warn(e);
    }
 }
 
 // TEST walkPaths
 if (window && Config.isDev) {
+   // @ts-ignore
    window.testWP = (arr, $options) => {
       $options || {};
       arr = arr.map(pathsReplaceEnvVar);

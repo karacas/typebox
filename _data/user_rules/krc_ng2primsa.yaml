@@ -1,0 +1,24 @@
+# https://www.json2yaml.com/convert-yaml-to-json
+# https://www.json2yaml.com/
+---
+name: m
+enabled: true
+icon: mdi-angular palette-Orange-A700 text
+rules:
+   - title: NG2 / Prisma snippets
+     type: 'object'
+     params:
+        changePath:
+           path: NG2PRISMAsnip
+
+   - title: log isDev
+     path: NG2PRISMAsnip
+     params:
+        string: |-
+           if (true && isVerbose()) console.log('%c[TEST]', 'color: #bada55', 1111);
+
+   - title: log isDev custom
+     path: NG2PRISMAsnip
+     params:
+        string: |-
+           _log('%c[TEST]', 'color: #bada55', 1111);

@@ -292,9 +292,9 @@ async function registerWindow() {
    mainWindow.loadURL(_getIndex_html_file);
 
    if (!settings.dev) {
-      mainWindow.setMenu(null);
       mainWindow.setMenuBarVisibility(false);
       mainWindow.setAutoHideMenuBar(true);
+      mainWindow.setMenu(null);
    }
 
    if (get(settings, 'here_are_dragons.chromiumConsole')) {

@@ -3,7 +3,7 @@
 const { app, systemPreferences } = require('electron');
 const { is } = require('electron-util');
 const ms = require('ms');
-const appName = app.getName();
+const appName = 'typebox';
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -192,7 +192,7 @@ let settings = {
       notificationsCliboardsTime: 1500,
       notificationsMaxTime: ms('3.5s'),
       __robotjs_setKeyboardDelay: 10 /*robotjs*/,
-      robotjs_setKeyboardDelay: 5 /*robotjs*/,
+      robotjs_setKeyboardDelay: 2 /*robotjs*/,
       robotjs_setMouseDelay: 10 /*robotjs*/,
       placeTextDelay: 2 /*placeText*/,
       placeTextInternal: 'clipboard' /*placeText*/,
@@ -202,7 +202,7 @@ let settings = {
       minY: 100,
       doubleClickTime: 320,
       chromiumConsole: false,
-      chromiumConsoleOptions: { mode: 'detach', setZoomFactor: 1 },
+      chromiumConsoleOptions: { mode: 'detach' },
       systray: true,
       safe_secure_commands: true,
       startOpen: true,
@@ -352,8 +352,9 @@ let settings = {
          minHeight: 90,
          enableRemoteModule: true,
          acceptFirstMouse: true,
-         disableAutoHideCursor: true,
+         // disableAutoHideCursor: true,
          autoHideMenuBar: true,
+         enableLargerThanScreen: false,
          offscreen: false,
          frame: false,
          transparent: true,
@@ -391,8 +392,12 @@ if (ostype === 'win32') {
 
 //MAC OVERWRITES
 if (ostype === 'darwin') {
-   settings.mainShortcut = 'Alt+space';
+   settings.mainShortcut = 'Ctrl+space';
    settings.here_are_dragons.electron_windows_list_options.transparent = false;
+   settings.here_are_dragons.electron_windows_list_options.hasShadow = true;
+   settings.here_are_dragons.electron_windows_list_options.maximizable = false;
+   settings.here_are_dragons.electron_windows_list_options.fullscreenWindowTitle = false;
+   settings.here_are_dragons.electron_windows_list_options.titleBarStyle = 'hidden';
 
    //Poor performance
    settings.avoidResizeHeigth = true;
@@ -474,7 +479,7 @@ if (
    }
 
    if (terminalName.includes('der2') || terminalName.includes('prystore')) {
-      settings.here_are_dragons.chromiumConsoleOptions.setZoomFactor = 1.35;
+      //settings.here_are_dragons.chromiumConsoleOptions.setZoomFactor = 1.35;
       settings.here_are_dragons.testConfig.reportPath = normalicePath('%typebox%' + '/_report/tests.json');
       settings.here_are_dragons.testConfig.reportPathPass = null;
       settings.here_are_dragons.testConfig.saveJsonReport = true;
