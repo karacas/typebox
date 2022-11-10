@@ -255,7 +255,7 @@
       "benchmark": "2.1.4",
       "cssnano": "4.1.10",
       "devtron": "1.4.0",
-      "electron": "7.1.10",
+      "electron": "18.3.7",
       "electron-rebuild": "1.9.0",
       "eslint": "6.8.0",
       "eslint-config-airbnb": "18.0.1",
